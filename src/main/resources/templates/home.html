@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenRoad · Inici</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+</head>
+<body>
+<header class="nav-container">
+    <nav class="navbar">
+
+        <div class="logo">
+            <a class="logo">
+                <img src="/Imagenes/logo_openroad.png" alt=" " class="logo-img" width="55px" height="55px">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Inici</a></li>
+            <li><a th:href="@{/cataleg}">Catàleg</a></li>
+            <li><a href="#section3">Contacte</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="hero">
+    <img th:src="@{/Imagenes/hero.jpg}" class="hero-img" alt="Imatge portada">
+    <div class="glass-box">
+        <h2>Benvingut a OpenRoad!</h2>
+        <p class="text_presentacio">Descobreix una nova manera de moure't amb OpenRoad, la solució més
+            ràpida i còmoda per llogar el cotxe que necessites.
+            Amb un procés senzill, vehicles en perfecte estat i atenció personalitzada, som aquí perquè
+            gaudiu del camí sense preocupacions.
+            <br>
+            Comença la teva aventura avui mateix!
+        </p>
+
+        <a th:href="@{/cataleg}" class="btn_explora">Explora</a>
+    </div>
+</section>
+
+<section id="cars" class="cars-section">
+    <div class="container2">
+        <h2 class="titulo text-center mb-4">Cotxes destacats</h2>
+        <div class="cars-grid">
+
+            <div th:each="vehicle : ${vehicles}" class="card">
+                <img src="images/vehiculos/mercedes.jpg" class="card-img-top" alt="Mercedes CLA">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${vehicle.marca + ' ' + vehicle.model}">Mercedes</h5>
+                    <a th:href="@{/vehicle/{matricula}(matricula=${vehicle.matricula})}" class="btn btn-dark">Veure
+                        detalls</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script src="index.js" defer></script>
+</body>
+</html>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2025 OpenRoad-Adrià Mayo Ortiz. Tots els drets reservats.</p>
+    </div>
+</footer>
+
