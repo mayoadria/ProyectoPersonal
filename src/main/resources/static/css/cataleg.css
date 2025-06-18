@@ -1,0 +1,504 @@
+ html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* Configura el diseño en columnas */
+}
+
+main {
+    flex: 1; /* Permite que el contenido principal ocupe todo el espacio disponible */
+}
+
+/* Reseteo bÃ¡sico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /*border-style: solid;*/
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+
+/*-----------------------------------------------------------------------------------------------*/
+
+/* Estilos del Navbar */
+.nav-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    transition: background-color 0.3s ease;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: grey;
+}
+
+.navbar.scrolled {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    margin-left: 40px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+
+.icono_user {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    /* Ajusta el tamaÃ±o del icono */
+    color: white;
+    /* Cambia el color del icono */
+    margin-left: auto;
+    outline: none;
+    transition: transform 0.3s ease;
+}
+
+.icono_user:hover {
+    color: #00b4d8;
+    /* Cambia el color al pasar el cursor */
+    transform: scale(1.1);
+    /* Efecto de agrandamiento */
+}
+
+/* MenÃº desplegable (oculto por defecto) */
+.user-menu-container {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 40px;
+    /* Ajusta segÃºn sea necesario */
+    right: 0;
+    background-color: #00b4d8;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 165px;
+    /* Ajusta el ancho del menÃº */
+}
+
+.dropdown-item {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    text-align: left;
+    font-weight: bold;
+}
+
+.dropdown-item svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    /* AÃ±adir un espacio entre el Ã­cono y el texto */
+    vertical-align: middle;
+    /* Alinear el Ã­cono verticalmente con el texto */
+}
+
+
+.dropdown-item:hover {
+    background-color: white;
+}
+
+/* Para mostrar el menÃº cuando estÃ¡ activo */
+.user-menu-container.active .dropdown-menu {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        /* Ocultar menÃº en mÃ³viles si es necesario */
+    }
+}
+
+.nav-links a:hover {
+    color: #00b4d8;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+/*----------------------------Filtres-----------------------------------*/
+
+/* Estilo para el botÃ³n de abrir el menÃº lateral */
+#openSidebar {
+    position: fixed;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: -25px;
+    margin-left: 315px;
+    z-index: 15;
+    width: 115px;
+    text-align: end;
+}
+
+#openSidebar:hover {
+    background-color: #45a049;
+}
+
+/* Estilo del menÃº lateral, inicialmente oculto */
+.sidebar {
+    width: 350px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: -350px;
+    background-color: #46494d;
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 125px;
+    z-index: 10;
+}
+
+/* Cuando se activa la clase 'open', el menÃº lateral se mueve a la vista */
+.sidebar.open {
+    left: 0;
+
+    /* Muestra el menÃº */
+}
+
+/* Estilo inicial de la secciÃ³n de vehÃ­culos */
+.filtres {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+}
+
+
+
+/* Estilo de los elementos dentro del menÃº lateral */
+.sidebar h3,
+.sidebar label {
+    color: white;
+    padding-left: 15px;
+}
+
+.sidebar select,
+.sidebar input,
+.sidebar button {
+    width: 90%;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#data-radios {
+    display: block;
+    flex-direction: column;
+    gap: 1px;
+}
+
+#data-radios label {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    width: max-content;
+
+}
+
+
+#range-filter {
+    display: block;
+    margin-bottom: 30px;
+    --color-headline: white;
+    --color-headline: white;
+}
+
+#range-values {
+    color: white;
+    padding-left: 15px;
+}
+
+/* Range Slider */
+.input-ranges[type='range'] {
+    width: 210px;
+    height: 30px;
+    overflow: hidden;
+    outline: none;
+}
+
+
+.input-ranges[type='range'],
+.input-ranges[type='range']::-webkit-slider-runnable-track,
+.input-ranges[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: none;
+}
+
+
+.input-ranges[type='range']::-webkit-slider-runnable-track {
+    width: 200px;
+    height: 1px;
+    background: var(--color-headline);
+}
+
+
+
+.input-ranges[type='range']:nth-child(2)::-webkit-slider-runnable-track {
+    background: none;
+}
+
+
+
+.input-ranges[type='range']::-webkit-slider-thumb {
+    position: relative;
+    height: 15px;
+    width: 15px;
+    margin-top: -7px;
+    background: #fff;
+    border: 1px solid var(--color-headline);
+    border-radius: 25px;
+    cursor: pointer;
+    z-index: 1;
+    transition: .5s;
+    -webkit-transition: .5s;
+    -moz-transition: .5s;
+    -ms-transition: .5s;
+    -o-transition: .5s;
+}
+
+
+
+.input-ranges[type='range']::-webkit-slider-thumb:hover {
+    background: #eaefff;
+    border: 1px solid var(--color-primary);
+    outline: .5px solid var(--color-primary);
+}
+
+
+
+.input-ranges[type='range']::-webkit-slider-thumb:active {
+    cursor: grabbing;
+}
+
+
+.input-ranges[type='range']:nth-child(1)::-webkit-slider-thumb {
+    z-index: 2;
+}
+
+
+.rangeslider {
+    font-family: sans-serif;
+    font-size: 14px;
+    position: relative;
+    height: 20px;
+    width: 210px;
+    display: inline-block;
+    margin-top: -5px;
+}
+
+
+.rangeslider input {
+    position: absolute;
+}
+
+.rangeslider span {
+    position: absolute;
+    margin-top: 20px;
+    left: 0;
+}
+
+.rangeslider .right {
+    position: relative;
+    float: right;
+    margin-right: -5px;
+}
+
+.separador {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 15px;
+    margin-right: 25px;
+
+}
+
+
+
+
+
+/*---------------------------------------------------------------------*/
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.cars-section {
+    padding-top: 70px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.cars-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
+
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    /* Limita la expansiÃ³n de las tarjetas */
+}
+
+@media (max-width: 1200px) {
+    .cars-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 800px) {
+    .cars-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .cars-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* ImÃ¡genes dinÃ¡micas */
+.card-img-top {
+    width: 100%;
+    /* Se adapta al ancho de la tarjeta */
+    height: 200px;
+    /* Altura fija para mantener consistencia */
+    object-fit: cover;
+    /* Recorta para mantener proporciÃ³n */
+    display: block;
+}
+
+/* Contenido de la tarjeta */
+.card-body {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.car-details {
+    display: flex;
+    align-content: center;
+    justify-content: space-around;
+}
+
+.icon {
+    display: inline-block;
+    padding: 1%;
+}
+
+
+
+.dades {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+
+.dies-box {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.dies-text {
+    color: darkgrey;
+
+}
+
+.price {
+    font-size: larger;
+    font-weight: bold;
+}
+
+.btn {
+    background: #00b4d8;
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background: #0096c7;
+}
+
+
+
+/*---------------------------------------------------------------------*/
+
+footer {
+    background-color: #343a40;
+    color: #ffffff;
+    text-align: center;
+    margin-top: auto; /* Mantiene el footer en la parte inferior si el contenido es escaso */
+    width: 100%;
+}

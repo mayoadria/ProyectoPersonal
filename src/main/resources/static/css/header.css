@@ -1,0 +1,91 @@
+.nav-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background: #343a40; /* Fondo oscuro */
+    transition: transform 0.3s ease; /* Transición suave */
+}
+
+.nav-container.hidden {
+    transform: translateY(-100%); /* Oculta el header fuera de la vista */
+}
+
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    color: white;
+    background: transparent;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #00b4d8; /* Efecto hover */
+}
+
+.icono_user {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: white;
+    margin-left: auto;
+    outline: none;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.icono_user:hover {
+    color: #00b4d8;
+    transform: scale(1.1);
+}
+
+.user-menu-container {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: #343a40;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 200px;
+}
+
+.user-menu-container.active .dropdown-menu {
+    display: block;
+}
+
+.dropdown-item {
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+.dropdown-item:hover {
+    background-color: #00b4d8;
+}
+
+body {
+    margin-top: 70px; /* Ajuste según el tamaño del header */
+}

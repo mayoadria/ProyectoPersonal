@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenRoad · Catàleg</title>
+
+    <link rel="stylesheet" href="/css/cataleg.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/header.css">
+    <script src="/js/header.js" defer></script>
+    <script src="/js/filtres.js" defer></script>
+
+</head>
+<body>
+<header class="nav-container">
+    <nav class="navbar">
+        <div class="logo">
+            <a class="logo">
+                <img src="/Imagenes/logo_openroad.png" alt=" " class="logo-img" width="55px" height="55px">
+            </a>
+        </div>
+
+        <ul class="nav-links">
+            <li><a th:href="@{/}">Inici</a></li>
+            <li><a th:href="@{/cataleg}">Catàleg</a></li>
+            <li><a href="#section3">Contacte</a></li>
+        </ul>
+    </nav>
+</header>
+</body>
+</html>
