@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenRoad · Registre</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/registre.css}">
+</head>
+<body>
+
+<form class="form" th:action="@{/crearUsuari}" th:object="${usuari}" method="post" th:enctype="@{multipart/form-data}">
+    <p class="title">Registre client</p>
+
+    <div class="compact-row">
+        <label for="nom">
+            <span>Nom</span>
+            <input type="text" class="input" id="nom" th:field="*{nom}" placeholder=" ">
+        </label>
+        <div class="error-message" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></div>
+
+        <label for="cognoms">
+            <span>Cognoms</span>
+            <input type="text" class="input" id="cognoms" th:field="*{cognoms}" placeholder=" ">
+        </label>
+        <div class="error-message" th:if="${#fields.hasErrors('cognoms')}" th:errors="*{cognoms}"></div>
+    </div>
+
+    <div class="compact-row">
+        <label for="email">
+            <span>Correu</span>
+            <input type="email" class="input" id="email" th:field="*{email}" placeholder=" ">
+        </label>
+        <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
+        <label for="contrasenya">
+            <span>Contrasenya</span>
+            <input type="password" class="input" id="contrasenya" th:field="*{contrasenya}" placeholder=" ">
+        </label>
+        <div class="error-message" th:if="${#fields.hasErrors('contrasenya')}" th:errors="*{contrasenya}"></div>
+    </div>
+
+    <div class="compact-row">
+        <label for="dni">
+            <span>DNI/NIE</span>
+            <input type="text" class="input" id="dni" th:field="*{dni}" placeholder=" ">
+        </label>
+        <div class="error-message" th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}"></div>
+
+        <label>
+            <span>Nacionalitat</span>
+            <select class="input" th:field="*{pais}" id="pais" required>
+                <option value="" disabled selected hidden></option>
+                <option class="inp_pais" th:each="pais : ${pais}"
+                        th:value="${pais}"
+                        th:text="${pais}"></option>
+            </select>
+        </label>
+    </div>
+
+    <div class="compact-row">
+        <label for="numContacte">
+            <span>Nº Telèfon</span>
+            <input type="text" class="input" id="numContacte" th:field="*{numContacte}" placeholder=" ">
+        </label>
+        <div class="error-message" th:if="${#fields.hasErrors('numContacte')}" th:errors="*{numContacte}"></div>
+
+        <label for="codiPostal">
+            <span>Codi Postal</span>
+            <input type="text" class="input" id="codiPostal" th:field="*{codiPostal}" placeholder=" ">
+        </label>
+        <div class="error-message" th:if="${#fields.hasErrors('codiPostal')}" th:errors="*{codiPostal}"></div>
+
+        <label for="poblacio">
+            <span>Població</span>
+            <input type="text" class="input" id="poblacio" th:field="*{poblacio}" placeholder=" ">
+        </label>
+        <div class="error-message" th:if="${#fields.hasErrors('poblacio')}" th:errors="*{poblacio}"></div>
+    </div>
+
+    <label for="adreca">
+        <span>Adreça</span>
+        <input type="text" class="input" id="adreca" th:field="*{direccio}" placeholder=" ">
+    </label>
+    <div class="error-message" th:if="${#fields.hasErrors('direccio')}" th:errors="*{direccio}"></div>
+
+<!--    <div class="compact-row">-->
+<!--        <div class="file-upload">-->
+<!--            <label for="dniFile">Foto DNI</label>-->
+<!--            <input type="file" id="dniFile" name="dniFile" accept="image/*">-->
+<!--        </div>-->
+
+<!--        <div class="file-upload">-->
+<!--            <label for="carnetFile">Foto Carnet</label>-->
+<!--            <input type="file" id="carnetFile" name="carnetFile" accept="image/*">-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <button class="submit">Registra</button>
+    <p class="signin">Ja estàs registrat? <a th:href="@{/login}">Inicia sessió</a></p>
+</form>
+
+</body>
+</html>

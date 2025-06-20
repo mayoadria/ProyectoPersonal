@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="login-container">
+    <h1>Iniciar Sesión</h1>
+
+    <form class="row g-3" th:action="@{/validar}" method="post">
+        <div class="form-group">
+            <label for="email">Usuari</label>
+            <input type="text" id="email" name="email" placeholder="Usuari" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Contrasenya</label>
+            <input type="password" id="password" name="password" placeholder="Contrasenya" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Accedeix</button>
+        <div class="forgot-password">
+            <a href="/registro">Crea un compte</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,149 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-image: url('../Imagenes/fondo_registro.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Arial', sans-serif;
+    overflow-y: auto; /* Permite scroll si es necesario */
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid white;
+    backdrop-filter: blur(20px);
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    margin: 20px; /* Añade margen para pantallas pequeñas */
+    overflow-y: auto; /* Asegura que el formulario no se corte */
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .flex {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+.form label {
+    position: relative;
+    width: 100%;
+}
+
+.form label .input {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: white;
+    width: 100%;
+    padding: 15px 10px;
+    outline: none;
+    border: 1px solid white;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.file-upload {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    gap: 8px;
+    width: 100%;
+}
+
+.submit {
+    padding: 12px 50px;
+    background-color: #00b4d8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: center;
+}
+
+.submit:hover {
+    background-color: #0077a3;
+    transform: scale(1.05);
+}
+
+.signin {
+    text-align: center;
+    margin-top: 15px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.signin a {
+    color: #00b4d8;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.signin a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo general del select (lista de países) */
+.form label select.input {
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo transparente */
+    color: white; /* Texto blanco */
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    padding: 15px 10px; /* Espaciado interno */
+    outline: none; /* Sin borde al hacer clic */
+    border: 1px solid white; /* Borde blanco */
+    border-radius: 8px; /* Bordes redondeados */
+    font-size: 14px; /* Tamaño de fuente */
+    transition: all 0.3s ease;
+    appearance: none; /* Elimina el estilo por defecto del navegador */
+    cursor: pointer; /* Cambia el cursor a mano al pasar */
+    z-index: 1; /* Asegura que esté por encima */
+}
+
+/* Cambia el color del borde y añade un efecto glow al enfocar */
+.form label select.input:focus {
+    border-color: #00b4d8;
+    box-shadow: 0 0 8px #00b4d8;
+}
+
+/* Estilo de las opciones desplegables */
+.form label select.input option {
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro */
+    color: white; /* Texto blanco */
+}
+
+/* Cambios para dispositivos pequeños */
+@media (max-width: 768px) {
+    .form label select.input {
+        font-size: 16px; /* Fuente más grande en pantallas pequeñas */
+    }
+}

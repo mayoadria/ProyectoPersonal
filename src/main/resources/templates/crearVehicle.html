@@ -39,12 +39,115 @@
 
 <div class="container mt-5">
     <h2>Crear Vehicle</h2>
-    <form th:action="@{/agent/crear}" th:object="${vehicle}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/vehicle/crear}" th:object="${vehicle}" method="post" enctype="multipart/form-data">
         <!-- Matricula -->
         <div class="mb-3">
             <label for="matricula" class="form-label">Matrícula</label>
             <input type="text" class="form-control" id="matricula"  th:field="*{matricula}">
             <div class="error-message" th:if="${#fields.hasErrors('matricula')}" th:errors="*{matricula}"></div>
+        </div>
+        <div class="mb-3">
+            <label for="marca" class="form-label">Marca</label>
+            <input type="text" class="form-control" id="marca"  th:field="*{marca}">
+            <div class="error-message" th:if="${#fields.hasErrors('matricula')}" th:errors="*{marca}"></div>
+        </div>
+        <div class="mb-3">
+            <label for="model" class="form-label">Model</label>
+            <input type="text" class="form-control" id="model" th:field="*{model}" >
+            <div class="error-message" th:if="${#fields.hasErrors('model')}" th:errors="*{model}"></div>
+        </div>
+        <div class="mb-3">
+            <label for="combustible" class="form-label">Combustible</label>
+            <select class="form-control" id="combustible" th:field="*{combustible}" >
+                <option value="" disabled selected>Seleccioneu un combustible</option>
+                <option th:each="combustible : ${T(adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Combustible).values()}"
+                        th:value="${combustible}" th:text="${combustible}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="color" class="form-label">Color</label>
+            <select class="form-control" id="color" th:field="*{color}" >
+                <option value="" disabled selected>Seleccioneu un color</option>
+                <option th:each="color : ${T(adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Color).values()}"
+                        th:value="${color}" th:text="${color}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="places" class="form-label">Places</label>
+            <select class="form-control" id="places" th:field="*{places}" >
+                <option value="" disabled selected>Seleccioneu les places del vehicle</option>
+                <option th:each="places : ${T(adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Places).values()}"
+                        th:value="${places}" th:text="${places.valor}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="portes" class="form-label">Portes</label>
+            <select class="form-control" id="portes" th:field="*{portes}" >
+                <option value="" disabled selected>Seleccioneu les portes del vehicle</option>
+                <option th:each="portes : ${T(adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Portes).values()}"
+                        th:value="${portes}" th:text="${portes.valor}"></option>
+            </select>
+        </div>
+
+        <!-- Caja de cambios -->
+        <div class="mb-3">
+            <label for="caixaCanvis" class="form-label">Caixa de canvis</label>
+            <select class="form-control" id="caixaCanvis" th:field="*{caixaCanvis}" >
+                <option th:each="caixaCanvis : ${T(adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.CaixaCanvis).values()}"
+                        th:value="${caixaCanvis}" th:text="${caixaCanvis}"></option>
+            </select>
+        </div>
+
+        <!-- Marchas -->
+        <div class="mb-3">
+            <label for="marxes" class="form-label">Marxes</label>
+            <select class="form-control" id="marxes" th:field="*{marxes}" >
+                <option value="" disabled selected>Seleccioneu marxes del vehicle</option>
+                <option th:each="marxes : ${T(adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Marxes).values()}"
+                        th:value="${marxes}" th:text="${marxes.valor}"></option>
+            </select>
+        </div>
+
+        <!-- Año del vehículo -->
+        <div class="mb-3">
+            <label for="anyVehicle" class="form-label">Any de matriculació</label>
+            <input type="number" class="form-control" id="anyVehicle" th:field="*{anyVehicle}" min="1998" max="2025" required >
+        </div>
+
+        <!-- Precio por hora -->
+        <div class="mb-3">
+            <label for="preuDia" class="form-label">Preu per dia</label>
+            <input type="number" step="0.5" class="form-control" id="preuDia" th:field="*{preuDia}" min="3" required>
+        </div>
+
+        <!-- Fianza -->
+        <div class="mb-3">
+            <label for="fianca" class="form-label">Fiança</label>
+            <input type="number" step="0.5" class="form-control" id="fianca" th:field="*{fianca}" min="3" required>
+        </div>
+
+        <!-- Kilómetros -->
+        <div class="mb-3">
+            <label for="km" class="form-label">Quilometratge</label>
+            <input type="number" class="form-control" id="km" th:field="*{km}" min="0" max="750000" required>
+        </div>
+
+        <!-- Días de alquiler mínimo -->
+        <div class="mb-3">
+            <label for="diesLloguerMinim" class="form-label">Dies de lloguer mínim</label>
+            <input type="number" class="form-control" id="diesLloguerMinim" th:field="*{diesLloguerMinim}" min="1" max="31" required>
+        </div>
+
+        <!-- Días de alquiler máximo -->
+        <div class="mb-3">
+            <label for="diesLloguerMaxim" class="form-label">Dies de lloguer màxim</label>
+            <input type="number" class="form-control" id="diesLloguerMaxim" th:field="*{diesLloguerMaxim}" min="1" max="31" required>
+        </div>
+
+        <!-- Campo para subir imagen -->
+        <div class="mb-3">
+            <label for="imagen" class="form-label">Imatge del vehicle</label>
+            <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" required>
         </div>
 
 

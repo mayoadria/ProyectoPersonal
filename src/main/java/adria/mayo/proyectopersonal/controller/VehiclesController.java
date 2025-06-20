@@ -30,7 +30,9 @@ public class VehiclesController {
 
     @PostMapping("/crear")
     public String crearVehicle(@ModelAttribute Vehiculo vehicle){
-        return "redirect:/vehicle/crear_vehicle";
+
+        vehicleService.guardarVehiculo(vehicle);
+        return "redirect:/cataleg";
 
     }
 }
