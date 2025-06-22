@@ -20,22 +20,4 @@ public class LoginController {
         return "Login";
     }
 
-    @PostMapping("/validar")
-    public String validarUsuario(@RequestParam String email, @RequestParam String password, Model model) {
-
-        Usuari user = usuariService.findByEmail(email);
-
-        if (usuariService.findByEmail(email) != null) {
-            System.out.println("Email encontrado");
-
-            if (user.getContrasenya().equals(password)) {
-                return "redirect:/";
-            }
-
-        } else {
-            return "redirect:/login";
-
-        }
-        return null;
-    }
 }

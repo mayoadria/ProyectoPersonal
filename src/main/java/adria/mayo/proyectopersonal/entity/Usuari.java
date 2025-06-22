@@ -5,16 +5,17 @@ import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-public class Usuari {
+public class Usuari implements UserDetails {
 
     @Id
     private String dni;
@@ -74,4 +75,18 @@ public class Usuari {
     private List<Local> locals;
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getPassword() {
+        return contrasenya;
+    }
+
+    @Override
+    public String getUsername() {
+        return nomUsuari;
+    }
 }

@@ -11,14 +11,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/registrar")
 public class RegistroController {
 
     @Autowired
     private UsuariService usuariService;
 
-    @GetMapping("/registro")
+    @GetMapping("/mostrar_registro")
     public String registro(Model model) {
         model.addAttribute("usuari", new Usuari());
         model.addAttribute("pais", Pais.values());
@@ -27,10 +29,7 @@ public class RegistroController {
 
     @PostMapping("/crearUsuari")
     public String crearUsuari(@ModelAttribute("usuari") Usuari usuari) {
-        if(usuariService.findByEmail(usuari.getEmail()) == null) {
-            usuari.setRol(Rol.CLIENTE);
-            usuari.setEstat(EstatUsuari.INACTIVO);
-            usuari.setNomUsuari(usuari.getEmail().substring(0, usuari.getEmail().indexOf("@")));
+        if(usuariService.findBynomUsuari(usuari.getEmail()) == null) {
             usuariService.crearUsuari(usuari);
         }
         return "redirect:/login";

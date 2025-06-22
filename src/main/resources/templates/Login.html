@@ -11,10 +11,10 @@
 <div class="login-container">
     <h1>Iniciar Sesión</h1>
 
-    <form class="row g-3" th:action="@{/validar}" method="post">
+    <form class="row g-3" th:action="@{/login}" method="post">
         <div class="form-group">
-            <label for="email">Usuari</label>
-            <input type="text" id="email" name="email" placeholder="Usuari" required>
+            <label for="nomUsuari">Usuari</label>
+            <input type="text" id="nomUsuari" name="nomUsuari" placeholder="Usuari" required>
         </div>
         <div class="form-group">
             <label for="password">Contrasenya</label>
@@ -23,7 +23,7 @@
 
         <button type="submit" class="btn btn-primary">Accedeix</button>
         <div class="forgot-password">
-            <a href="/registro">Crea un compte</a>
+            <a href="/registrar/mostrar_registro">Crea un compte</a>
         </div>
     </form>
 </div>

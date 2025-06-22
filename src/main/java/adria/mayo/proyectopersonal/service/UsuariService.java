@@ -1,8 +1,11 @@
 package adria.mayo.proyectopersonal.service;
 
 import adria.mayo.proyectopersonal.entity.Usuari;
+import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
+import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
 import adria.mayo.proyectopersonal.repository.UsuarioRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,12 +14,22 @@ public class UsuariService {
     @Autowired
     private UsuarioRepo usuarioRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     public void crearUsuari(Usuari usuari){
-        usuarioRepo.save(usuari);
+        if(usuari.getEmail() != null){
+            usuari.setContrasenya(passwordEncoder.encode(usuari.getContrasenya()));
+            usuari.setRol(Rol.CLIENTE);
+            usuari.setEstat(EstatUsuari.INACTIVO);
+            usuari.setNomUsuari(usuari.getEmail().substring(0, usuari.getEmail().indexOf("@")));
+            usuarioRepo.save(usuari);
+        }
+
     }
 
-    public Usuari findByEmail(String email){
-       return usuarioRepo.findByEmail(email);
+    public Usuari findBynomUsuari(String nomUsuari){
+       return usuarioRepo.findBynomUsuari(nomUsuari);
     }
 }
