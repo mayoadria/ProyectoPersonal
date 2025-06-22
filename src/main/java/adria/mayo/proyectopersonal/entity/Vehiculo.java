@@ -3,7 +3,6 @@ package adria.mayo.proyectopersonal.entity;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.*;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 

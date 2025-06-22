@@ -27,10 +27,7 @@ public class ValidarUsuari implements UserDetailsService {
             throw new UsernameNotFoundException("El compte està inactiu.");
         }
 
-        return User.withUsername(usuari.getNomUsuari())
-                .password(usuari.getContrasenya())
-                .roles(usuari.getRol().name())
-                .build();
+        return usuari;
     }
 
 

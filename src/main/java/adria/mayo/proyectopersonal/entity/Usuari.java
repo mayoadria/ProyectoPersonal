@@ -77,8 +77,9 @@ public class Usuari implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(() -> "ROLE_" + rol.name());
     }
+
 
     @Override
     public String getPassword() {
