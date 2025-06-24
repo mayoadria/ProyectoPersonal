@@ -53,6 +53,14 @@
                     <form th:action="@{/admin/eliminar/{nomUsuari}(nomUsuari=${client.nomUsuari})}" method="post" style="display:inline">
                         <button type="submit" class="btn btn-danger">Esborrar</button>
                     </form>
+
+                    <form th:action="@{/admin/activar/{nomUsuari}(nomUsuari=${client.nomUsuari})}" method="post" style="display:inline">
+                        <button type="submit"
+                                th:text="${client.estat.name()} == 'ACTIVO' ? 'Desactivar' : 'Activar'"
+                                th:classappend="${client.estat.name()} == 'ACTIU' ? ' btn btn-warning' : ' btn btn-success'">
+                        </button>
+                    </form>
+
                 </td>
             </tr>
             </tbody>

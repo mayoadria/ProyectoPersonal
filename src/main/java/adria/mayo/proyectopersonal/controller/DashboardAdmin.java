@@ -32,4 +32,9 @@ public class DashboardAdmin {
         return "redirect:/admin/listaUsu";
     }
 
+    @PostMapping("/activar/{nomUsuari}")
+    public String activarUsu(@PathVariable String nomUsuari) {
+        usuariService.activarUsuari(nomUsuari);
+        return "redirect:/admin/listaUsu";
+    }
 }

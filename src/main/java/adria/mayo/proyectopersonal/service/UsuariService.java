@@ -20,8 +20,8 @@ public class UsuariService {
     private PasswordEncoder passwordEncoder;
 
 
-    public void crearUsuari(Usuari usuari){
-        if(usuari.getEmail() != null){
+    public void crearUsuari(Usuari usuari) {
+        if (usuari.getEmail() != null) {
             usuari.setContrasenya(passwordEncoder.encode(usuari.getContrasenya()));
             usuari.setRol(Rol.CLIENTE);
             usuari.setEstat(EstatUsuari.INACTIVO);
@@ -31,20 +31,37 @@ public class UsuariService {
 
     }
 
-    public Usuari findBynomUsuari(String nomUsuari){
-       return usuarioRepo.findBynomUsuari(nomUsuari);
+    public Usuari findBynomUsuari(String nomUsuari) {
+        return usuarioRepo.findBynomUsuari(nomUsuari);
     }
 
-    public List<Usuari> findAll(){
+    public List<Usuari> findAll() {
         return usuarioRepo.findAll();
     }
 
-    public void eliminarUsuari(String nomUsuari){
+    public void eliminarUsuari(String nomUsuari) {
         Usuari usuari = findBynomUsuari(nomUsuari);
         usuarioRepo.delete(usuari);
     }
 
-    public void actualizarUsuari(Usuari usuari){
+    public void actualizarUsuari(Usuari usuari) {
         usuarioRepo.save(usuari);
+    }
+
+    public void activarUsuari(String nomUsuari) {
+        Usuari usuari = findBynomUsuari(nomUsuari);
+        switch (usuari.getEstat()) {
+            case ACTIVO:
+                usuari.setEstat(EstatUsuari.INACTIVO);
+                usuarioRepo.save(usuari);
+                break;
+
+            case INACTIVO:
+                usuari.setEstat(EstatUsuari.ACTIVO);
+                usuarioRepo.save(usuari);
+                break;
+        }
+
+
     }
 }
