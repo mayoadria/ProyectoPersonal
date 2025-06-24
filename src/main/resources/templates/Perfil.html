@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil d'Usuari</title>
+    <link rel="stylesheet" th:href="@{/css/perfil.css}">
+</head>
+<body>
+<header class="nav-container">
+<!--    <nav class="navbar">-->
+<!--        <div class="logo">-->
+<!--            <a class="logo">-->
+<!--                <img src="/Imagenes/logo_openroad.png" alt=" " class="logo-img" width="55px" height="55px">-->
+<!--            </a>-->
+<!--        </div>-->
+
+<!--        <ul class="nav-links">-->
+<!--            <li><a th:href="@{/}">Inici</a></li>-->
+<!--            <li><a th:href="@{/cataleg}">Catàleg</a></li>-->
+<!--            <li><a href="#section3">Contacte</a></li>-->
+
+<!--            <li class="user-menu-container">-->
+<!--                <button class="icono_user">  &lt;!&ndash; Icono de usuario importado desde Bootstrap &ndash;&gt;-->
+<!--                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">-->
+<!--                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>-->
+<!--                    </svg>-->
+<!--                    <a class="username" th:if="${isLogged}" th:text="${nomUsuari}"></a>-->
+<!--                </button>-->
+
+<!--                &lt;!&ndash; Menú desplegable per defecte &ndash;&gt;-->
+<!--                <div th:if="${!isLogged}" class="dropdown-menu">-->
+<!--                    <a th:href="@{/login}" class="dropdown-item">-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">-->
+<!--                            <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>-->
+<!--                            <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>-->
+<!--                        </svg>-->
+<!--                        Login-->
+<!--                    </a>-->
+
+<!--                    <a th:href="@{/registre}" class="dropdown-item">-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">-->
+<!--                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>-->
+<!--                            <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>-->
+<!--                        </svg>-->
+<!--                        Registre-->
+<!--                    </a>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Menú desplegable &ndash;&gt;-->
+<!--                <div th:if="${isLogged}" class="dropdown-menu">-->
+<!--                    <a th:href="@{/perfil}" class="dropdown-item">-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">-->
+<!--                            <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>-->
+<!--                            <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>-->
+<!--                        </svg>-->
+<!--                        Perfil-->
+<!--                    </a>-->
+<!--                    <div th:if="${isAgent}" >-->
+<!--                        <a th:href="@{/agent/dashboard}" class="dropdown-item">-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">-->
+<!--                                <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>-->
+<!--                                <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>-->
+<!--                            </svg>-->
+<!--                            Dashboard-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                    <div th:if="${isAdmin}" >-->
+<!--                        <a th:href="@{/admin/dashboard}" class="dropdown-item">-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">-->
+<!--                                <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>-->
+<!--                                <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>-->
+<!--                            </svg>-->
+<!--                            Dashboard-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                    <div th:if="${isClient}" >-->
+<!--                        <a th:href="@{/client/reserves}" class="dropdown-item">-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">-->
+<!--                                <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>-->
+<!--                                <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>-->
+<!--                            </svg>-->
+<!--                            Dashboard-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                    <a th:href="@{/logout}" class="dropdown-item">-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">-->
+<!--                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>-->
+<!--                            <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>-->
+<!--                        </svg>-->
+<!--                        Tancar sessió-->
+<!--                    </a>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Script en JS per interactuar amb el botó d'usuari &ndash;&gt;-->
+<!--                <script>-->
+<!--                    // Obtener el contenedor del menú de usuario-->
+<!--                    const userButton = document.querySelector('.icono_user');-->
+<!--                    const userMenu = document.querySelector('.user-menu-container');-->
+
+<!--                    // Agregar evento para mostrar/ocultar el menú al hacer clic en el icono-->
+<!--                    userButton.addEventListener('click', (event) => {-->
+<!--                        userMenu.classList.toggle('active'); // Añadir o quitar la clase 'active'-->
+<!--                        event.stopPropagation(); // Prevenir que el clic se propague y cierre el menú-->
+<!--                    });-->
+
+<!--                    // Cerrar el menú si se hace clic fuera de él-->
+<!--                    document.addEventListener('click', (event) => {-->
+<!--                        if (!userMenu.contains(event.target)) {-->
+<!--                            userMenu.classList.remove('active'); // Cerrar el menú si el clic está fuera-->
+<!--                        }-->
+<!--                    });-->
+<!--                </script>-->
+
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </nav>-->
+</header>
+ Formulario de perfil
+<form th:action="@{/perfil/editar}" th:object="${cliente}" method="post" enctype="multipart/form-data">
+
+    <!-- Contenedor principal centrado -->
+    <div class="main-container">
+
+        <!-- Menú lateral (Sidebar) -->
+        <div class="sidebar">
+
+<!--            <div class="profile-image">-->
+<!--                <img th:src="${cliente.imageUrl}" alt=" ">-->
+<!--            </div>-->
+<!--            <div class="profile-name" th:text="${cliente.nomUsuari}"></div> &lt;!&ndash; Nombre de usuario &ndash;&gt;-->
+<!--            <div class="profile-bio">-->
+<!--                <h3 th:text="${cliente.nom} + ' ' + ${cliente.cognom1}"></h3> &lt;!&ndash; Nombre completo &ndash;&gt;-->
+<!--            </div>-->
+
+            <!-- Botón para cambiar la foto -->
+            <div class="file-upload">
+                <label class="file-upload-btn" for="imagen">Subir Foto</label>
+                <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <div class="profile-container">
+                <h1>Dades del meu perfil</h1>
+
+                <div class="profile-field">
+                    <h3>Nom d'Usuari:</h3>
+                    <h5 class="profile-name" th:text="${cliente.nomUsuari}"></h5>
+                    <input type="hidden" id="nomUsuari" name="nomUsuari" th:value="${cliente.nomUsuari}">
+                </div>
+
+                <div class="profile-field">
+                    <h3>Nom:</h3>
+                    <input type="text" id="nom" name="nom" th:value="${cliente.nom}" placeholder="Nom">
+                    <div class="error-message" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></div>
+                </div>
+
+                <div class="profile-field">
+                    <h3>Cognoms</h3>
+                    <input type="text" id="cognoms" name="cognoms" th:value="${cliente.cognoms}" placeholder="Cognom 1">
+                    <div class="error-message" th:if="${#fields.hasErrors('cognoms')}" th:errors="*{cognoms}"></div>
+                </div>
+
+                <div class="profile-field">
+                    <h3>DNI</h3>
+                    <input type="text" id="dni" name="dni" th:value="${cliente.dni}" placeholder="DNI">
+                    <div class="error-message" th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}"></div>
+                </div>
+                <div class="profile-field">
+<!--                    <h3>Contrasenya</h3>-->
+                    <input type="hidden" id="contrasenya" name="contrasenya" th:value="${cliente.contrasenya}" placeholder="DNI">
+
+                </div>
+<!--                <div class="error-message" th:if="${#fields.hasErrors('contrasenya')}" th:errors="*{contrasenya}"></div>-->
+
+                <div class="profile-field">
+                    <h3>Número de contacte:</h3>
+                    <input type="text" id="numContacte" name="numContacte" th:value="${cliente.numContacte}" placeholder="Telefon">
+                </div>
+                <div class="error-message" th:if="${#fields.hasErrors('numContacte')}" th:errors="*{numContacte}"></div>
+                <div class="profile-field">
+                    <h3>Codi Postal:</h3>
+                    <input type="text" id="codiPostal" name="codiPostal" th:value="${cliente.codiPostal}" placeholder="Codi postal">
+                    <div class="error-message" th:if="${#fields.hasErrors('codiPostal')}" th:errors="*{codiPostal}"></div>
+                </div>
+
+                <div class="profile-field">
+                    <h3>Direcció:</h3>
+                    <input type="text" id="direccio" name="direccio" th:value="${cliente.direccio}" placeholder="Direcció">
+                    <div class="error-message" th:if="${#fields.hasErrors('direccio')}" th:errors="*{direccio}"></div>
+                </div>
+
+                <div class="profile-field">
+                    <h3>Correu Electrònic:</h3>
+                    <input type="text" id="email" name="email" th:value="${cliente.email}" placeholder="Correu electronic">
+                </div>
+                <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                <div class="profile-field">
+                    <h3>Població:</h3>
+                    <input type="text" id="poblacio" name="poblacio" th:value="${cliente.poblacio}" placeholder="Població">
+                </div>
+                <div class="error-message" th:if="${#fields.hasErrors('poblacio')}" th:errors="*{poblacio}"></div>
+
+                <div class="mb-3">
+                    <label for="combustible" class="form-label">Pais</label>
+                    <select class="form-control" id="combustible" th:field="*{pais}" >
+                        <option value="" disabled selected>Seleccioneu un Pais</option>
+                        <option th:each="pais : ${T(adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais).values()}"
+                                th:value="${pais}" th:text="${pais}"></option>
+                    </select>
+                </div>
+                <div>
+
+                    <button type="submit">Guardar Canvis</button>
+                    <a class="btn_explora" th:href="@{/}">Sortir</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+</body>
+</html>
