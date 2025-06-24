@@ -168,12 +168,6 @@
                     <input type="text" id="dni" name="dni" th:value="${cliente.dni}" placeholder="DNI">
                     <div class="error-message" th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}"></div>
                 </div>
-                <div class="profile-field">
-<!--                    <h3>Contrasenya</h3>-->
-                    <input type="hidden" id="contrasenya" name="contrasenya" th:value="${cliente.contrasenya}" placeholder="DNI">
-
-                </div>
-<!--                <div class="error-message" th:if="${#fields.hasErrors('contrasenya')}" th:errors="*{contrasenya}"></div>-->
 
                 <div class="profile-field">
                     <h3>Número de contacte:</h3>

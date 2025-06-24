@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UsuariService {
 
@@ -31,5 +33,18 @@ public class UsuariService {
 
     public Usuari findBynomUsuari(String nomUsuari){
        return usuarioRepo.findBynomUsuari(nomUsuari);
+    }
+
+    public List<Usuari> findAll(){
+        return usuarioRepo.findAll();
+    }
+
+    public void eliminarUsuari(String nomUsuari){
+        Usuari usuari = findBynomUsuari(nomUsuari);
+        usuarioRepo.delete(usuari);
+    }
+
+    public void actualizarUsuari(Usuari usuari){
+        usuarioRepo.save(usuari);
     }
 }
