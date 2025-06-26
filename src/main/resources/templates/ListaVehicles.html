@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Usuaris</title>
+    <title>Dashboard Vehicles</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/dashboardAdmin.css">
@@ -30,35 +29,37 @@
 
 <main class="container mt-4">
     <section>
-        <h2>Llista de Clients</h2>
-        <a class="btn-crear" th:href="@{/admin/creaUsuariAdmin}">Crear</a>
+        <h2>Llista de Vehicles</h2>
+        <a class="btn-crear" th:href="@{/admin/creaVehiculoAdmin}">Crear</a>
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th>DNI</th>
-                <th>Nom</th>
-                <th>Nom usuari</th>
-                <th>Codi Postal</th>
-                <th>Direcció</th>
+                <th>Matricula</th>
+                <th>Marca</th>
+                <th>Model</th>
+                <th>Any del Vehicle</th>
+                <th>Combustible</th>
+                <th>Plaçes</th>
                 <th>Accions</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="client : ${usu}">
-                <td th:text="${client.dni}">DNI</td>
-                <td th:text="${client.nom}">Nom</td>
-                <td th:text="${client.nomUsuari}">Nom usuari</td>
-                <td th:text="${client.codiPostal}">Codi Postal</td>
-                <td th:text="${client.direccio}">Direcció</td>
+            <tr th:each="vehicle : ${vehicle}">
+                <td th:text="${vehicle.matricula}">Matricula</td>
+                <td th:text="${vehicle.marca}">Marca</td>
+                <td th:text="${vehicle.model}">Model</td>
+                <td th:text="${vehicle.anyVehicle}">Any del Vehicle</td>
+                <td th:text="${vehicle.combustible}">Combustible</td>
+                <td th:text="${vehicle.places}">Plaçes</td>
                 <td>
-                    <form th:action="@{/admin/eliminar/{nomUsuari}(nomUsuari=${client.nomUsuari})}" method="post" style="display:inline">
+                    <form th:action="@{/admin/eliminarVeh/{matricula}(matricula=${vehicle.matricula})}" method="post" style="display:inline">
                         <button type="submit" class="btn btn-danger">Esborrar</button>
                     </form>
 
-                    <form th:action="@{/admin/activar/{nomUsuari}(nomUsuari=${client.nomUsuari})}" method="post" style="display:inline">
+                    <form th:action="@{/admin/activarVeh/{matricula}(matricula=${vehicle.matricula})}" method="post" style="display:inline">
                         <button type="submit"
-                                th:text="${client.estat.name()} == 'ACTIVO' ? 'Desactivar' : 'Activar'"
-                                th:classappend="${client.estat.name()} == 'ACTIU' ? ' btn btn-warning' : ' btn btn-success'">
+                                th:text="${vehicle.estatVehicle.name()} == 'ACTIU' ? 'Desactivar' : 'Activar'"
+                                th:classappend="${vehicle.estatVehicle.name()} == 'ACTIU' ? ' btn btn-warning' : ' btn btn-success'">
                         </button>
                     </form>
 

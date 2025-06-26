@@ -71,12 +71,12 @@ public class Vehiculo {
     @Lob
     private String foto;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "usuari_dni", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "usuari_dni", nullable = true)
     private Usuari creador;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "local_id", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "local_id", nullable = true)
     private Local local;
 
     @OneToMany(mappedBy = "vehiculo", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -20,15 +20,14 @@ public class UsuariService {
     private PasswordEncoder passwordEncoder;
 
 
-    public void crearUsuari(Usuari usuari) {
+    public void crearUsuari(Usuari usuari, Rol rol, EstatUsuari estat) {
         if (usuari.getEmail() != null) {
             usuari.setContrasenya(passwordEncoder.encode(usuari.getContrasenya()));
-            usuari.setRol(Rol.CLIENTE);
-            usuari.setEstat(EstatUsuari.INACTIVO);
+            usuari.setRol(rol);
+            usuari.setEstat(estat);
             usuari.setNomUsuari(usuari.getEmail().substring(0, usuari.getEmail().indexOf("@")));
             usuarioRepo.save(usuari);
         }
-
     }
 
     public Usuari findBynomUsuari(String nomUsuari) {

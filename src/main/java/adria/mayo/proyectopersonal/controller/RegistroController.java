@@ -30,7 +30,7 @@ public class RegistroController {
     @PostMapping("/crearUsuari")
     public String crearUsuari(@ModelAttribute("usuari") Usuari usuari) {
         if(usuariService.findBynomUsuari(usuari.getEmail()) == null) {
-            usuariService.crearUsuari(usuari);
+            usuariService.crearUsuari(usuari,Rol.CLIENTE,EstatUsuari.INACTIVO);
         }
         return "redirect:/login";
     }
