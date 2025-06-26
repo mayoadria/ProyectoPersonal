@@ -28,6 +28,10 @@ public class VehicleService {
         return vehiclesRepository.findAll();
     }
 
+    public List<Vehiculo> listarVehiculosActivos(EstatVehicle estatVehicle) {
+        return vehiclesRepository.findByEstatVehicle(estatVehicle);
+    }
+
     public void eliminarVehiculo(String matricula) {
         Vehiculo vehiculo = buscarVehiculo(matricula)
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle no trobat amb matrícula: " + matricula));

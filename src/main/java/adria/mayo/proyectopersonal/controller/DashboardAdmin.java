@@ -75,13 +75,13 @@ public class DashboardAdmin {
     @PostMapping("/eliminarVeh/{matricula}")
     public String eliminarVehiculo(@PathVariable String matricula) {
         vehiculoService.eliminarVehiculo(matricula);
-        return "redirect:/admin/listaUsu";
+        return "redirect:/admin/llistaVehiculo";
     }
 
     @PostMapping("/activarVeh/{matricula}")
     public String activarVeh(@PathVariable String matricula) {
         vehiculoService.activarVehiculo(matricula);
-        return "redirect:/admin/listaUsu";
+        return "redirect:/admin/llistaVehiculo";
     }
 
 
@@ -117,7 +117,7 @@ public class DashboardAdmin {
             return "crearVehicle"; // Vista con el formulario, por ejemplo
         }
 
-        return "redirect:/admin/listaUsu";
+        return "redirect:/admin/llistaVehiculo";
     }
 
 
