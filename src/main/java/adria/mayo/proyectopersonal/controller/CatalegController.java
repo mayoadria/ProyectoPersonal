@@ -1,5 +1,6 @@
 package adria.mayo.proyectopersonal.controller;
 
+import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.Vehiculo;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.EstatVehicle;
 import adria.mayo.proyectopersonal.service.VehicleService;
@@ -35,4 +36,6 @@ public class CatalegController {
 
         return "infoVehiculo";
     }
+
+
 }

@@ -181,5 +181,20 @@ window.addEventListener('pageshow', () => {
     inicializarPrecio();
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const submitButton = document.getElementById("alquilarBoton");
+    if (submitButton) {
+        submitButton.addEventListener("click", function () {
+            // Actualizar el campo oculto antes de enviar el formulario
+            actualizarPrecioYDias();
+
+            const form = document.getElementById("formReserva");
+            if (form) {
+                form.submit();
+            }
+        });
+    }
+});
+
 
 
