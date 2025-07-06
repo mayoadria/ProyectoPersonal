@@ -1,11 +1,13 @@
 package adria.mayo.proyectopersonal.controller;
 
+import adria.mayo.proyectopersonal.entity.Reserva;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.Vehiculo;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.*;
 import adria.mayo.proyectopersonal.security.UserUtils;
+import adria.mayo.proyectopersonal.service.ReservaService;
 import adria.mayo.proyectopersonal.service.UsuariService;
 import adria.mayo.proyectopersonal.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ import java.util.Optional;
 public class DashboardAdmin {
 
 
+    @Autowired
+    private ReservaService reservaService;
     @Autowired
     private UsuariService usuariService;
 
@@ -126,5 +130,14 @@ public class DashboardAdmin {
         return "redirect:/admin/llistaVehiculo";
     }
 
+
+
+
+    @GetMapping("/listarReserva")
+    public String listar(Model model) {
+        List<Reserva> reservas = reservaService.listarReservas();
+        model.addAttribute("reserva" ,reservas);
+        return "listaReservas";
+    }
 
 }
