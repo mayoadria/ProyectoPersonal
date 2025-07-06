@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/infoVehiculo.css">
+    <script src="/js/horas.js" defer></script>
+    <link rel="stylesheet" href="/css/header.css">
+
+    <script src="/js/header.js" defer></script>
+    <title>OpenRoad · Vehicle</title>
+</head>
+<body>
+<header class="nav-container">
+    <nav class="navbar">
+        <div class="logo">
+            <a class="logo">
+                <img src="/images/Branding/v2/OpenRoad_Logo_Nombre_drecha_blanco.png" alt=" " class="logo-img"
+                     width="55px" height="55px" draggable="false">
+            </a>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#section1">Inici</a></li>
+            <li><a th:href="@{/cataleg}">Catàleg</a></li>
+            <li><a href="#section3">Contacte</a></li>
+
+
+        </ul>
+    </nav>
+</header>
+
+
+<div class="container">
+    <div class="left-panel">
+
+        <img th:src="'data:image/jpeg;base64,' + ${vehicle.foto}" alt="Foto del vehículo"/>
+        <h3 class="nombre-coche" th:text="${vehicle.marca + ' ' + vehicle.model}"></h3>
+        <div class="details">
+            <div>
+                <i class="fa-solid fa-user"></i>
+                <span th:text="${vehicle.places.getValor()}"></span>
+            </div>
+            <p>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="30" height="30">
+                    <!-- Contorno de la puerta -->
+                    <path d="M40 100 Q40 50 100 40 H160 Q180 40 180 60 V150 Q180 170 160 170 H60 Q40 170 40 150 Z"
+                          fill="black" stroke="black" stroke-width="2"/>
+
+                    <!-- Ventana -->
+                    <path d="M50 100 Q50 70 100 60 H150 Q160 60 160 80 V100 H50 Z" fill="white"/>
+
+                    <!-- Manija -->
+                    <rect x="130" y="120" width="20" height="6" rx="3" ry="3" fill="white"/>
+                </svg>
+            <p th:text="${vehicle.portes.getValor()}">
+            </p>
+            <div>
+                <i class="fa-solid fa-gear"></i>
+                <span th:text="${vehicle.caixaCanvis}"></span>
+            </div>
+            <div>
+                <i class="fa-solid fa-gas-pump"></i>
+                <span th:text="${vehicle.combustible}"></span>
+            </div>
+        </div>
+
+
+        <div class="alquilarButton">
+            <button id="alquilarBoton" type="button">LLOGAR</button>
+        </div>
+
+
+    </div>
+
+    <div class="right-panel">
+        <div class="section">
+            <h3>DADES RESERVA</h3>
+            <div class="fechas">
+                <form th:action="@{/reserva/{matricula3}(matricula3=${vehicle.matricula})}" method="post" id="formReserva">
+                    <input type="hidden" name="matricula" th:value="${vehicle.matricula}"/>
+                    <label for="fechaRecogida">Data recollida:</label>
+                    <input type="date" id="fechaRecogida" name="fechaRecogida" required/>
+
+                    <label for="fechaEntrega">Data entrega:</label>
+                    <input type="date" id="fechaEntrega" name="fechaEntrega" required/>
+                </form>
+                <p>Hora Recollida</p>
+                <select id="horaRecogida">
+                    <option value="" disabled selected>Selecciona una hora</option>
+                </select>
+                <p>Hora entrega</p>
+
+                <select id="horaEntrega">
+                    <option value="" disabled selected>Selecciona una hora</option>
+                </select>
+
+            </div>
+
+        </div>
+        <div class="section">
+            <h3>PREU LLOGUER + SEGUR</h3>
+            <div class="price-details">
+                <p>
+                    <span><strong>Preu per dia:</strong></span>
+                    <span id="preuDia" th:text="${vehicle.preuDia + ' €'}"></span>
+                </p>
+                <p><strong>Número de díes:</strong> <span id="diasReserva">0</span></p>
+
+                <p>
+                    <span><strong>Preu fiança:</strong></span>
+                    <span id="precioFianza" th:text="${vehicle.fianca + ' €'}"></span>
+                </p>
+                <p>
+                    <span><strong>Total:</strong></span>
+                    <span id="precioTotal"></span>
+                </p>
+            </div>
+        </div>
+
+
+        <div class="section">
+            <h3>ALTRES DADES DE LA RESERVA</h3>
+            <div class="additional-info">
+
+                <p>
+                    <span><strong>Cotxe:</strong></span>
+                    <span th:text="${vehicle.marca + ' ' + vehicle.model}"></span>
+                </p>
+
+                <p>
+                    <span><strong>Matrícula:</strong></span>
+                    <span th:text="${vehicle.matricula}"></span>
+                </p>
+
+                <p>
+                    <span><strong>Combustible:</strong></span>
+                    <span th:text="${vehicle.combustible}"></span>
+                </p>
+
+                <p>
+                    <span><strong>Entrega/Recollida:</strong></span>
+                    <span th:text="${vehicle.creador.direccio}"></span>
+                </p>
+
+
+                <p><strong>Horari d'atenció:</strong> Dilluns a diumenge, de 8:30 a 13:00 / 15:00 a 21:30</p>
+                <p><strong>Instruccions:</strong> Presenteu-vos amb el vostre document d'identitat i el número de reserva.</p>
+                <p><strong>Contacte:</strong> +34 900 123 456</p>
+                <p><strong>Correo electrònic:</strong> soporte@openroad.com</p>
+                <p><strong>Asistencia en carretera:</strong> Truca al +34 800 654 321 en cas d'emergencia.</p>
+                <p><strong>Condicions:</strong> No fumeu a l'interior del vehicle. Tornar amb almenys 1/4 del tanc de combustible</p>
+                <p><strong>Requisits del conductor:</strong> Edad mínima de 20 anys i llicencia válida en la UE.</p>
+                <p><strong>Política de cancel·lació:</strong> Cancel·lació gratuïta fins a 24 hores abans de l'inici de la reserva.</p>
+            </div>
+
+            <!-- Mapa insertado -->
+            <div class="map-container">
+                <p id="error" style="color: red; display: none;">No s'ha trobat la direcció</p>
+                <div id="map" style="width: 100%; height: 400px; margin-top: 20px;"></div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

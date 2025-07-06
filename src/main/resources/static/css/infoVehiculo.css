@@ -1,0 +1,315 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+/* Estilos del Navbar */
+.nav-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    transition: background-color 0.3s ease;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #e0e0e0;
+
+}
+
+.navbar.scrolled {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    margin-left: 40px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.icono_user {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem; /* Ajusta el tamaño del icono */
+    color: white; /* Cambia el color del icono */
+    margin-left: auto;
+    outline: none;
+    transition: transform 0.3s ease;
+}
+
+.icono_user:hover {
+    color: #00b4d8; /* Cambia el color al pasar el cursor */
+    transform: scale(1.1); /* Efecto de agrandamiento */
+}
+
+/* Menú desplegable (oculto por defecto) */
+.user-menu-container {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 40px; /* Ajusta según sea necesario */
+    right: 0;
+    background-color: #00b4d8;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 150px; /* Ajusta el ancho del menú */
+}
+
+.dropdown-item {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    text-align: left;
+    font-weight: bold;
+}
+.dropdown-item svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px; /* Añadir un espacio entre el ícono y el texto */
+    vertical-align: middle; /* Alinear el ícono verticalmente con el texto */
+}
+
+
+.dropdown-item:hover {
+    background-color: white;
+}
+
+/* Para mostrar el menú cuando está activo */
+.user-menu-container.active .dropdown-menu {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Ocultar menú en móviles si es necesario */
+    }
+}
+
+.nav-links a:hover {
+    color: #00b4d8;
+}
+
+/*------------------------------------------------------------------------------------------*/
+
+.container {
+    display: flex;
+    padding: 20px;
+}
+
+.left-panel {
+    width: 30%;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
+}
+
+.left-panel img {
+    justify-content: center;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.left-panel .nombre-coche {
+    justify-content: center;
+    margin-top: 10px;
+    display: flex;
+}
+
+.left-panel .details {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center; /* Centrar en el eje horizontal */
+    align-items: center; /* Centrar en el eje vertical */
+    text-align: center;
+}
+
+.left-panel .details p {
+    margin: 0 2%; /* Espaciado horizontal entre los elementos */
+    display: flex; /* Activa flexbox en cada párrafo */
+    align-items: center; /* Alinea íconos y texto verticalmente */
+}
+
+.left-panel .details svg {
+    width: 24px; /* Ajusta el tamaño del SVG */
+    height: 24px; /* Asegura consistencia con los íconos */
+    margin-right: 5px; /* Espaciado entre el ícono y el texto */
+    display: inline-block; /* Asegura alineación inline */
+    vertical-align: middle; /* Centra el SVG respecto al texto */
+}
+
+.left-panel .details i {
+    margin-right: 5px; /* Espaciado entre ícono y texto */
+}
+
+.left-panel .rating {
+    margin-top: 100px;
+}
+
+.alquilarButton {
+    display: flex; /* Asegura que el enlace ocupe todo el espacio */
+    justify-content: center;
+    align-items: center;
+    background-color: #007bff; /* Color del fondo */
+    border-radius: 5px; /* Bordes redondeados */
+    height: 50px; /* Altura del botón */
+    text-align: center;
+}
+
+.button-link {
+    color: white;
+    text-decoration: none; /* Quita el subrayado */
+    width: 100%; /* Hace que el enlace ocupe todo el ancho */
+    height: 100%; /* Hace que el enlace ocupe toda la altura */
+    display: flex; /* Flexbox para centrar el texto */
+    justify-content: center;
+    align-items: center;
+}
+
+.button-link:hover {
+    background-color: #0056b3; /* Color al pasar el cursor */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+
+.right-panel {
+    width: 70%;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.right-panel .section {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+}
+
+.right-panel .section h3 {
+    margin: 0;
+    padding-bottom: 30px;
+}
+
+.fechas {
+    display: flex;
+    justify-content: space-around; /* Distribuye los grupos uniformemente */
+    align-items: center; /* Asegura que todos los elementos estén alineados verticalmente */
+    gap: 20px; /* Espaciado entre los grupos */
+    padding: 10px 20px;
+}
+
+.fechas .column {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos verticalmente dentro de cada columna */
+    align-items: flex-start; /* Alinea los elementos de cada columna a la izquierda */
+}
+
+.fechas .column p {
+    margin: 0;
+    font-weight: bold; /* Resalta las etiquetas */
+    margin-bottom: 5px; /* Espacio entre la etiqueta y el campo */
+}
+
+.fechas .column input[type="date"] {
+    width: 80%; /* Ancho uniforme para todos los campos */
+    height: 20px; /* Altura consistente entre los inputs y selects */
+    padding: 5px; /* Espaciado interno */
+    font-size: 14px; /* Tamaño del texto */
+    border: 1px solid #ccc; /* Borde del campo */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #ffffff; /* Fondo blanco */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra interna */
+}
+
+.fechas .column select {
+    width: 162px; /* Ancho uniforme para todos los campos */
+    height: 30px; /* Altura consistente entre los inputs y selects */
+    padding: 5px; /* Espaciado interno */
+    font-size: 14px; /* Tamaño del texto */
+    border: 1px solid #ccc; /* Borde del campo */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #ffffff; /* Fondo blanco */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra interna */
+}
+
+.fechas .column input[type="date"]:focus,
+.fechas .column select:focus {
+    outline: none;
+    border-color: #007bff; /* Cambia el color del borde al enfocarse */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra azul */
+}
+
+.fechas :hover{
+    cursor: pointer;
+}
+
+
+.additional-info {
+    line-height: 1.5; /* Espaciado entre líneas */
+    font-size: 14px; /* Tamaño del texto */
+    color: #333; /* Color del texto */
+}
+
+.additional-info p {
+    margin: 5px 0; /* Espaciado entre párrafos */
+}
+
+.additional-info strong {
+    font-weight: bold; /* Resalta los títulos */
+    color: #000; /* Color negro para los títulos */
+}
+
+/*---------------------------------------------------------------------*/
+
+.map-container {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#map {
+    width: 100%;
+    height: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/*---------------------------------------------------------------------*/
+footer {
+    background-color: #343a40; /* Color de fondo */
+    color: #ffffff; /* Color del texto */
+    text-align: center; /* Centrar texto dentro del footer */
+    padding: 1rem 0; /* Espaciado vertical */
+    width: 100%; /* Asegura que ocupe todo el ancho de la página */
+    position: relative; /* Para que esté dentro del flujo normal de la página */
+    bottom: 0;
+}
+
+footer .container {
+    justify-content: center;
+    max-width: 1200px; /* Tamaño máximo del contenido */
+    margin: 0 auto; /* Centra horizontalmente el contenido del footer */
+    padding: 0 1rem; /* Espaciado interno */
+}

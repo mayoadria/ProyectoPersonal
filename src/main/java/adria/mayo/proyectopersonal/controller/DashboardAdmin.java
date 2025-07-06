@@ -12,11 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,16 +59,17 @@ public class DashboardAdmin {
         model.addAttribute("estat", EstatUsuari.values());
         return "CrearUsuari";
     }
+
     @PostMapping("/newUsuari")
     public String crearUsuarisAdmin(Usuari usuari) {
-        usuariService.crearUsuari(usuari,usuari.getRol(),usuari.getEstat());
+        usuariService.crearUsuari(usuari, usuari.getRol(), usuari.getEstat());
         return "redirect:/admin/listaUsu";
     }
 
     @GetMapping("/llistaVehiculo")
     public String llistaVehiculo(Model model) {
         List<Vehiculo> vehicle = vehiculoService.listarVehiculos();
-        model.addAttribute("vehicle" ,vehicle);
+        model.addAttribute("vehicle", vehicle);
         return "ListaVehicles";
     }
 
@@ -96,8 +97,9 @@ public class DashboardAdmin {
         model.addAttribute("isLogges", true);
         return "crearVehicle";
     }
+
     @PostMapping("/newVehicle")
-    public String crearVehiculoAdmin(Vehiculo vehiculo, Model model) {
+    public String crearVehiculoAdmin(Vehiculo vehiculo, Model model, @RequestParam(value = "imagen", required = false) MultipartFile imagen) throws IOException {
         Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
 
         Optional<Vehiculo> vehiculoExistente = vehiculoService.buscarVehiculo(vehiculo.getMatricula());
@@ -108,6 +110,10 @@ public class DashboardAdmin {
                 vehiculo.setCreador(usuari);
             } else {
                 vehiculo.setCreador(null);
+            }
+            if (imagen != null && !imagen.isEmpty()) {
+                String base64Foto = Base64.getEncoder().encodeToString(imagen.getBytes());
+                vehiculo.setFoto(base64Foto);
             }
             vehiculo.setEstatVehicle(EstatVehicle.INACTIU);
             vehiculoService.guardarVehiculo(vehiculo);

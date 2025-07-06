@@ -40,7 +40,7 @@
             <div class="cars-grid">
 
                 <div th:each="vehicle : ${vehiculos}" class="card">
-                    <img th:src="${vehicle.foto}" alt="Imagen de ${vehicle.nombre}">
+                    <img th:src="'data:image/jpeg;base64,' + ${vehicle.foto}" alt="Foto del vehículo"/>
                     <div class="card-body">
                         <h5 class="card-title" th:text="${vehicle.marca} + ' ' + ${vehicle.model}">Mercedes Benz
                         </h5>
@@ -75,8 +75,8 @@
                         <p class="dies-text">Fiança: </p>
                         <p class="dies" th:text="' ' + ${vehicle.fianca} + ' €'"></p>
                     </div>
-<!--                    <a th:href="@{/vehicle/{matricula}(matricula=${vehicle.matricula})}" class="btn btn-dark">Veure-->
-<!--                        detalls</a>-->
+                    <a th:href="@{/detallsVehicle/{matricula}(matricula=${vehicle.matricula})}" class="btn btn-dark">Veure
+                        detalls</a>
                 </div>
             </div>
 
