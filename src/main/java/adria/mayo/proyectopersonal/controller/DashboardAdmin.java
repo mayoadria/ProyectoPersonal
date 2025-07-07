@@ -155,12 +155,14 @@ public class DashboardAdmin {
     @PostMapping("/cancelarReserva/{idReserva}/{matricula}")
     public String cancelarReserva(@PathVariable Long idReserva, @PathVariable String matricula) {
         Optional<Reserva> optionalReserva = reservaService.trobarReserva(idReserva);
+        Optional<Vehiculo> vehiculo = vehiculoService.buscarVehiculo(matricula);
         if (optionalReserva.isPresent()) {
             Reserva reserva = optionalReserva.get();
             reserva.setEstatReserva(EstatReserva.ANULLADA);
-
-            vehiculoService.activarVehiculo(matricula);
-            vehiculoService.guardarVehiculo(reserva.getVehiculo());
+            if (vehiculo.isPresent()) {
+                vehiculoService.activarVehiculo(matricula);
+                vehiculoService.guardarVehiculo(reserva.getVehiculo());
+            }
             reservaService.crearReserva(reserva);
         }
         return "redirect:/admin/listarReserva";
