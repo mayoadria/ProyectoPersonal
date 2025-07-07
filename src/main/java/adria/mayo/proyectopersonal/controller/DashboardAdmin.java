@@ -3,6 +3,7 @@ package adria.mayo.proyectopersonal.controller;
 import adria.mayo.proyectopersonal.entity.Reserva;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.Vehiculo;
+import adria.mayo.proyectopersonal.entity.enums.enumsReserva.EstatReserva;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.*;
@@ -34,6 +35,12 @@ public class DashboardAdmin {
 
     @Autowired
     private VehicleService vehiculoService;
+
+
+    @GetMapping("/adminDashboard")
+    public String adminDashboard(Model model) {
+        return "adminDashboard";
+    }
 
     @GetMapping("/listaUsu")
     public String listaUsu(Model model) {
@@ -131,13 +138,47 @@ public class DashboardAdmin {
     }
 
 
-
+    /*
+     *
+     * RESERVAS
+     *
+     */
 
     @GetMapping("/listarReserva")
     public String listar(Model model) {
         List<Reserva> reservas = reservaService.listarReservas();
-        model.addAttribute("reserva" ,reservas);
+        model.addAttribute("reserva", reservas);
         return "listaReservas";
     }
+
+
+    @PostMapping("/cancelarReserva/{idReserva}/{matricula}")
+    public String cancelarReserva(@PathVariable Long idReserva, @PathVariable String matricula) {
+        Optional<Reserva> optionalReserva = reservaService.trobarReserva(idReserva);
+        if (optionalReserva.isPresent()) {
+            Reserva reserva = optionalReserva.get();
+            reserva.setEstatReserva(EstatReserva.ANULLADA);
+
+            vehiculoService.activarVehiculo(matricula);
+            vehiculoService.guardarVehiculo(reserva.getVehiculo());
+            reservaService.crearReserva(reserva);
+        }
+        return "redirect:/admin/listarReserva";
+    }
+
+
+    @PostMapping("/activarReserva/{idReserva}")
+    public String activarReserva(@PathVariable Long idReserva) {
+        Optional<Reserva> optionalReserva = reservaService.trobarReserva(idReserva);
+        if (optionalReserva.isPresent()) {
+            Reserva reserva = optionalReserva.get();
+            reserva.setEstatReserva(EstatReserva.ACCEPTADA);
+            reservaService.crearReserva(reserva);
+        }
+        return "redirect:/admin/listarReserva";
+    }
+
+
+
 
 }

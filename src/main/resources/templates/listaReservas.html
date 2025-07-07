@@ -52,7 +52,19 @@
                 <td th:text="${reservas.fechaEntrega}">Data Entrega</td>
                 <td th:text="${reservas.preuComplert}">Preu Complert</td>
 
+                <td>
+                    <form th:action="@{/admin/cancelarReserva/{idReserva}/{matricula}(idReserva=${reservas.idReserva}, matricula=${reservas.vehiculo.matricula})}"
+                     method="post" style="display:inline">
+                        <button type="submit" class="btn btn-danger">Cancelar</button>
+                    </form>
+                    <form th:action="@{/admin/activarReserva/{idReserva}(idReserva=${reservas.idReserva})}" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-success">Activar</button>
+                    </form>
+
+                </td>
             </tr>
+
+
             </tbody>
         </table>
     </section>
