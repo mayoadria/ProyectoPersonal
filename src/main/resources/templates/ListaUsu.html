@@ -136,6 +136,8 @@
                                 th:classappend="${client.estat.name()} == 'ACTIU' ? ' btn btn-warning' : ' btn btn-success'">
                         </button>
                     </form>
+                    <a th:href="@{/admin/editarUsuari/{nomUsuari}(nomUsuari=${client.nomUsuari})}">Editar</a>
+
 
                 </td>
             </tr>

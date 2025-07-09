@@ -147,6 +147,7 @@ public class DashboardAdmin {
         model.addAttribute("pais", Pais.values());
         model.addAttribute("rol", Rol.values());
         model.addAttribute("estat", EstatUsuari.values());
+        model.addAttribute("isEdit", false);
         return "CrearUsuari";
     }
 
@@ -155,6 +156,27 @@ public class DashboardAdmin {
         usuariService.crearUsuari(usuari, usuari.getRol(), usuari.getEstat());
         return "redirect:/admin/listaUsu";
     }
+
+    @GetMapping("/editarUsuari/{nomUsuari}")
+    public String editarUsuari(@PathVariable String nomUsuari, Model model) {
+        Usuari usuariOptional = usuariService.findBynomUsuari(nomUsuari);
+        if (usuariOptional != null) {
+            model.addAttribute("usu", usuariOptional);
+            model.addAttribute("pais", Pais.values());
+            model.addAttribute("rol", Rol.values());
+            model.addAttribute("estat", EstatUsuari.values());
+            model.addAttribute("isEdit", usuariOptional.getDni() != null);
+            return "CrearUsuari";
+        } else {
+            return "redirect:/admin/listaUsu";
+        }
+    }
+    @PostMapping("/editarUsuari")
+    public String guardarEdicioUsuari(@ModelAttribute("usu") Usuari usuari) {
+        usuariService.crearUsuari(usuari, usuari.getRol(), usuari.getEstat());
+        return "redirect:/admin/listaUsu";
+    }
+
 
     @GetMapping("/llistaVehiculo")
     public String llistaVehiculo(Model model) {

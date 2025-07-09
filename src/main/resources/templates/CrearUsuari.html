@@ -16,7 +16,8 @@
 
 <body>
 <h1>Crear Usuaris</h1>
-<form th:action="@{/admin/newUsuari}" th:object="${usu}" method="POST">
+<form th:action="${isEdit} ? '/admin/editarUsuari' : '/admin/newUsuari'" th:object="${usu}" method="POST">
+
     <!-- DNI -->
     <label for="dni">DNI:</label>
     <input type="text" id="dni" th:field="*{dni}">
@@ -42,10 +43,17 @@
     <input type="email" id="email" th:field="*{email}" >
     <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
 
-    <!-- Contrasenya -->
-    <label for="contrasenya">Contrasenya:</label>
-    <input type="password" id="contrasenya" th:field="*{contrasenya}">
-    <div class="error-message" th:if="${#fields.hasErrors('contrasenya')}" th:errors="*{contrasenya}"></div>
+    <!-- Contraseña -->
+    <div th:if="${isEdit}">
+        <label for="contrasenya">Contrasenya:</label>
+        <input type="password" id="contrasenya" name="contrasenya" placeholder="La contrasenya no es editable" readonly>
+    </div>
+    <div th:if="${!isEdit}">
+        <label for="contrasenya">Contrasenya:</label>
+        <input type="password" th:field="*{contrasenya}">
+        <div class="error-message" th:if="${#fields.hasErrors('contrasenya')}" th:errors="*{contrasenya}"></div>
+    </div>
+
 
     <label>
         <span>Nacionalitat</span>
