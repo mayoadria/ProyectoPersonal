@@ -42,7 +42,7 @@ public class Usuari implements UserDetails {
     private Pais pais;
 
     @Column(nullable = false)
-    private Long codiPostal;
+    private String codiPostal;
 
     @Column(nullable = false)
     private String poblacio;

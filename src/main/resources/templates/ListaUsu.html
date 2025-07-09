@@ -30,16 +30,85 @@
 
 <main class="container mt-4">
     <section>
+        <form th:action="@{/admin/listaUsu}" method="get">
         <h2>Llista de Clients</h2>
         <a class="btn-crear" th:href="@{/admin/creaUsuariAdmin}">Crear</a>
+
+        <button class="filter-toggle">Mostrar Filtres</button>
+
+        <div class="filter-content">
+            <div class="filtre">
+                <label for="Dni" class="filt-txt">DNI:</label>
+                <input type="text" id="Dni" name="Dni" th:value="${param.Dni}" class="filt-input">
+            </div>
+            <div class="filtre">
+                <label for="Nom" class="filt-txt">NOM:</label>
+                <input type="text" id="Nom" name="Nom" th:value="${param.Nom}" class="filt-input">
+            </div>
+            <div class="filtre">
+                <label for="Cognom" class="filt-txt">Cognom:</label>
+                <input type="text" id="Cognom" name="Cognom" th:value="${param.Cognom}" class="filt-input">
+            </div>
+            <div class="filtre">
+                <label for="Email" class="filt-txt">EMAIL:</label>
+                <input type="text" id="Email" name="Email" th:value="${param.Email}" class="filt-input">
+            </div>
+            <div class="filtre">
+                <label for="nomUsuari" class="filt-txt">NOM USUARI:</label>
+                <input type="text" id="nomUsuari" name="nomUsuari" th:value="${param.nomUsuari}" class="filt-input">
+            </div>
+            <div class="filtre">
+                <label for="telf" class="filt-txt">NUM CONTACTE:</label>
+                <input type="text" id="telf" name="telf" th:value="${param.telf}" class="filt-input">
+            </div>
+            <div class="filtre">
+                <label for="codiPostal" class="filt-txt">CODI POSTAL:</label>
+                <input type="text" id="codiPostal" name="codiPostal" th:value="${param.codiPostal}" class="filt-input">
+            </div>
+            <div class="filtre">
+                <label for="direccio" class="filt-txt">ADREÇA:</label>
+                <input type="text" id="direccio" name="direccio" th:value="${param.direccio}" class="filt-input">
+            </div>
+            <div class="filtre">
+                <label for="poblacio" class="filt-txt">POBLACIÓ:</label>
+                <input type="text" id="poblacio" name="poblacio" th:value="${param.poblacio}" class="filt-input">
+            </div>
+            <div class="filtre">
+                <label for="estat" class="filt-txt">Estat:</label>
+                <select id="estat" name="estat" class="filt-input">
+                    <option value="">Tots</option>
+                    <option th:each="estat : ${estats}" th:value="${estat}" th:text="${estat}"
+                            th:selected="${param.estat == estat}"></option>
+                </select>
+            </div>
+            <div class="filtre">
+                <label for="pais" class="filt-txt">Pais:</label>
+                <select id="pais" name="pais" class="filt-input">
+                    <option value="">Tots</option>
+                    <option th:each="pais : ${pais}" th:value="${pais}" th:text="${pais}"
+                            th:selected="${param.pais == pais}"></option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-crear">Filtrar</button>
+        </div>
+        </form>
+
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>DNI</th>
                 <th>Nom</th>
+                <th>Cognoms</th>
+                <th>Email</th>
                 <th>Nom usuari</th>
+                <th>Telefón Contacte</th>
                 <th>Codi Postal</th>
                 <th>Direcció</th>
+                <th>Població</th>
+                <th>Estat</th>
+                <th>Pais</th>
+
                 <th>Accions</th>
             </tr>
             </thead>
@@ -47,9 +116,15 @@
             <tr th:each="client : ${usu}">
                 <td th:text="${client.dni}">DNI</td>
                 <td th:text="${client.nom}">Nom</td>
+                <td th:text="${client.cognoms}">Nom</td>
+                <td th:text="${client.email}">Email</td>
                 <td th:text="${client.nomUsuari}">Nom usuari</td>
+                <td th:text="${client.numContacte}">Nom usuari</td>
                 <td th:text="${client.codiPostal}">Codi Postal</td>
                 <td th:text="${client.direccio}">Direcció</td>
+                <td th:text="${client.poblacio}">Poblacio</td>
+                <td th:text="${client.estat}">Estat</td>
+                <td th:text="${client.pais}">Pais</td>
                 <td>
                     <form th:action="@{/admin/eliminar/{nomUsuari}(nomUsuari=${client.nomUsuari})}" method="post" style="display:inline">
                         <button type="submit" class="btn btn-danger">Esborrar</button>

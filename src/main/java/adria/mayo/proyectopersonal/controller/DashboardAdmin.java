@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -43,9 +44,87 @@ public class DashboardAdmin {
     }
 
     @GetMapping("/listaUsu")
-    public String listaUsu(Model model) {
+    public String listaUsu(
+            @RequestParam(name = "Dni" ,required = false) String Dni,
+            @RequestParam(name = "Nom" ,required = false) String Nom,
+            @RequestParam(name = "Cognom" ,required = false) String Cognom,
+            @RequestParam(name = "Email" ,required = false) String Email,
+            @RequestParam(name = "nomUsuari" ,required = false) String nomUsuari,
+            @RequestParam(name = "telf" ,required = false) String telf,
+            @RequestParam(name = "codiPostal" ,required = false) String codiPostal,
+            @RequestParam(name = "direccio" ,required = false) String direccio,
+            @RequestParam(name = "poblacio" ,required = false) String poblacio,
+            @RequestParam(name = "estat", required = false) EstatUsuari estat,
+            @RequestParam(name = "pais", required = false) Pais pais,
+
+            Model model) {
         List<Usuari> usu = usuariService.findAll();
+
+        if (Dni != null && !Dni.isEmpty()) {
+            String dniLower = Dni.toLowerCase();
+
+            // Si el DNI tiene exactamente 9 caracteres (8 números + 1 letra)
+            if (dniLower.length() == 9) {
+                String dniNumeros = dniLower.substring(0, 8);
+                String letraDNI = dniLower.substring(8); // solo el último caracter
+
+                usu = usu.stream()
+                        .filter(u -> u.getDni().toLowerCase().contains(dniNumeros))
+                        .filter(u -> u.getDni().toLowerCase().contains(letraDNI))
+                        .toList();
+
+            } else {
+                // Búsqueda parcial general si no tiene 9 caracteres
+                usu = usu.stream()
+                        .filter(u -> u.getDni().toLowerCase().contains(dniLower))
+                        .toList();
+            }
+        }
+
+        if(Nom != null && !Nom.isEmpty()) {
+            String nom = Nom.toLowerCase();
+            usu = usu.stream().filter(u -> u.getNom().toLowerCase().contains(nom)).toList();
+        }
+        if(Cognom != null && !Cognom.isEmpty()) {
+            String nom = Cognom.toLowerCase();
+            usu = usu.stream().filter(u -> u.getCognoms().toLowerCase().contains(nom)).toList();
+        }
+        if(nomUsuari != null && !nomUsuari.isEmpty()) {
+            String nom = nomUsuari.toLowerCase();
+            usu = usu.stream().filter(u -> u.getNomUsuari().toLowerCase().contains(nom)).toList();
+        }
+        if(Email != null && !Email.isEmpty()) {
+            String nom = Email.toLowerCase();
+            usu = usu.stream().filter(u -> u.getEmail().toLowerCase().contains(nom)).toList();
+        }
+        if(codiPostal != null && !codiPostal.isEmpty() ) {
+            usu = usu.stream().filter(u -> u.getCodiPostal().contains(codiPostal)).toList();
+        }
+        if(telf != null && !telf.isEmpty() ) {
+            usu = usu.stream().filter(u -> u.getNumContacte().contains(telf)).toList();
+        }
+        if(direccio != null && !direccio.isEmpty() ) {
+            String direccion = direccio.toLowerCase();
+            usu = usu.stream().filter(u -> u.getDireccio().contains(direccion)).toList();
+        }
+        if(poblacio != null && !poblacio.isEmpty() ) {
+            String poblacion = poblacio.toLowerCase();
+            usu = usu.stream().filter(u -> u.getPoblacio().contains(poblacion)).toList();
+        }
+        if (estat != null) {
+            usu = usu.stream()
+                    .filter(u -> u.getEstat().name().equalsIgnoreCase(estat.name()))
+                    .collect(Collectors.toList());
+        }
+        if (pais != null) {
+            usu = usu.stream()
+                    .filter(u -> u.getPais().name().equalsIgnoreCase(pais.name()))
+                    .collect(Collectors.toList());
+        }
+
         model.addAttribute("usu", usu);
+        model.addAttribute("estats", EstatUsuari.values());
+        model.addAttribute("pais", Pais.values());
         return "ListaUsu";
     }
 
@@ -105,7 +184,7 @@ public class DashboardAdmin {
         model.addAttribute("combustible", Combustible.values());
         model.addAttribute("caixaCanvis", CaixaCanvis.values());
         model.addAttribute("Marxes", Marxes.values());
-        model.addAttribute("isLogges", true);
+        model.addAttribute("isLogged", true);
         return "crearVehicle";
     }
 

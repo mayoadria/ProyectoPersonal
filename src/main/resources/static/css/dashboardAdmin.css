@@ -128,21 +128,6 @@ tbody tr:hover {
     background-color: #f1f1f1;
 }
 
-.filtre {
-    display: flex;
-    flex-direction: column;
-}
-
-.filt-txt {
-    margin-top: 5px;
-}
-
-.filt-input {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
 
 select {
     padding: 5px;
@@ -230,6 +215,67 @@ footer {
     padding: 10px 0;
     text-align: center;
     width: 100%;
+}
+
+.filter-toggle {
+    background-color: #027ba0;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+.filter-toggle:hover {
+    background-color: #02688a;
+}
+
+.filter-content {
+    background: linear-gradient(
+            135deg,
+            rgba(132, 208, 230, 0.4),
+            rgba(199, 240, 255, 0.25),
+            rgba(255, 255, 255, 0.1)
+    );
+    display: none;
+    flex-wrap: wrap;
+    gap: 4px;                /* Menor separación entre filtros */
+    padding: 4px 12px 10px;        /* Menor padding general */
+    border-radius: 6px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08); /* Ligero ajuste de sombra */
+    font-size: 0.8rem;       /* Letra un poco más pequeña */
+    margin-bottom: 8px;
+}
+
+.filter-content.active {
+    display: flex;
+}
+
+.filtre {
+    display: flex;
+    flex-direction: column;
+    width: 130px;
+    margin-left: 8px;
+
+}
+
+.filt-txt {
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    color: black;
+}
+
+.filt-input {
+    width: 100%;
+    padding: 4px;
+    border: 1px solid #5fa6bd;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: black;
 }
 
 /* Responsive Design */

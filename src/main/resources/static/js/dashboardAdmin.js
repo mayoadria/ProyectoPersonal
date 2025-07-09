@@ -1,13 +1,7 @@
-const formFiltresAgent = document.getElementById("filtres-form-agent");
-const buttonFiltresAgent = document.getElementById("applyFiltersAgent");
+const filterToggle = document.querySelector('.filter-toggle');
+const filterContent = document.querySelector('.filter-content');
 
-buttonFiltresAgent.addEventListener("click", () => {
-    formFiltresAgent.submit();
-})
-
-const formFiltresClient = document.getElementById("filtres-form-client");
-const buttonFiltresClient = document.getElementById("applyFiltersClient");
-
-buttonFiltresClient.addEventListener("click", () => {
-    formFiltresClient.submit();
-})
+filterToggle.addEventListener('click', function (event) {
+    event.preventDefault();
+    filterContent.classList.toggle('active');
+});
