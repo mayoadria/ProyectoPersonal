@@ -124,6 +124,9 @@
                     <form th:action="@{/admin/editarVehicle/{matricula}(matricula=${vehicle.matricula})}" style="display:inline">
                         <button type="submit" class="btn btn-edit">Editar</button>
                     </form>
+                    <form th:action="@{/admin/visualizarDetallsVehicle/{matricula}(matricula=${vehicle.matricula})}" style="display:inline">
+                        <button type="submit" class="btn btn-crear">Veure Detalls</button>
+                    </form>
 
                 </td>
             </tr>

@@ -39,7 +39,7 @@
 
 <div class="container mt-5">
     <h2>Crear Vehicle</h2>
-    <form th:action="${isEdit} ? '/admin/editarVehicle' : '/admin/newVehicle'" th:object="${vehiculo}" method="POST">
+    <form th:action="${isEdit} ? '/admin/editarVehicle' : '/admin/newVehicle'" th:object="${vehiculo}" method="POST" enctype="multipart/form-data">
         <!-- Matricula -->
         <div th:if="${isEdit}" class="mb-3">
             <label for="matricula">Matricula:</label>
@@ -162,6 +162,8 @@
             <label for="imagen" class="form-label">Imatge del vehicle</label>
             <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" required>
         </div>
+
+
 
         <!-- Botón de Crear Vehicle -->
         <div th:if="${isEdit}">

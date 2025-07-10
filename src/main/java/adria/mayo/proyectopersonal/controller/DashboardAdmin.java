@@ -320,11 +320,32 @@ public class DashboardAdmin {
         }
     }
     @PostMapping("/editarVehicle")
-    public String guardarEdicioVehicle(@ModelAttribute("vehiculo") Vehiculo vehiculo) {
+    public String guardarEdicioVehicle(@ModelAttribute("vehiculo") Vehiculo vehiculo,@RequestParam(value = "imagen", required = false) MultipartFile imagen) throws IOException {
+        if (imagen != null && !imagen.isEmpty()) {
+            String base64Foto = Base64.getEncoder().encodeToString(imagen.getBytes());
+            vehiculo.setFoto(base64Foto);
+        }
         vehiculoService.guardarVehiculo(vehiculo);
         return "redirect:/admin/llistaVehiculo";
     }
 
+
+@GetMapping("/visualizarDetallsVehicle/{matricula}")
+public String verDetallsVehiculo(@PathVariable String matricula, Model model) {
+        Optional<Vehiculo> vehiculo = vehiculoService.buscarVehiculo(matricula);
+        if (vehiculo.isPresent()) {
+            model.addAttribute("vehiculo", vehiculo.get());
+            model.addAttribute("places", Places.values());
+            model.addAttribute("portes", Portes.values());
+            model.addAttribute("combustible", Combustible.values());
+            model.addAttribute("caixaCanvis", CaixaCanvis.values());
+            model.addAttribute("Marxes", Marxes.values());
+            model.addAttribute("estat", EstatVehicle.values());
+            return "infoVehicleAdmin";
+        }else {
+            return "redirect:/admin/llistaVehiculo";
+        }
+}
 
 
     /*

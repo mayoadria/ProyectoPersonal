@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenRoad · Vehicle</title>
+
+    <!-- Iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="/css/infoVehiculo.css">
+    <link rel="stylesheet" href="/css/header.css">
+
+    <!-- Scripts -->
+    <script src="/js/header.js" defer></script>
+</head>
+
+<body>
+<!-- Header -->
+<header class="nav-container">
+    <nav class="navbar">
+        <div class="logo">
+            <a class="logo">
+                <img src="/Imagenes/logo_openroad.png"  class="logo-img" width="55" height="55" draggable="false">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#section1">Inici</a></li>
+            <li><a th:href="@{/cataleg}">Catàleg</a></li>
+            <li><a href="#section3">Contacte</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Contenido Principal -->
+<div class="main-wrapper">
+<main class="main-content">
+    <div class="container">
+        <div class="left-panel">
+            <img th:src="'data:image/jpeg;base64,' + ${vehiculo.foto}" alt="Foto del vehículo" class="vehiculo-img" />
+            <h3 class="nombre-coche" th:text="${vehiculo.marca + ' ' + vehiculo.model}"></h3>
+
+            <div class="details">
+                <div>
+                    <i class="fa-solid fa-user"></i>
+                    <span th:text="${vehiculo.places.getValor()}"></span>
+                </div>
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="24" height="24">
+                        <path d="M40 100 Q40 50 100 40 H160 Q180 40 180 60 V150 Q180 170 160 170 H60 Q40 170 40 150 Z"
+                              fill="black" stroke="black" stroke-width="2"/>
+                        <path d="M50 100 Q50 70 100 60 H150 Q160 60 160 80 V100 H50 Z" fill="white"/>
+                        <rect x="130" y="120" width="20" height="6" rx="3" ry="3" fill="white"/>
+                    </svg>
+                    <span th:text="${vehiculo.portes.getValor()}"></span>
+                </div>
+                <div>
+                    <i class="fa-solid fa-gear"></i>
+                    <span th:text="${vehiculo.caixaCanvis}"></span>
+                </div>
+                <div>
+                    <i class="fa-solid fa-gas-pump"></i>
+                    <span th:text="${vehiculo.combustible}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="section additional-info">
+                <p><strong>Matrícula:</strong> <span th:text="${vehiculo.matricula}"></span></p>
+                <p><strong>Estat:</strong> <span th:text="${vehiculo.estatVehicle}"></span></p>
+                <p><strong>Canvi:</strong> <span th:text="${vehiculo.caixaCanvis}"></span></p>
+                <p><strong>Places:</strong> <span th:text="${vehiculo.places}"></span></p>
+                <p><strong>Combustible:</strong> <span th:text="${vehiculo.combustible}"></span></p>
+                <p><strong>Marca:</strong> <span th:text="${vehiculo.marca}"></span></p>
+                <p><strong>Model:</strong> <span th:text="${vehiculo.model}"></span></p>
+                <p><strong>Dies mínim:</strong> <span th:text="${vehiculo.diesLloguerMinim}"></span></p>
+                <p><strong>Dies màxim:</strong> <span th:text="${vehiculo.diesLloguerMaxim}"></span></p>
+                <p><strong>Creador:</strong> <span th:text="${vehiculo.creador}"></span></p>
+                <p><strong>Color:</strong> <span th:text="${vehiculo.color}"></span></p>
+                <p><strong>Fiança:</strong> <span th:text="${vehiculo.fianca}"></span></p>
+                <p><strong>KM:</strong> <span th:text="${vehiculo.km}"></span></p>
+                <p><strong>Ubicació:</strong> <span th:text="${vehiculo.local}"></span></p>
+                <p><strong>Portes:</strong> <span th:text="${vehiculo.portes}"></span></p>
+                <p><strong>Preu/dia:</strong> <span th:text="${vehiculo.preuDia}"></span></p>
+            </div>
+
+        </div>
+    </div>
+</main>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>&copy; 2025 OpenRoad. Tots els drets reservats.</p>
+    </div>
+</footer>
+</body>
+</html>
