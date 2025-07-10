@@ -29,17 +29,76 @@
 
 <main class="container mt-4">
     <section>
+        <form th:action="@{/admin/llistaVehiculo}" method="get">
         <h2>Llista de Vehicles</h2>
         <a class="btn-crear" th:href="@{/admin/creaVehiculoAdmin}">Crear</a>
+            <button class="filter-toggle">Mostrar Filtres</button>
+            <div class="filter-content">
+                <div class="filtre">
+                    <label for="matricula" class="filt-txt">Matricula:</label>
+                    <input type="text" id="matricula" name="matricula" th:value="${param.matricula}" class="filt-input">
+                </div>
+                <div class="filtre">
+                    <label for="marca" class="filt-txt">Marca:</label>
+                    <input type="text" id="marca" name="marca" th:value="${param.marca}" class="filt-input">
+                </div>
+                <div class="filtre">
+                    <label for="estatVehicle" class="filt-txt">Estat:</label>
+                    <select id="estatVehicle" name="estatVehicle" class="filt-input">
+                        <option value="">Tots</option>
+                        <option th:each="estatVehicle : ${estatVehicle}" th:value="${estatVehicle}" th:text="${estatVehicle}"
+                                th:selected="${param.estatVehicle == estatVehicle}"></option>
+                    </select>
+                </div>
+                <div class="filtre">
+                    <label for="minPunts" class="filt-txt">Punts mínims:</label>
+                    <input type="number"
+                           id="minPunts"
+                           name="minPunts"
+                           min="1998"
+                           th:value="${param.minPunts}"
+                           class="filt-input">
+                </div>
+
+                <div class="filtre">
+                    <label for="maxPunts" class="filt-txt">Punts màxims:</label>
+                    <input type="number"
+                           id="maxPunts"
+                           name="maxPunts"
+                           min="1998"
+                           th:value="${param.maxPunts}"
+                           class="filt-input">
+                </div>
+                <div class="filtre">
+                    <label for="combustible" class="filt-txt">Combustible:</label>
+                    <select id="combustible" name="combustible" class="filt-input">
+                        <option value="">Tots</option>
+                        <option th:each="combustible : ${combustible}" th:value="${combustible}" th:text="${combustible}"
+                                th:selected="${param.combustible == combustible}"></option>
+                    </select>
+                </div>
+                <div class="filtre">
+                    <label for="canvis" class="filt-txt">Caixa de canvis:</label>
+                    <select id="canvis" name="canvis" class="filt-input">
+                        <option value="">Tots</option>
+                        <option th:each="canvis : ${canvis}" th:value="${canvis}" th:text="${canvis}"
+                                th:selected="${param.canvis == canvis}"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-crear">Filtrar</button>
+            </div>
+
+        </form>
+
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>Matricula</th>
                 <th>Marca</th>
-                <th>Model</th>
+                <th>Estat</th>
                 <th>Any del Vehicle</th>
                 <th>Combustible</th>
-                <th>Plaçes</th>
+                <th>Caixa de canvis</th>
                 <th>Accions</th>
             </tr>
             </thead>
@@ -47,10 +106,10 @@
             <tr th:each="vehicle : ${vehicle}">
                 <td th:text="${vehicle.matricula}">Matricula</td>
                 <td th:text="${vehicle.marca}">Marca</td>
-                <td th:text="${vehicle.model}">Model</td>
+                <td th:text="${vehicle.estatVehicle}">Model</td>
                 <td th:text="${vehicle.anyVehicle}">Any del Vehicle</td>
                 <td th:text="${vehicle.combustible}">Combustible</td>
-                <td th:text="${vehicle.places}">Plaçes</td>
+                <td th:text="${vehicle.caixaCanvis}">Plaçes</td>
                 <td>
                     <form th:action="@{/admin/eliminarVeh/{matricula}(matricula=${vehicle.matricula})}" method="post" style="display:inline">
                         <button type="submit" class="btn btn-danger">Esborrar</button>
@@ -61,6 +120,9 @@
                                 th:text="${vehicle.estatVehicle.name()} == 'ACTIU' ? 'Desactivar' : 'Activar'"
                                 th:classappend="${vehicle.estatVehicle.name()} == 'ACTIU' ? ' btn btn-warning' : ' btn btn-success'">
                         </button>
+                    </form>
+                    <form th:action="@{/admin/editarVehicle/{matricula}(matricula=${vehicle.matricula})}" style="display:inline">
+                        <button type="submit" class="btn btn-edit">Editar</button>
                     </form>
 
                 </td>

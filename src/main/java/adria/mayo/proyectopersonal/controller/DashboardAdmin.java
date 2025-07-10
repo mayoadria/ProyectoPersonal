@@ -179,9 +179,72 @@ public class DashboardAdmin {
 
 
     @GetMapping("/llistaVehiculo")
-    public String llistaVehiculo(Model model) {
+    public String llistaVehiculo(
+            @RequestParam(name = "matricula",required = false ) String matricula,
+            @RequestParam(name = "marca",required = false ) String marca,
+            @RequestParam(name = "estatVehicle",required = false ) EstatVehicle estatVehicle,
+            @RequestParam(name = "combustible",required = false ) Combustible combustible,
+            @RequestParam(name = "canvis",required = false ) CaixaCanvis canvis,
+            @RequestParam(name = "minPunts",required = false ) Integer minPunts,
+            @RequestParam(name = "maxPunts",required = false ) Integer maxPunts,
+            Model model) {
         List<Vehiculo> vehicle = vehiculoService.listarVehiculos();
+
+        if (matricula != null && !matricula.trim().isEmpty()) {
+            String matriculaAux = matricula.trim().toUpperCase();
+
+            // Validar que tenga al menos 7 caracteres para hacer substring
+            if (matriculaAux.length() >= 7) {
+                String numeros = matriculaAux.substring(0, 4);
+                String letras = matriculaAux.substring(4, 7);
+
+                vehicle = vehicle.stream()
+                        .filter(m -> m.getMatricula().toUpperCase().contains(numeros))
+                        .filter(m -> m.getMatricula().toUpperCase().contains(letras))
+                        .toList();
+            } else {
+                // Si no tiene longitud suficiente, puedes buscar con contains o ignorar
+                vehicle = vehicle.stream()
+                        .filter(m -> m.getMatricula().toUpperCase().contains(matriculaAux))
+                        .toList();
+            }
+        }
+
+        if(marca != null && !marca.isEmpty()) {
+            String marcaAux = marca.toUpperCase();
+            vehicle = vehicle.stream().filter(u -> u.getMarca().toUpperCase().contains(marcaAux)).toList();
+        }
+
+        if (estatVehicle != null) {
+            vehicle = vehicle.stream()
+                    .filter(v -> v.getEstatVehicle().name().equalsIgnoreCase(estatVehicle.name()))
+                    .collect(Collectors.toList());
+        }
+
+        if (combustible != null) {
+            vehicle = vehicle.stream()
+                    .filter(v -> v.getCombustible().name().equalsIgnoreCase(combustible.name()))
+                    .collect(Collectors.toList());
+        }
+        if (canvis != null) {
+            vehicle = vehicle.stream()
+                    .filter(v -> v.getCaixaCanvis().name().equalsIgnoreCase(canvis.name()))
+                    .collect(Collectors.toList());
+        }
+        if (minPunts != null || maxPunts != null) {
+            int min = (minPunts != null) ? minPunts : Integer.MIN_VALUE;
+            int max = (maxPunts != null) ? maxPunts : Integer.MAX_VALUE;
+
+            vehicle = vehicle.stream()
+                    .filter(v -> v.getAnyVehicle() >= min && v.getAnyVehicle() <= max)
+                    .collect(Collectors.toList());
+        }
+
+
         model.addAttribute("vehicle", vehicle);
+        model.addAttribute("estatVehicle", EstatVehicle.values());
+        model.addAttribute("combustible", Combustible.values());
+        model.addAttribute("canvis", CaixaCanvis.values());
         return "ListaVehicles";
     }
 
@@ -207,6 +270,7 @@ public class DashboardAdmin {
         model.addAttribute("caixaCanvis", CaixaCanvis.values());
         model.addAttribute("Marxes", Marxes.values());
         model.addAttribute("isLogged", true);
+        model.addAttribute("isEdit", false);
         return "crearVehicle";
     }
 
@@ -237,6 +301,30 @@ public class DashboardAdmin {
 
         return "redirect:/admin/llistaVehiculo";
     }
+
+    @GetMapping("/editarVehicle/{matricula}")
+    public String editarVehicle(@PathVariable String matricula, Model model) {
+        Optional<Vehiculo> vehiculo = vehiculoService.buscarVehiculo(matricula);
+        if (vehiculo.isPresent()) {
+            model.addAttribute("vehiculo", vehiculo);
+            model.addAttribute("places", Places.values());
+            model.addAttribute("portes", Portes.values());
+            model.addAttribute("combustible", Combustible.values());
+            model.addAttribute("caixaCanvis", CaixaCanvis.values());
+            model.addAttribute("Marxes", Marxes.values());
+            model.addAttribute("estat", EstatVehicle.values());
+            model.addAttribute("isEdit", true);
+            return "crearVehicle";
+        } else {
+            return "redirect:/admin/llistaVehiculo";
+        }
+    }
+    @PostMapping("/editarVehicle")
+    public String guardarEdicioVehicle(@ModelAttribute("vehiculo") Vehiculo vehiculo) {
+        vehiculoService.guardarVehiculo(vehiculo);
+        return "redirect:/admin/llistaVehiculo";
+    }
+
 
 
     /*

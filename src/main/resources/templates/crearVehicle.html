@@ -39,17 +39,21 @@
 
 <div class="container mt-5">
     <h2>Crear Vehicle</h2>
-    <form th:action="@{/admin/newVehicle}" th:object="${vehiculo}" method="post" enctype="multipart/form-data">
+    <form th:action="${isEdit} ? '/admin/editarVehicle' : '/admin/newVehicle'" th:object="${vehiculo}" method="POST">
         <!-- Matricula -->
-        <div class="mb-3">
-            <label for="matricula" class="form-label">Matrícula</label>
-            <input type="text" class="form-control" id="matricula"  th:field="*{matricula}">
+        <div th:if="${isEdit}" class="mb-3">
+            <label for="matricula">Matricula:</label>
+            <input type="text" id="matricula" name="matricula" th:field="*{matricula}" placeholder="La Matricula no es editable" readonly>
+        </div>
+        <div th:if="${!isEdit}" class="mb-3">
+            <label for="matricula">Matricula:</label>
+            <input type="text" th:field="*{matricula}">
             <div class="error-message" th:if="${#fields.hasErrors('matricula')}" th:errors="*{matricula}"></div>
         </div>
         <div class="mb-3">
             <label for="marca" class="form-label">Marca</label>
             <input type="text" class="form-control" id="marca"  th:field="*{marca}">
-            <div class="error-message" th:if="${#fields.hasErrors('matricula')}" th:errors="*{marca}"></div>
+            <div class="error-message" th:if="${#fields.hasErrors('marca')}" th:errors="*{marca}"></div>
         </div>
         <div class="mb-3">
             <label for="model" class="form-label">Model</label>
@@ -144,6 +148,15 @@
             <input type="number" class="form-control" id="diesLloguerMaxim" th:field="*{diesLloguerMaxim}" min="1" max="31" required>
         </div>
 
+        <div th:if="${isEdit}" class="mb-3">
+            <label for="estat" class="form-label">Estat</label>
+            <select class="form-control" id="estat" th:field="*{estatVehicle}" >
+                <option value="" disabled selected>Seleccioneu Estat del vehicle</option>
+                <option th:each="estat : ${T(adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.EstatVehicle).values()}"
+                        th:value="${estat}" th:text="${estat}"></option>
+            </select>
+        </div>
+
         <!-- Campo para subir imagen -->
         <div class="mb-3">
             <label for="imagen" class="form-label">Imatge del vehicle</label>
@@ -151,7 +164,12 @@
         </div>
 
         <!-- Botón de Crear Vehicle -->
-        <button type="submit" class="btn btn-primary">Crear Vehicle</button>
+        <div th:if="${isEdit}">
+            <button type="submit">Editar Vehicle</button>
+        </div>
+        <div th:if="${!isEdit}">
+            <button type="submit">Crear Vehicle</button>
+        </div>
     </form>
 
 </div>
