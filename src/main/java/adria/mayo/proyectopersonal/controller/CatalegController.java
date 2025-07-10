@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class CatalegController {
@@ -22,7 +23,8 @@ public class CatalegController {
     @GetMapping("/cataleg")
     public String cataleg(Model model){
         List<Vehiculo> vehiculos = vehicleService.listarVehiculosActivos(EstatVehicle.ACTIU);
-        model.addAttribute("vehiculos", vehiculos);
+        List<Vehiculo> vehiculosSinCreador = vehiculos.stream().filter(v -> v.getCreador() !=null).toList();
+        model.addAttribute("vehiculos", vehiculosSinCreador);
         return "cataleg";
     }
 

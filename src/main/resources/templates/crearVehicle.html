@@ -156,14 +156,32 @@
                         th:value="${estat}" th:text="${estat}"></option>
             </select>
         </div>
-
-        <!-- Campo para subir imagen -->
-        <div class="mb-3">
-            <label for="imagen" class="form-label">Imatge del vehicle</label>
-            <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" required>
+        <div th:if="${isEdit}" class="mb-3">
+            <label for="usuaris" class="form-label">Usuaris</label>
+            <select class="form-control" id="usuaris" th:field="*{creador}" >
+                <option value="" disabled selected>Seleccioneu un Usuari</option>
+                <option th:each="usuaris : ${usuaris}"
+                        th:value="${usuaris.dni}" th:text="${usuaris.dni}"></option>
+            </select>
         </div>
 
 
+        <!-- Campo para subir imagen -->
+
+        <div th:if="${isEdit}">
+            <div th:if="${vehiculo.foto == null}">
+                <p>Aquest vehicle no té imatge</p>
+            </div>
+            <div th:if="${vehiculo.foto != null}">
+                <img th:src="'data:image/jpeg;base64,' + ${vehiculo.foto}"
+                     style="max-width: 200px; display: block; margin-bottom: 10px;" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="imagen" class="form-label">Imatge del vehicle</label>
+            <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" th:required="${!isEdit}" />
+        </div>
 
         <!-- Botón de Crear Vehicle -->
         <div th:if="${isEdit}">

@@ -305,14 +305,16 @@ public class DashboardAdmin {
     @GetMapping("/editarVehicle/{matricula}")
     public String editarVehicle(@PathVariable String matricula, Model model) {
         Optional<Vehiculo> vehiculo = vehiculoService.buscarVehiculo(matricula);
+        List<Usuari> usuaris = usuariService.findAll();
         if (vehiculo.isPresent()) {
-            model.addAttribute("vehiculo", vehiculo);
+            model.addAttribute("vehiculo", vehiculo.get());
             model.addAttribute("places", Places.values());
             model.addAttribute("portes", Portes.values());
             model.addAttribute("combustible", Combustible.values());
             model.addAttribute("caixaCanvis", CaixaCanvis.values());
             model.addAttribute("Marxes", Marxes.values());
             model.addAttribute("estat", EstatVehicle.values());
+            model.addAttribute("usuaris", usuaris);
             model.addAttribute("isEdit", true);
             return "crearVehicle";
         } else {
