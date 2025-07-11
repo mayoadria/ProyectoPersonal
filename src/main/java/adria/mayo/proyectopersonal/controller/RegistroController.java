@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/registrar")
 public class RegistroController {
 
-    @Autowired
-    private UsuariService usuariService;
+
+    private final UsuariService usuariService;
+
+    public RegistroController(UsuariService usuariService) {
+        this.usuariService = usuariService;
+    }
 
     @GetMapping("/mostrar_registro")
     public String registro(Model model) {

@@ -21,11 +21,15 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/reserva")
 public class ReservaController {
-    @Autowired
-    private VehicleService vehicleService;
 
-    @Autowired
-    private ReservaService reservaService;
+    private final VehicleService vehicleService;
+
+    private final ReservaService reservaService;
+
+    public ReservaController(VehicleService vehicleService, ReservaService reservaService) {
+        this.vehicleService = vehicleService;
+        this.reservaService = reservaService;
+    }
 
     @PostMapping("/crearReserva/{matricula}")
     public String createReserva(

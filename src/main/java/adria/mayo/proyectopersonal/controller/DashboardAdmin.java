@@ -28,14 +28,15 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin")
 public class DashboardAdmin {
 
+    private final ReservaService reservaService;
+    private final UsuariService usuariService;
+    private final VehicleService vehiculoService;
 
-    @Autowired
-    private ReservaService reservaService;
-    @Autowired
-    private UsuariService usuariService;
-
-    @Autowired
-    private VehicleService vehiculoService;
+    public DashboardAdmin(ReservaService reservaService, UsuariService usuariService, VehicleService vehiculoService) {
+        this.reservaService = reservaService;
+        this.usuariService = usuariService;
+        this.vehiculoService = vehiculoService;
+    }
 
 
     @GetMapping("/adminDashboard")
@@ -45,15 +46,15 @@ public class DashboardAdmin {
 
     @GetMapping("/listaUsu")
     public String listaUsu(
-            @RequestParam(name = "Dni" ,required = false) String Dni,
-            @RequestParam(name = "Nom" ,required = false) String Nom,
-            @RequestParam(name = "Cognom" ,required = false) String Cognom,
-            @RequestParam(name = "Email" ,required = false) String Email,
-            @RequestParam(name = "nomUsuari" ,required = false) String nomUsuari,
-            @RequestParam(name = "telf" ,required = false) String telf,
-            @RequestParam(name = "codiPostal" ,required = false) String codiPostal,
-            @RequestParam(name = "direccio" ,required = false) String direccio,
-            @RequestParam(name = "poblacio" ,required = false) String poblacio,
+            @RequestParam(name = "Dni", required = false) String Dni,
+            @RequestParam(name = "Nom", required = false) String Nom,
+            @RequestParam(name = "Cognom", required = false) String Cognom,
+            @RequestParam(name = "Email", required = false) String Email,
+            @RequestParam(name = "nomUsuari", required = false) String nomUsuari,
+            @RequestParam(name = "telf", required = false) String telf,
+            @RequestParam(name = "codiPostal", required = false) String codiPostal,
+            @RequestParam(name = "direccio", required = false) String direccio,
+            @RequestParam(name = "poblacio", required = false) String poblacio,
             @RequestParam(name = "estat", required = false) EstatUsuari estat,
             @RequestParam(name = "pais", required = false) Pais pais,
 
@@ -81,33 +82,33 @@ public class DashboardAdmin {
             }
         }
 
-        if(Nom != null && !Nom.isEmpty()) {
+        if (Nom != null && !Nom.isEmpty()) {
             String nom = Nom.toLowerCase();
             usu = usu.stream().filter(u -> u.getNom().toLowerCase().contains(nom)).toList();
         }
-        if(Cognom != null && !Cognom.isEmpty()) {
+        if (Cognom != null && !Cognom.isEmpty()) {
             String nom = Cognom.toLowerCase();
             usu = usu.stream().filter(u -> u.getCognoms().toLowerCase().contains(nom)).toList();
         }
-        if(nomUsuari != null && !nomUsuari.isEmpty()) {
+        if (nomUsuari != null && !nomUsuari.isEmpty()) {
             String nom = nomUsuari.toLowerCase();
             usu = usu.stream().filter(u -> u.getNomUsuari().toLowerCase().contains(nom)).toList();
         }
-        if(Email != null && !Email.isEmpty()) {
+        if (Email != null && !Email.isEmpty()) {
             String nom = Email.toLowerCase();
             usu = usu.stream().filter(u -> u.getEmail().toLowerCase().contains(nom)).toList();
         }
-        if(codiPostal != null && !codiPostal.isEmpty() ) {
+        if (codiPostal != null && !codiPostal.isEmpty()) {
             usu = usu.stream().filter(u -> u.getCodiPostal().contains(codiPostal)).toList();
         }
-        if(telf != null && !telf.isEmpty() ) {
+        if (telf != null && !telf.isEmpty()) {
             usu = usu.stream().filter(u -> u.getNumContacte().contains(telf)).toList();
         }
-        if(direccio != null && !direccio.isEmpty() ) {
+        if (direccio != null && !direccio.isEmpty()) {
             String direccion = direccio.toLowerCase();
             usu = usu.stream().filter(u -> u.getDireccio().contains(direccion)).toList();
         }
-        if(poblacio != null && !poblacio.isEmpty() ) {
+        if (poblacio != null && !poblacio.isEmpty()) {
             String poblacion = poblacio.toLowerCase();
             usu = usu.stream().filter(u -> u.getPoblacio().contains(poblacion)).toList();
         }
@@ -171,6 +172,7 @@ public class DashboardAdmin {
             return "redirect:/admin/listaUsu";
         }
     }
+
     @PostMapping("/editarUsuari")
     public String guardarEdicioUsuari(@ModelAttribute("usu") Usuari usuari) {
         usuariService.crearUsuari(usuari, usuari.getRol(), usuari.getEstat());
@@ -180,13 +182,13 @@ public class DashboardAdmin {
 
     @GetMapping("/llistaVehiculo")
     public String llistaVehiculo(
-            @RequestParam(name = "matricula",required = false ) String matricula,
-            @RequestParam(name = "marca",required = false ) String marca,
-            @RequestParam(name = "estatVehicle",required = false ) EstatVehicle estatVehicle,
-            @RequestParam(name = "combustible",required = false ) Combustible combustible,
-            @RequestParam(name = "canvis",required = false ) CaixaCanvis canvis,
-            @RequestParam(name = "minPunts",required = false ) Integer minPunts,
-            @RequestParam(name = "maxPunts",required = false ) Integer maxPunts,
+            @RequestParam(name = "matricula", required = false) String matricula,
+            @RequestParam(name = "marca", required = false) String marca,
+            @RequestParam(name = "estatVehicle", required = false) EstatVehicle estatVehicle,
+            @RequestParam(name = "combustible", required = false) Combustible combustible,
+            @RequestParam(name = "canvis", required = false) CaixaCanvis canvis,
+            @RequestParam(name = "minPunts", required = false) Integer minPunts,
+            @RequestParam(name = "maxPunts", required = false) Integer maxPunts,
             Model model) {
         List<Vehiculo> vehicle = vehiculoService.listarVehiculos();
 
@@ -210,7 +212,7 @@ public class DashboardAdmin {
             }
         }
 
-        if(marca != null && !marca.isEmpty()) {
+        if (marca != null && !marca.isEmpty()) {
             String marcaAux = marca.toUpperCase();
             vehicle = vehicle.stream().filter(u -> u.getMarca().toUpperCase().contains(marcaAux)).toList();
         }
@@ -321,8 +323,9 @@ public class DashboardAdmin {
             return "redirect:/admin/llistaVehiculo";
         }
     }
+
     @PostMapping("/editarVehicle")
-    public String guardarEdicioVehicle(@ModelAttribute("vehiculo") Vehiculo vehiculo,@RequestParam(value = "imagen", required = false) MultipartFile imagen) throws IOException {
+    public String guardarEdicioVehicle(@ModelAttribute("vehiculo") Vehiculo vehiculo, @RequestParam(value = "imagen", required = false) MultipartFile imagen) throws IOException {
         if (imagen != null && !imagen.isEmpty()) {
             String base64Foto = Base64.getEncoder().encodeToString(imagen.getBytes());
             vehiculo.setFoto(base64Foto);
@@ -332,8 +335,8 @@ public class DashboardAdmin {
     }
 
 
-@GetMapping("/visualizarDetallsVehicle/{matricula}")
-public String verDetallsVehiculo(@PathVariable String matricula, Model model) {
+    @GetMapping("/visualizarDetallsVehicle/{matricula}")
+    public String verDetallsVehiculo(@PathVariable String matricula, Model model) {
         Optional<Vehiculo> vehiculo = vehiculoService.buscarVehiculo(matricula);
         if (vehiculo.isPresent()) {
             model.addAttribute("vehiculo", vehiculo.get());
@@ -344,10 +347,10 @@ public String verDetallsVehiculo(@PathVariable String matricula, Model model) {
             model.addAttribute("Marxes", Marxes.values());
             model.addAttribute("estat", EstatVehicle.values());
             return "infoVehicleAdmin";
-        }else {
+        } else {
             return "redirect:/admin/llistaVehiculo";
         }
-}
+    }
 
 
     /*
@@ -391,8 +394,6 @@ public String verDetallsVehiculo(@PathVariable String matricula, Model model) {
         }
         return "redirect:/admin/listarReserva";
     }
-
-
 
 
 }

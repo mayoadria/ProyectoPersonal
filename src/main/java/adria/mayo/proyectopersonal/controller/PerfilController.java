@@ -20,8 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/perfil")
 public class PerfilController {
 
-    @Autowired
-    private UsuariService usuariService;
+
+    private final UsuariService usuariService;
+
+    public PerfilController(UsuariService usuariService) {
+        this.usuariService = usuariService;
+    }
 
     @GetMapping("/mostrarPerfil")
     public String mostrarPerfil(Model model) {

@@ -17,8 +17,11 @@ import java.util.stream.Collectors;
 @Controller
 public class CatalegController {
 
-    @Autowired
-    private VehicleService vehicleService;
+    private final VehicleService vehicleService;
+
+    public CatalegController(VehicleService vehicleService) {
+        this.vehicleService = vehicleService;
+    }
 
     @GetMapping("/cataleg")
     public String cataleg(Model model){

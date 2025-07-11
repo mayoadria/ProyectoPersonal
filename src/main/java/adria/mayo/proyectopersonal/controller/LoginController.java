@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
 
-    @Autowired
-    private UsuariService usuariService;
-
     @GetMapping("/login")
     public String login() {
         return "Login";
