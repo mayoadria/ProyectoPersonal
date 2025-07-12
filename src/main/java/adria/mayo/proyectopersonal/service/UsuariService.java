@@ -31,6 +31,7 @@ public class UsuariService {
         }
     }
 
+
     public Usuari findBynomUsuari(String nomUsuari) {
         return usuarioRepo.findBynomUsuari(nomUsuari);
     }
@@ -45,11 +46,21 @@ public class UsuariService {
     }
 
     public void actualizarUsuari(Usuari usuari) {
-        usuarioRepo.save(usuari);
+        // Obtener el usuario actual de la base de datos
+        Usuari usuariExistente = usuarioRepo.findById(usuari.getDni()).orElse(null);
+
+        if (usuariExistente != null) {
+            // Mantener la contraseña existente
+            usuari.setContrasenya(usuariExistente.getContrasenya());
+
+            // Guardar el usuario actualizado con la contraseña intacta
+            usuarioRepo.save(usuari);
+        }
     }
 
     public void activarUsuari(String nomUsuari) {
         Usuari usuari = findBynomUsuari(nomUsuari);
+
         switch (usuari.getEstat()) {
             case ACTIVO:
                 usuari.setEstat(EstatUsuari.INACTIVO);

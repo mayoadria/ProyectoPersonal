@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UsuarioRepo extends JpaRepository<Usuari, Long> {
+public interface UsuarioRepo extends JpaRepository<Usuari, String> {
     Usuari findBynomUsuari(String nomUsuari);
 
     @Query("SELECT u FROM Usuari u " +

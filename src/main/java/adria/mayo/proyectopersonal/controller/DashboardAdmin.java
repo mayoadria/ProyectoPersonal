@@ -1,5 +1,7 @@
 package adria.mayo.proyectopersonal.controller;
 
+import adria.mayo.proyectopersonal.dto.UsuariFiltroDTO;
+import adria.mayo.proyectopersonal.dto.UsuariRespuestaDTO;
 import adria.mayo.proyectopersonal.entity.Reserva;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.Vehiculo;
@@ -45,25 +47,40 @@ public class DashboardAdmin {
     }
 
     @GetMapping("/listaUsu")
-    public String listaUsu(
-            @RequestParam(name = "Dni", required = false) String Dni,
-            @RequestParam(name = "Nom", required = false) String Nom,
-            @RequestParam(name = "Cognom", required = false) String Cognom,
-            @RequestParam(name = "Email", required = false) String Email,
-            @RequestParam(name = "nomUsuari", required = false) String nomUsuari,
-            @RequestParam(name = "telf", required = false) String telf,
-            @RequestParam(name = "codiPostal", required = false) String codiPostal,
-            @RequestParam(name = "direccio", required = false) String direccio,
-            @RequestParam(name = "poblacio", required = false) String poblacio,
-            @RequestParam(name = "estat", required = false) EstatUsuari estat,
-            @RequestParam(name = "pais", required = false) Pais pais,
-
-            Model model) {
+    public String listaUsu(@ModelAttribute UsuariFiltroDTO filtro, Model model) {
         List<Usuari> usu = usuariService.buscarUsuarisAvançat(
-                Dni, Nom, Cognom, Email, nomUsuari, telf, codiPostal, direccio, poblacio, estat, pais
+                filtro.getDni(),
+                filtro.getNom(),
+                filtro.getCognom(),
+                filtro.getEmail(),
+                filtro.getNomUsuari(),
+                filtro.getTelf(),
+                filtro.getCodiPostal(),
+                filtro.getDireccio(),
+                filtro.getPoblacio(),
+                filtro.getEstatUsuari(),
+                filtro.getPais()
         );
 
-        model.addAttribute("usu", usu);
+        // Convertir a DTO
+        List<UsuariRespuestaDTO> usuDTO = usu.stream()
+                .map(u -> new UsuariRespuestaDTO(
+                        u.getDni(),
+                        u.getNom(),
+                        u.getCognoms(),
+                        u.getEmail(),
+                        u.getNomUsuari(),
+                        u.getEstat(),
+                        u.getPais(),
+                        u.getNumContacte(),
+                        u.getCodiPostal(),
+                        u.getDireccio(),
+                        u.getPoblacio(),
+                        u.getRol()
+                ))
+                .collect(Collectors.toList());
+
+        model.addAttribute("usu", usuDTO);
         model.addAttribute("estats", EstatUsuari.values());
         model.addAttribute("pais", Pais.values());
         return "ListaUsu";
@@ -100,13 +117,27 @@ public class DashboardAdmin {
 
     @GetMapping("/editarUsuari/{nomUsuari}")
     public String editarUsuari(@PathVariable String nomUsuari, Model model) {
-        Usuari usuariOptional = usuariService.findBynomUsuari(nomUsuari);
-        if (usuariOptional != null) {
-            model.addAttribute("usu", usuariOptional);
+        Usuari usuari = usuariService.findBynomUsuari(nomUsuari);
+        if (usuari != null) {
+            UsuariRespuestaDTO dto = new UsuariRespuestaDTO(
+                    usuari.getDni(),
+                    usuari.getNom(),
+                    usuari.getCognoms(),
+                    usuari.getEmail(),
+                    usuari.getNomUsuari(),
+                    usuari.getEstat(),
+                    usuari.getPais(),
+                    usuari.getNumContacte(),
+                    usuari.getCodiPostal(),
+                    usuari.getDireccio(),
+                    usuari.getPoblacio(),
+                    usuari.getRol()
+            );
+            model.addAttribute("usu", dto);
             model.addAttribute("pais", Pais.values());
             model.addAttribute("rol", Rol.values());
             model.addAttribute("estat", EstatUsuari.values());
-            model.addAttribute("isEdit", usuariOptional.getDni() != null);
+            model.addAttribute("isEdit", dto.getDni() != null);
             return "CrearUsuari";
         } else {
             return "redirect:/admin/listaUsu";
@@ -115,7 +146,7 @@ public class DashboardAdmin {
 
     @PostMapping("/editarUsuari")
     public String guardarEdicioUsuari(@ModelAttribute("usu") Usuari usuari) {
-        usuariService.crearUsuari(usuari, usuari.getRol(), usuari.getEstat());
+        usuariService.actualizarUsuari(usuari);
         return "redirect:/admin/listaUsu";
     }
 
