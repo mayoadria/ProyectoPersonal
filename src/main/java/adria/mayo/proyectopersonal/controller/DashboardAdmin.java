@@ -127,62 +127,19 @@ public class DashboardAdmin {
             @RequestParam(name = "estatVehicle", required = false) EstatVehicle estatVehicle,
             @RequestParam(name = "combustible", required = false) Combustible combustible,
             @RequestParam(name = "canvis", required = false) CaixaCanvis canvis,
-            @RequestParam(name = "minPunts", required = false) Integer minPunts,
-            @RequestParam(name = "maxPunts", required = false) Integer maxPunts,
+            @RequestParam(name = "minAny", required = false) Integer minAny,
+            @RequestParam(name = "maxAny", required = false) Integer maxAny,
             Model model) {
-        List<Vehiculo> vehicle = vehiculoService.listarVehiculos();
+        List<Vehiculo> vehicle = vehiculoService.buscarVehiculosFiltro(matricula,marca,estatVehicle,combustible,canvis);
 
-        if (matricula != null && !matricula.trim().isEmpty()) {
-            String matriculaAux = matricula.trim().toUpperCase();
-
-            // Validar que tenga al menos 7 caracteres para hacer substring
-            if (matriculaAux.length() >= 7) {
-                String numeros = matriculaAux.substring(0, 4);
-                String letras = matriculaAux.substring(4, 7);
-
-                vehicle = vehicle.stream()
-                        .filter(m -> m.getMatricula().toUpperCase().contains(numeros))
-                        .filter(m -> m.getMatricula().toUpperCase().contains(letras))
-                        .toList();
-            } else {
-                // Si no tiene longitud suficiente, puedes buscar con contains o ignorar
-                vehicle = vehicle.stream()
-                        .filter(m -> m.getMatricula().toUpperCase().contains(matriculaAux))
-                        .toList();
-            }
-        }
-
-        if (marca != null && !marca.isEmpty()) {
-            String marcaAux = marca.toUpperCase();
-            vehicle = vehicle.stream().filter(u -> u.getMarca().toUpperCase().contains(marcaAux)).toList();
-        }
-
-        if (estatVehicle != null) {
-            vehicle = vehicle.stream()
-                    .filter(v -> v.getEstatVehicle().name().equalsIgnoreCase(estatVehicle.name()))
-                    .collect(Collectors.toList());
-        }
-
-        if (combustible != null) {
-            vehicle = vehicle.stream()
-                    .filter(v -> v.getCombustible().name().equalsIgnoreCase(combustible.name()))
-                    .collect(Collectors.toList());
-        }
-        if (canvis != null) {
-            vehicle = vehicle.stream()
-                    .filter(v -> v.getCaixaCanvis().name().equalsIgnoreCase(canvis.name()))
-                    .collect(Collectors.toList());
-        }
-        if (minPunts != null || maxPunts != null) {
-            int min = (minPunts != null) ? minPunts : Integer.MIN_VALUE;
-            int max = (maxPunts != null) ? maxPunts : Integer.MAX_VALUE;
+        if (minAny != null || maxAny != null) {
+            int min = (minAny != null) ? minAny : Integer.MIN_VALUE;
+            int max = (maxAny != null) ? maxAny : Integer.MAX_VALUE;
 
             vehicle = vehicle.stream()
                     .filter(v -> v.getAnyVehicle() >= min && v.getAnyVehicle() <= max)
                     .collect(Collectors.toList());
         }
-
-
         model.addAttribute("vehicle", vehicle);
         model.addAttribute("estatVehicle", EstatVehicle.values());
         model.addAttribute("combustible", Combustible.values());

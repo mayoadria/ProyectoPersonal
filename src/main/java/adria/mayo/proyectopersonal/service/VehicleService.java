@@ -3,6 +3,8 @@ package adria.mayo.proyectopersonal.service;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.Vehiculo;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
+import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.CaixaCanvis;
+import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Combustible;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.EstatVehicle;
 import adria.mayo.proyectopersonal.repository.VehiclesRepository;
 import adria.mayo.proyectopersonal.security.UserUtils;
@@ -22,10 +24,6 @@ public class VehicleService {
 
     public void guardarVehiculo(Vehiculo vehiculo) {
         vehiclesRepository.save(vehiculo);
-    }
-
-    public List<Vehiculo> listarVehiculos() {
-        return vehiclesRepository.findAll();
     }
 
     public List<Vehiculo> listarVehiculosActivos(EstatVehicle estatVehicle) {
@@ -55,5 +53,12 @@ public class VehicleService {
                 vehiclesRepository.save(vehiculo);
                 break;
         }
+    }
+
+    public List<Vehiculo> buscarVehiculosFiltro(String matricula, String marca,
+                                                EstatVehicle estatVehicle, Combustible combustible,
+                                                CaixaCanvis canvis) {
+        return vehiclesRepository.listaFiltrado(matricula,marca,estatVehicle,
+                combustible,canvis);
     }
 }
