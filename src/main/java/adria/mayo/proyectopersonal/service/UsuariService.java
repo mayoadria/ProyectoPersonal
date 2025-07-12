@@ -3,6 +3,7 @@ package adria.mayo.proyectopersonal.service;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
+import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais;
 import adria.mayo.proyectopersonal.repository.UsuarioRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,5 +63,12 @@ public class UsuariService {
         }
 
 
+    }
+
+    public List<Usuari> buscarUsuarisAvançat(String dni, String nom, String cognom, String email,
+                                             String nomUsuari, String telf, String codiPostal, String direccio,
+                                             String poblacio, EstatUsuari estat, Pais pais) {
+        return usuarioRepo.buscarUsuarisAvançat(dni, nom, cognom, email, nomUsuari, telf,
+                codiPostal, direccio, poblacio, estat, pais);
     }
 }

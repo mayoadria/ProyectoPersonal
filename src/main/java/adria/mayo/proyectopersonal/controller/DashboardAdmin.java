@@ -59,69 +59,9 @@ public class DashboardAdmin {
             @RequestParam(name = "pais", required = false) Pais pais,
 
             Model model) {
-        List<Usuari> usu = usuariService.findAll();
-
-        if (Dni != null && !Dni.isEmpty()) {
-            String dniLower = Dni.toLowerCase();
-
-            // Si el DNI tiene exactamente 9 caracteres (8 números + 1 letra)
-            if (dniLower.length() == 9) {
-                String dniNumeros = dniLower.substring(0, 8);
-                String letraDNI = dniLower.substring(8); // solo el último caracter
-
-                usu = usu.stream()
-                        .filter(u -> u.getDni().toLowerCase().contains(dniNumeros))
-                        .filter(u -> u.getDni().toLowerCase().contains(letraDNI))
-                        .toList();
-
-            } else {
-                // Búsqueda parcial general si no tiene 9 caracteres
-                usu = usu.stream()
-                        .filter(u -> u.getDni().toLowerCase().contains(dniLower))
-                        .toList();
-            }
-        }
-
-        if (Nom != null && !Nom.isEmpty()) {
-            String nom = Nom.toLowerCase();
-            usu = usu.stream().filter(u -> u.getNom().toLowerCase().contains(nom)).toList();
-        }
-        if (Cognom != null && !Cognom.isEmpty()) {
-            String nom = Cognom.toLowerCase();
-            usu = usu.stream().filter(u -> u.getCognoms().toLowerCase().contains(nom)).toList();
-        }
-        if (nomUsuari != null && !nomUsuari.isEmpty()) {
-            String nom = nomUsuari.toLowerCase();
-            usu = usu.stream().filter(u -> u.getNomUsuari().toLowerCase().contains(nom)).toList();
-        }
-        if (Email != null && !Email.isEmpty()) {
-            String nom = Email.toLowerCase();
-            usu = usu.stream().filter(u -> u.getEmail().toLowerCase().contains(nom)).toList();
-        }
-        if (codiPostal != null && !codiPostal.isEmpty()) {
-            usu = usu.stream().filter(u -> u.getCodiPostal().contains(codiPostal)).toList();
-        }
-        if (telf != null && !telf.isEmpty()) {
-            usu = usu.stream().filter(u -> u.getNumContacte().contains(telf)).toList();
-        }
-        if (direccio != null && !direccio.isEmpty()) {
-            String direccion = direccio.toLowerCase();
-            usu = usu.stream().filter(u -> u.getDireccio().contains(direccion)).toList();
-        }
-        if (poblacio != null && !poblacio.isEmpty()) {
-            String poblacion = poblacio.toLowerCase();
-            usu = usu.stream().filter(u -> u.getPoblacio().contains(poblacion)).toList();
-        }
-        if (estat != null) {
-            usu = usu.stream()
-                    .filter(u -> u.getEstat().name().equalsIgnoreCase(estat.name()))
-                    .collect(Collectors.toList());
-        }
-        if (pais != null) {
-            usu = usu.stream()
-                    .filter(u -> u.getPais().name().equalsIgnoreCase(pais.name()))
-                    .collect(Collectors.toList());
-        }
+        List<Usuari> usu = usuariService.buscarUsuarisAvançat(
+                Dni, Nom, Cognom, Email, nomUsuari, telf, codiPostal, direccio, poblacio, estat, pais
+        );
 
         model.addAttribute("usu", usu);
         model.addAttribute("estats", EstatUsuari.values());
