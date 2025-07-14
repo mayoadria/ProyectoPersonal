@@ -160,6 +160,8 @@ public class DashboardAdmin {
             @RequestParam(name = "minAny", required = false) Integer minAny,
             @RequestParam(name = "maxAny", required = false) Integer maxAny,
             Model model) {
+        Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
+
         List<Vehiculo> vehicle = vehiculoService.buscarVehiculosFiltro(
                 filtro.getMatricula(),
                 filtro.getMarca(),
@@ -176,6 +178,7 @@ public class DashboardAdmin {
                     .filter(v -> v.getAnyVehicle() >= min && v.getAnyVehicle() <= max)
                     .toList();
         }
+
 
         List<VehicleRespuestaDTO> vehicleDto = vehicle.stream().map(
                  vehiculo -> new VehicleRespuestaDTO(
@@ -201,7 +204,15 @@ public class DashboardAdmin {
                  )
         ).toList();
 
-        model.addAttribute("vehicle", vehicleDto);
+        if(usuari.getRol() == Rol.AGENTE){
+            List<VehicleRespuestaDTO> vehicleDTOAgente = vehicleDto.stream().filter(
+                    vehicleRespuestaDTO -> vehicleRespuestaDTO.getCreador().getNomUsuari().equals(usuari.getNomUsuari())
+            ).toList();
+            model.addAttribute("vehicle", vehicleDTOAgente);
+        }else{
+            model.addAttribute("vehicle", vehicleDto);
+        }
+
         model.addAttribute("estatVehicle", EstatVehicle.values());
         model.addAttribute("combustible", Combustible.values());
         model.addAttribute("canvis", CaixaCanvis.values());
