@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/CrearAgente.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <script src="/js/header.js" defer></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -15,6 +17,7 @@
 </head>
 
 <body>
+<div th:replace="/header.html :: siteHeader"></div>
 <h1>Crear Usuaris</h1>
 <form th:action="${isEdit} ? '/admin/editarUsuari' : '/admin/newUsuari'" th:object="${usu}" method="POST">
     <input type="hidden" name="nomUsuari" th:value="${usu.nomUsuari}" />

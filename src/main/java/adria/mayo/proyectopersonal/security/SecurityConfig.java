@@ -17,7 +17,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain webChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(
-                auth -> auth.requestMatchers("registrar/**","/login", "/validar", "/", "/cataleg","/css/**","/js/**","/Imagenes/**").permitAll()
+                auth -> auth.requestMatchers("registrar/**","/login", "/validar", "/**", "/cataleg","/css/**","/js/**","/Imagenes/**").permitAll()
                         .anyRequest().authenticated()
         ).formLogin(form -> form
                         .loginPage("/login")                     // <- tu página personalizada

@@ -1,7 +1,6 @@
 package adria.mayo.proyectopersonal.controller;
 
-import adria.mayo.proyectopersonal.dto.UsuariFiltroDTO;
-import adria.mayo.proyectopersonal.dto.UsuariRespuestaDTO;
+import adria.mayo.proyectopersonal.dto.*;
 import adria.mayo.proyectopersonal.entity.Reserva;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.Vehiculo;
@@ -33,11 +32,13 @@ public class DashboardAdmin {
     private final ReservaService reservaService;
     private final UsuariService usuariService;
     private final VehicleService vehiculoService;
+    private final UsuariMapper usuariMapper;
 
-    public DashboardAdmin(ReservaService reservaService, UsuariService usuariService, VehicleService vehiculoService) {
+    public DashboardAdmin(ReservaService reservaService, UsuariService usuariService, VehicleService vehiculoService,UsuariMapper usuariMapper) {
         this.reservaService = reservaService;
         this.usuariService = usuariService;
         this.vehiculoService = vehiculoService;
+        this.usuariMapper = usuariMapper;
     }
 
 
@@ -79,6 +80,8 @@ public class DashboardAdmin {
                         u.getRol()
                 ))
                 .collect(Collectors.toList());
+
+
 
         model.addAttribute("usu", usuDTO);
         model.addAttribute("estats", EstatUsuari.values());
@@ -153,15 +156,17 @@ public class DashboardAdmin {
 
     @GetMapping("/llistaVehiculo")
     public String llistaVehiculo(
-            @RequestParam(name = "matricula", required = false) String matricula,
-            @RequestParam(name = "marca", required = false) String marca,
-            @RequestParam(name = "estatVehicle", required = false) EstatVehicle estatVehicle,
-            @RequestParam(name = "combustible", required = false) Combustible combustible,
-            @RequestParam(name = "canvis", required = false) CaixaCanvis canvis,
+            @ModelAttribute VehicleFltroDTO filtro,
             @RequestParam(name = "minAny", required = false) Integer minAny,
             @RequestParam(name = "maxAny", required = false) Integer maxAny,
             Model model) {
-        List<Vehiculo> vehicle = vehiculoService.buscarVehiculosFiltro(matricula,marca,estatVehicle,combustible,canvis);
+        List<Vehiculo> vehicle = vehiculoService.buscarVehiculosFiltro(
+                filtro.getMatricula(),
+                filtro.getMarca(),
+                filtro.getEstatVehicle(),
+                filtro.getCombustible(),
+                filtro.getCanvis()
+        );
 
         if (minAny != null || maxAny != null) {
             int min = (minAny != null) ? minAny : Integer.MIN_VALUE;
@@ -169,9 +174,34 @@ public class DashboardAdmin {
 
             vehicle = vehicle.stream()
                     .filter(v -> v.getAnyVehicle() >= min && v.getAnyVehicle() <= max)
-                    .collect(Collectors.toList());
+                    .toList();
         }
-        model.addAttribute("vehicle", vehicle);
+
+        List<VehicleRespuestaDTO> vehicleDto = vehicle.stream().map(
+                 vehiculo -> new VehicleRespuestaDTO(
+                         vehiculo.getMatricula(),
+                         vehiculo.getMarca(),
+                         vehiculo.getModel(),
+                         vehiculo.getPreuDia(),
+                         vehiculo.getFianca(),
+                         vehiculo.getDiesLloguerMinim(),
+                         vehiculo.getDiesLloguerMaxim(),
+                         vehiculo.getPlaces(),
+                         vehiculo.getPortes(),
+                         vehiculo.getCaixaCanvis(),
+                         vehiculo.getMarxes(),
+                         vehiculo.getCombustible(),
+                         vehiculo.getColor(),
+                         vehiculo.getEstatVehicle(),
+                         vehiculo.getAnyVehicle(),
+                         vehiculo.getKm(),
+                         vehiculo.getFoto(),
+                         usuariMapper.usuariToUsuariRespuestaDTO(vehiculo.getCreador())
+
+                 )
+        ).toList();
+
+        model.addAttribute("vehicle", vehicleDto);
         model.addAttribute("estatVehicle", EstatVehicle.values());
         model.addAttribute("combustible", Combustible.values());
         model.addAttribute("canvis", CaixaCanvis.values());

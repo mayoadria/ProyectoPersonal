@@ -18,20 +18,7 @@
 
 <body>
 <!-- Header -->
-<header class="nav-container">
-    <nav class="navbar">
-        <div class="logo">
-            <a class="logo">
-                <img src="/Imagenes/logo_openroad.png"  class="logo-img" width="55" height="55" draggable="false">
-            </a>
-        </div>
-        <ul class="nav-links">
-            <li><a href="#section1">Inici</a></li>
-            <li><a th:href="@{/cataleg}">Catàleg</a></li>
-            <li><a href="#section3">Contacte</a></li>
-        </ul>
-    </nav>
-</header>
+<div th:replace="/header.html :: siteHeader"></div>
 
 <!-- Contenido Principal -->
 <div class="main-wrapper">

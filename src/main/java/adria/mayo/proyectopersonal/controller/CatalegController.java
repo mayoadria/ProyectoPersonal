@@ -3,6 +3,7 @@ package adria.mayo.proyectopersonal.controller;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.Vehiculo;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.EstatVehicle;
+import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class CatalegController {
 
     @GetMapping("/cataleg")
     public String cataleg(Model model){
+        UserUtils.getUsuariDetalls(model);
         List<Vehiculo> vehiculos = vehicleService.listarVehiculosActivos(EstatVehicle.ACTIU);
         List<Vehiculo> vehiculosSinCreador = vehiculos.stream().filter(v -> v.getCreador() !=null).toList();
         model.addAttribute("vehiculos", vehiculosSinCreador);
@@ -34,6 +36,7 @@ public class CatalegController {
 
     @GetMapping("/detallsVehicle/{matricula}")
     public String detallsVehiculo(@PathVariable String matricula, Model model){
+        UserUtils.getUsuariDetalls(model);
         Optional<Vehiculo> vehiculo = vehicleService.buscarVehiculo(matricula);
         if(vehiculo.isPresent()){
             model.addAttribute("vehicle", vehiculo.get());

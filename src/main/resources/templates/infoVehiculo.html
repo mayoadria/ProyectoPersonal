@@ -12,24 +12,7 @@
     <title>OpenRoad · Vehicle</title>
 </head>
 <body>
-<header class="nav-container">
-    <nav class="navbar">
-        <div class="logo">
-            <a class="logo">
-                <img src="/images/Branding/v2/OpenRoad_Logo_Nombre_drecha_blanco.png" alt=" " class="logo-img"
-                     width="55px" height="55px" draggable="false">
-            </a>
-        </div>
-
-        <ul class="nav-links">
-            <li><a href="#section1">Inici</a></li>
-            <li><a th:href="@{/cataleg}">Catàleg</a></li>
-            <li><a href="#section3">Contacte</a></li>
-
-
-        </ul>
-    </nav>
-</header>
+<div th:replace="/header.html :: siteHeader"></div>
 
 
 <div class="container">
