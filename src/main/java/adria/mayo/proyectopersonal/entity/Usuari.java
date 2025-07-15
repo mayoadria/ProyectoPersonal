@@ -3,8 +3,11 @@ package adria.mayo.proyectopersonal.entity;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
+import adria.mayo.proyectopersonal.validaciones.ValidDniNie;
+import adria.mayo.proyectopersonal.validaciones.ValidTelf;
 import jakarta.persistence.*;
 import lombok.*;
+import jakarta.validation.constraints.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,18 +21,25 @@ import java.util.List;
 public class Usuari implements UserDetails {
 
     @Id
+    @NotEmpty(message = "El dni no pot estar buït")
+    @ValidDniNie
     private String dni;
 
     @Column(nullable = false)
+    @NotEmpty(message = "El nom no pot estar buït")
     private String nom;
 
     @Column(nullable = false)
+    @NotEmpty(message = "El cognom no pot estar buït")
     private String cognoms;
 
     @Column(nullable = false)
+    @ValidTelf
     private String numContacte;
 
     @Column(nullable = false, unique = true)
+    @NotEmpty(message = "El email no pot estar buït")
+    @Email(message = "Format del correu electronìc no vàlid")
     private String email;
 
     @Column(nullable = false)
@@ -42,12 +52,15 @@ public class Usuari implements UserDetails {
     private Pais pais;
 
     @Column(nullable = false)
+    @Size(min = 5,max = 5, message = "El codi postal a de tenir 5 digits")
     private String codiPostal;
 
     @Column(nullable = false)
+    @NotEmpty(message = "La població no pot estar buïda")
     private String poblacio;
 
     @Column(nullable = false)
+    @NotEmpty(message = "La direcció no pot estar buïda")
     private String direccio;
 
     @Enumerated(EnumType.STRING)

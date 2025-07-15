@@ -12,10 +12,12 @@ import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.ReservaService;
 import adria.mayo.proyectopersonal.service.UsuariService;
 import adria.mayo.proyectopersonal.service.VehicleService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +42,14 @@ public class DashboardAdmin {
         this.vehiculoService = vehiculoService;
         this.usuariMapper = usuariMapper;
     }
+
+    private void prepararFormularioCrear(Model model, boolean isEdit) {
+        model.addAttribute("pais", Pais.values());
+        model.addAttribute("rol", Rol.values());
+        model.addAttribute("estat", EstatUsuari.values());
+        model.addAttribute("isEdit", isEdit);
+    }
+
 
 
     @GetMapping("/adminDashboard")
@@ -105,15 +115,26 @@ public class DashboardAdmin {
     @GetMapping("/creaUsuariAdmin")
     public String crearUsuari(Model model) {
         model.addAttribute("usu", new Usuari());
-        model.addAttribute("pais", Pais.values());
-        model.addAttribute("rol", Rol.values());
-        model.addAttribute("estat", EstatUsuari.values());
-        model.addAttribute("isEdit", false);
+        prepararFormularioCrear(model,false);
         return "CrearUsuari";
     }
 
     @PostMapping("/newUsuari")
-    public String crearUsuarisAdmin(Usuari usuari) {
+    public String crearUsuarisAdmin(@Valid @ModelAttribute("usu") Usuari usuari, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            prepararFormularioCrear(model,false);
+            return "CrearUsuari";
+        }
+        if (usuariService.findByEmail(usuari.getEmail()) != null) {
+            result.rejectValue("email", "error.usu", "El email ya está registrado");
+            prepararFormularioCrear(model,false);
+            return "CrearUsuari";  // Volvemos a la vista con error sin insertar
+        }
+        if (usuariService.findByDni(usuari.getDni()).isPresent()) {
+            result.rejectValue("dni", "error.usu", "El dni ya está registrado");
+            prepararFormularioCrear(model,false);
+            return "CrearUsuari";  // Volvemos a la vista con error sin insertar
+        }
         usuariService.crearUsuari(usuari, usuari.getRol(), usuari.getEstat());
         return "redirect:/admin/listaUsu";
     }
@@ -137,10 +158,7 @@ public class DashboardAdmin {
                     usuari.getRol()
             );
             model.addAttribute("usu", dto);
-            model.addAttribute("pais", Pais.values());
-            model.addAttribute("rol", Rol.values());
-            model.addAttribute("estat", EstatUsuari.values());
-            model.addAttribute("isEdit", dto.getDni() != null);
+            prepararFormularioCrear(model,true);
             return "CrearUsuari";
         } else {
             return "redirect:/admin/listaUsu";
@@ -148,10 +166,26 @@ public class DashboardAdmin {
     }
 
     @PostMapping("/editarUsuari")
-    public String guardarEdicioUsuari(@ModelAttribute("usu") Usuari usuari) {
+    public String guardarEdicioUsuari(@Valid @ModelAttribute("usu") Usuari usuari, BindingResult result, Model model) {
+        // Validación de errores del formulario
+        if (result.hasErrors()) {
+            prepararFormularioCrear(model, true);
+            return "CrearUsuari";
+        }
+
+        // Verificamos si el email ya está en uso por otro usuario
+        Usuari usuariConMismoEmail = usuariService.findByEmail(usuari.getEmail());
+        if (usuariConMismoEmail != null && !usuariConMismoEmail.getNomUsuari().equals(usuari.getNomUsuari())) {
+            result.rejectValue("email", "error.usu", "El email ya está registrado por otro usuario");
+            prepararFormularioCrear(model, true);
+            return "CrearUsuari";
+        }
+
+        // Guardamos la edición
         usuariService.actualizarUsuari(usuari);
         return "redirect:/admin/listaUsu";
     }
+
 
 
     @GetMapping("/llistaVehiculo")

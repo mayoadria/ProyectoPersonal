@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface UsuarioRepo extends JpaRepository<Usuari, String> {
     Usuari findBynomUsuari(String nomUsuari);
+    Usuari findByEmail(String email);
 
     @Query("SELECT u FROM Usuari u " +
             "WHERE (:dni IS NULL OR LOWER(u.dni) LIKE LOWER(CONCAT('%', :dni, '%'))) " +

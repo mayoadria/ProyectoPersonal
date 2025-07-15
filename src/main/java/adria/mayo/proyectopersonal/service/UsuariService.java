@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuariService {
@@ -35,6 +36,15 @@ public class UsuariService {
     public Usuari findBynomUsuari(String nomUsuari) {
         return usuarioRepo.findBynomUsuari(nomUsuari);
     }
+
+    public Usuari findByEmail(String email) {
+        return usuarioRepo.findByEmail(email);
+    }
+    public Optional<Usuari> findByDni(String email) {
+        return usuarioRepo.findById(email);
+    }
+
+
 
     public List<Usuari> findAll() {
         return usuarioRepo.findAll();
