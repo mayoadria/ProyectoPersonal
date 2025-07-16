@@ -41,11 +41,20 @@ public class DashboardAdmin {
         this.usuariMapper = usuariMapper;
     }
 
-    private void prepararFormularioCrear(Model model, boolean isEdit) {
+    private void prepararFormularioCrearUsuario(Model model, boolean isEdit) {
         model.addAttribute("pais", Pais.values());
         model.addAttribute("rol", Rol.values());
         model.addAttribute("estat", EstatUsuari.values());
         model.addAttribute("isEdit", isEdit);
+    }
+
+    private void prepararFormularioCrearVehiculo(Model model) {
+        model.addAttribute("places", Places.values());
+        model.addAttribute("portes", Portes.values());
+        model.addAttribute("combustible", Combustible.values());
+        model.addAttribute("caixaCanvis", CaixaCanvis.values());
+        model.addAttribute("Marxes", Marxes.values());
+        model.addAttribute("estat", EstatVehicle.values());
     }
 
 
@@ -113,27 +122,28 @@ public class DashboardAdmin {
     @GetMapping("/creaUsuariAdmin")
     public String crearUsuari(Model model) {
         model.addAttribute("usu", new Usuari());
-        prepararFormularioCrear(model,false);
+        prepararFormularioCrearUsuario(model,false);
         return "CrearUsuari";
     }
 
     @PostMapping("/newUsuari")
     public String crearUsuarisAdmin(@Valid @ModelAttribute("usu") Usuari usuari, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            prepararFormularioCrear(model,false);
+            prepararFormularioCrearUsuario(model,false);
             return "CrearUsuari";
         }
-        if (usuariService.findByEmail(usuari.getEmail()) != null) {
+        if (usuariService.findByEmailOptional(usuari.getEmail()).isPresent()) {
             result.rejectValue("email", "error.usu", "El email ya está registrado");
-            prepararFormularioCrear(model,false);
+            prepararFormularioCrearUsuario(model,false);
             return "CrearUsuari";  // Volvemos a la vista con error sin insertar
         }
-        if (usuariService.findByDni(usuari.getDni()) != null) {
+        if (usuariService.findByDniOptional(usuari.getDni()).isPresent()) {
             result.rejectValue("dni", "error.usu", "El dni ya está registrado");
-            prepararFormularioCrear(model,false);
+            prepararFormularioCrearUsuario(model,false);
             return "CrearUsuari";  // Volvemos a la vista con error sin insertar
         }
-        usuariService.crearUsuari(usuari, usuari.getRol(), usuari.getEstat());
+
+        usuariService.crearUsuari(usuari,usuari.getRol(),usuari.getEstat());
         return "redirect:/admin/listaUsu";
     }
 
@@ -156,7 +166,7 @@ public class DashboardAdmin {
                     usuari.getRol()
             );
             model.addAttribute("usu", dto);
-            prepararFormularioCrear(model,true);
+            prepararFormularioCrearUsuario(model,true);
             return "CrearUsuari";
         } else {
             return "redirect:/admin/listaUsu";
@@ -167,7 +177,7 @@ public class DashboardAdmin {
     public String guardarEdicioUsuari(@Valid @ModelAttribute("usu") Usuari usuari, BindingResult result, Model model) {
         // Validación de errores del formulario
         if (result.hasErrors()) {
-            prepararFormularioCrear(model, true);
+            prepararFormularioCrearUsuario(model, true);
             return "CrearUsuari";
         }
 
@@ -175,7 +185,7 @@ public class DashboardAdmin {
         Usuari usuariConMismoEmail = usuariService.findByEmail(usuari.getEmail());
         if (usuariConMismoEmail != null && !usuariConMismoEmail.getNomUsuari().equals(usuari.getNomUsuari())) {
             result.rejectValue("email", "error.usu", "El email ya está registrado por otro usuario");
-            prepararFormularioCrear(model, true);
+            prepararFormularioCrearUsuario(model, true);
             return "CrearUsuari";
         }
 
@@ -267,11 +277,7 @@ public class DashboardAdmin {
     @GetMapping("/creaVehiculoAdmin")
     public String crearVehiculo(Model model) {
         model.addAttribute("vehiculo", new Vehiculo());
-        model.addAttribute("places", Places.values());
-        model.addAttribute("portes", Portes.values());
-        model.addAttribute("combustible", Combustible.values());
-        model.addAttribute("caixaCanvis", CaixaCanvis.values());
-        model.addAttribute("Marxes", Marxes.values());
+        prepararFormularioCrearVehiculo(model);
         model.addAttribute("isLogged", true);
         model.addAttribute("isEdit", false);
         return "crearVehicle";
@@ -281,7 +287,7 @@ public class DashboardAdmin {
     public String crearVehiculoAdmin(Vehiculo vehiculo, Model model, @RequestParam(value = "imagen", required = false) MultipartFile imagen) throws IOException {
         Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
 
-        Optional<Vehiculo> vehiculoExistente = vehiculoService.buscarVehiculo(vehiculo.getMatricula());
+        Optional<Vehiculo> vehiculoExistente = vehiculoService.buscarVehiculoOptional(vehiculo.getMatricula());
 
         if (vehiculoExistente.isEmpty()) {
             // Solo lo creamos si no existe
@@ -307,16 +313,11 @@ public class DashboardAdmin {
 
     @GetMapping("/editarVehicle/{matricula}")
     public String editarVehicle(@PathVariable String matricula, Model model) {
-        Optional<Vehiculo> vehiculo = vehiculoService.buscarVehiculo(matricula);
+        Vehiculo vehiculo = vehiculoService.buscarVehiculo(matricula);
         List<Usuari> usuaris = usuariService.findAll();
-        if (vehiculo.isPresent()) {
-            model.addAttribute("vehiculo", vehiculo.get());
-            model.addAttribute("places", Places.values());
-            model.addAttribute("portes", Portes.values());
-            model.addAttribute("combustible", Combustible.values());
-            model.addAttribute("caixaCanvis", CaixaCanvis.values());
-            model.addAttribute("Marxes", Marxes.values());
-            model.addAttribute("estat", EstatVehicle.values());
+        if (vehiculo != null) {
+            model.addAttribute("vehiculo", vehiculo);
+            prepararFormularioCrearVehiculo(model);
             model.addAttribute("usuaris", usuaris);
             model.addAttribute("isEdit", true);
             return "crearVehicle";
@@ -338,15 +339,10 @@ public class DashboardAdmin {
 
     @GetMapping("/visualizarDetallsVehicle/{matricula}")
     public String verDetallsVehiculo(@PathVariable String matricula, Model model) {
-        Optional<Vehiculo> vehiculo = vehiculoService.buscarVehiculo(matricula);
-        if (vehiculo.isPresent()) {
-            model.addAttribute("vehiculo", vehiculo.get());
-            model.addAttribute("places", Places.values());
-            model.addAttribute("portes", Portes.values());
-            model.addAttribute("combustible", Combustible.values());
-            model.addAttribute("caixaCanvis", CaixaCanvis.values());
-            model.addAttribute("Marxes", Marxes.values());
-            model.addAttribute("estat", EstatVehicle.values());
+        Vehiculo vehiculo = vehiculoService.buscarVehiculo(matricula);
+        if (vehiculo != null) {
+            model.addAttribute("vehiculo", vehiculo);
+            prepararFormularioCrearVehiculo(model);
             return "infoVehicleAdmin";
         } else {
             return "redirect:/admin/llistaVehiculo";
@@ -371,11 +367,11 @@ public class DashboardAdmin {
     @PostMapping("/cancelarReserva/{idReserva}/{matricula}")
     public String cancelarReserva(@PathVariable Long idReserva, @PathVariable String matricula) {
         Optional<Reserva> optionalReserva = reservaService.trobarReserva(idReserva);
-        Optional<Vehiculo> vehiculo = vehiculoService.buscarVehiculo(matricula);
+        Vehiculo vehiculo = vehiculoService.buscarVehiculo(matricula);
         if (optionalReserva.isPresent()) {
             Reserva reserva = optionalReserva.get();
             reserva.setEstatReserva(EstatReserva.ANULLADA);
-            if (vehiculo.isPresent()) {
+            if (vehiculo != null) {
                 vehiculoService.activarVehiculo(matricula);
                 vehiculoService.guardarVehiculo(reserva.getVehiculo());
             }

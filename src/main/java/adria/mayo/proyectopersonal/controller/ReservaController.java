@@ -37,16 +37,16 @@ public class ReservaController {
             Model model, Reserva reserva) {
 
         Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
-        Optional<Vehiculo> vehiculo = vehicleService.buscarVehiculo(matricula);
+        Vehiculo vehiculo = vehicleService.buscarVehiculo(matricula);
         if (usuari != null) {
             reserva.setUsuari(usuari);
             reserva.setEstatReserva(EstatReserva.PENDENT);
-            if (vehiculo.isPresent()) {
-                reserva.setVehiculo(vehiculo.get());
+            if (vehiculo != null) {
+                reserva.setVehiculo(vehiculo);
             }
             reservaService.crearReserva(reserva);
-            vehiculo.get().setEstatVehicle(EstatVehicle.INACTIU);
-            vehicleService.guardarVehiculo(vehiculo.get());
+            vehiculo.setEstatVehicle(EstatVehicle.INACTIU);
+            vehicleService.guardarVehiculo(vehiculo);
         }
         return "redirect:/cataleg";
 

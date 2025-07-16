@@ -1,4 +1,4 @@
-package adria.mayo.proyectopersonal.validaciones;
+package adria.mayo.proyectopersonal.validaciones.Usuari;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

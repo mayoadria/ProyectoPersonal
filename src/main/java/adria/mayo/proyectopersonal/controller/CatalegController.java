@@ -37,9 +37,9 @@ public class CatalegController {
     @GetMapping("/detallsVehicle/{matricula}")
     public String detallsVehiculo(@PathVariable String matricula, Model model){
         UserUtils.getUsuariDetalls(model);
-        Optional<Vehiculo> vehiculo = vehicleService.buscarVehiculo(matricula);
-        if(vehiculo.isPresent()){
-            model.addAttribute("vehicle", vehiculo.get());
+        Vehiculo vehiculo = vehicleService.buscarVehiculo(matricula);
+        if(vehiculo != null){
+            model.addAttribute("vehicle", vehiculo);
         }
 
         return "infoVehiculo";

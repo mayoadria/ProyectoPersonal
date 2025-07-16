@@ -1,15 +1,16 @@
-package adria.mayo.proyectopersonal.validaciones;
+package adria.mayo.proyectopersonal.validaciones.Usuari;
+
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = PhoneValidator.class)
+@Constraint(validatedBy = DniValidator.class)
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidTelf {
-    String message() default "Número de teléfono no válido";
+public @interface ValidDniNie {
+    String message() default "Format de DNI o NIE incorrecte";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

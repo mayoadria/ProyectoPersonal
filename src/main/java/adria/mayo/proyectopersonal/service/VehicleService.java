@@ -1,5 +1,7 @@
 package adria.mayo.proyectopersonal.service;
 
+import adria.mayo.proyectopersonal.Excepciones.Vehicle.ActivarVehiculoException;
+import adria.mayo.proyectopersonal.Excepciones.Vehicle.EncontrarVehicleException;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.Vehiculo;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
@@ -24,6 +26,9 @@ public class VehicleService {
 
     public void guardarVehiculo(Vehiculo vehiculo) {
         vehiclesRepository.save(vehiculo);
+        if(vehiculo.getEstatVehicle() == EstatVehicle.RESERVAT || vehiculo.getEstatVehicle() == EstatVehicle.ENTREGAT){
+            throw new ActivarVehiculoException("El vehiculo con " + vehiculo.getMatricula() + " no se puede desactivar porque tiene una reserva");
+        }
     }
 
     public List<Vehiculo> listarVehiculosActivos(EstatVehicle estatVehicle) {
@@ -31,27 +36,37 @@ public class VehicleService {
     }
 
     public void eliminarVehiculo(String matricula) {
-        Vehiculo vehiculo = buscarVehiculo(matricula)
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle no trobat amb matrícula: " + matricula));
+        Vehiculo vehiculo = buscarVehiculo(matricula);
+        if(vehiculo.getEstatVehicle() == EstatVehicle.RESERVAT || vehiculo.getEstatVehicle() == EstatVehicle.ENTREGAT){
+            throw new ActivarVehiculoException("El vehiculo con " + matricula + " no se puede eliminar porque tiene una reserva");
+        }
         vehiclesRepository.delete(vehiculo);
     }
 
-    public Optional<Vehiculo> buscarVehiculo(String matricula) {
+    public Vehiculo buscarVehiculo(String matricula) {
+        return vehiclesRepository.findById(matricula).orElseThrow(()->new EncontrarVehicleException("Vehiculo no encontrado: " + matricula));
+    }
+
+    public Optional<Vehiculo> buscarVehiculoOptional(String matricula) {
         return vehiclesRepository.findById(matricula);
     }
 
     public void activarVehiculo(String matricula) {
-        Vehiculo vehiculo = buscarVehiculo(matricula).orElseThrow(() -> new EntityNotFoundException("Vehicle no trobat amb matrícula: " + matricula));
-        switch (vehiculo.getEstatVehicle()) {
-            case ACTIU:
-                vehiculo.setEstatVehicle(EstatVehicle.INACTIU);
-                vehiclesRepository.save(vehiculo);
-                break;
+        Vehiculo vehiculo = buscarVehiculo(matricula);
+        if(vehiculo.getEstatVehicle() == EstatVehicle.RESERVAT || vehiculo.getEstatVehicle() == EstatVehicle.ENTREGAT){
+            throw new ActivarVehiculoException("El vehiculo con " + matricula + " no se puede desactivar porque tiene una reserva");
+        }else {
+            switch (vehiculo.getEstatVehicle()) {
+                case ACTIU:
+                    vehiculo.setEstatVehicle(EstatVehicle.INACTIU);
+                    vehiclesRepository.save(vehiculo);
+                    break;
 
-            case INACTIU:
-                vehiculo.setEstatVehicle(EstatVehicle.ACTIU);
-                vehiclesRepository.save(vehiculo);
-                break;
+                case INACTIU:
+                    vehiculo.setEstatVehicle(EstatVehicle.ACTIU);
+                    vehiclesRepository.save(vehiculo);
+                    break;
+            }
         }
     }
 
