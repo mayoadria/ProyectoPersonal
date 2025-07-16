@@ -81,7 +81,9 @@
             <button type="submit" class="btn-crear">Filtrar</button>
         </div>
         </form>
-
+        <div th:if="${mensajeError}" class="alert alert-danger">
+            <p th:text="${mensajeError}"></p>
+        </div>
         <table class="table table-bordered">
             <thead>
             <tr>

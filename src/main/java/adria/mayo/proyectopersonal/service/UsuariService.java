@@ -1,26 +1,28 @@
 package adria.mayo.proyectopersonal.service;
 
+import adria.mayo.proyectopersonal.Excepciones.AdminException;
+import adria.mayo.proyectopersonal.Excepciones.EncontrarUsuarioException;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais;
 import adria.mayo.proyectopersonal.repository.UsuarioRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UsuariService {
 
-    @Autowired
-    private UsuarioRepo usuarioRepo;
+    private final UsuarioRepo usuarioRepo;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
+    public UsuariService(UsuarioRepo usuarioRepo, PasswordEncoder passwordEncoder) {
+        this.usuarioRepo = usuarioRepo;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void crearUsuari(Usuari usuari, Rol rol, EstatUsuari estat) {
         if (usuari.getEmail() != null) {
@@ -34,14 +36,17 @@ public class UsuariService {
 
 
     public Usuari findBynomUsuari(String nomUsuari) {
-        return usuarioRepo.findBynomUsuari(nomUsuari);
+        return usuarioRepo.findBynomUsuari(nomUsuari)
+                .orElseThrow(() -> new EncontrarUsuarioException("Usuario no encontrado en la base de datos"));
     }
 
+
     public Usuari findByEmail(String email) {
-        return usuarioRepo.findByEmail(email);
+        return usuarioRepo.findByEmail(email)
+                .orElseThrow(()-> new EncontrarUsuarioException("Usuario no encontrado en la base de datos"));
     }
-    public Optional<Usuari> findByDni(String email) {
-        return usuarioRepo.findById(email);
+    public Usuari findByDni(String email) {
+        return usuarioRepo.findById(email).orElseThrow(()-> new EncontrarUsuarioException("Usuario no encontrado en la base de datos"));
     }
 
 
@@ -52,12 +57,16 @@ public class UsuariService {
 
     public void eliminarUsuari(String nomUsuari) {
         Usuari usuari = findBynomUsuari(nomUsuari);
+
+        if (usuari.getRol() == Rol.ADMINISTRADOR) {
+            throw new AdminException("No se puede eliminar un admin, si quieres eliminar el usuario cambia el rol primero");
+        }
         usuarioRepo.delete(usuari);
     }
 
     public void actualizarUsuari(Usuari usuari) {
         // Obtener el usuario actual de la base de datos
-        Usuari usuariExistente = usuarioRepo.findById(usuari.getDni()).orElse(null);
+        Usuari usuariExistente = usuarioRepo.findById(usuari.getDni()).orElseThrow(()-> new EncontrarUsuarioException("Usuario no encontrado en la base de datos"));
 
         if (usuariExistente != null) {
             // Mantener la contraseña existente
@@ -71,16 +80,20 @@ public class UsuariService {
     public void activarUsuari(String nomUsuari) {
         Usuari usuari = findBynomUsuari(nomUsuari);
 
-        switch (usuari.getEstat()) {
-            case ACTIVO:
-                usuari.setEstat(EstatUsuari.INACTIVO);
-                usuarioRepo.save(usuari);
-                break;
+        if (usuari.getRol() == Rol.ADMINISTRADOR) {
+            throw new AdminException("No se puede cambiar el estado a un administrador, cambia el rol primero");
+        }else {
+            switch (usuari.getEstat()) {
+                case ACTIVO:
+                    usuari.setEstat(EstatUsuari.INACTIVO);
+                    usuarioRepo.save(usuari);
+                    break;
 
-            case INACTIVO:
-                usuari.setEstat(EstatUsuari.ACTIVO);
-                usuarioRepo.save(usuari);
-                break;
+                case INACTIVO:
+                    usuari.setEstat(EstatUsuari.ACTIVO);
+                    usuarioRepo.save(usuari);
+                    break;
+            }
         }
 
 

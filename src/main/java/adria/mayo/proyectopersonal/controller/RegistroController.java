@@ -43,7 +43,7 @@ public class RegistroController {
             model.addAttribute("pais", Pais.values());
             return "Registre";  // Volvemos a la vista con error sin insertar
         }
-        if (usuariService.findByDni(usuari.getDni()).isPresent()) {
+        if (usuariService.findByDni(usuari.getDni()) != null) {
             result.rejectValue("dni", "error.usu", "El dni ya está registrado");
             model.addAttribute("pais", Pais.values());
             return "CrearUsuari";  // Volvemos a la vista con error sin insertar

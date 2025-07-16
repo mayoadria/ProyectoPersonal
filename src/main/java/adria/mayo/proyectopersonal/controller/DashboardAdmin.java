@@ -13,8 +13,6 @@ import adria.mayo.proyectopersonal.service.ReservaService;
 import adria.mayo.proyectopersonal.service.UsuariService;
 import adria.mayo.proyectopersonal.service.VehicleService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -130,7 +128,7 @@ public class DashboardAdmin {
             prepararFormularioCrear(model,false);
             return "CrearUsuari";  // Volvemos a la vista con error sin insertar
         }
-        if (usuariService.findByDni(usuari.getDni()).isPresent()) {
+        if (usuariService.findByDni(usuari.getDni()) != null) {
             result.rejectValue("dni", "error.usu", "El dni ya está registrado");
             prepararFormularioCrear(model,false);
             return "CrearUsuari";  // Volvemos a la vista con error sin insertar

@@ -9,11 +9,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UsuarioRepo extends JpaRepository<Usuari, String> {
-    Usuari findBynomUsuari(String nomUsuari);
-    Usuari findByEmail(String email);
+    Optional<Usuari> findBynomUsuari(String nomUsuari);
+    Optional<Usuari> findByEmail(String email);
 
     @Query("SELECT u FROM Usuari u " +
             "WHERE (:dni IS NULL OR LOWER(u.dni) LIKE LOWER(CONCAT('%', :dni, '%'))) " +

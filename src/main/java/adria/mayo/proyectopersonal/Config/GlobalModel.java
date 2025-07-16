@@ -1,4 +1,4 @@
-package adria.mayo.proyectopersonal.controller;
+package adria.mayo.proyectopersonal.Config;
 
 import adria.mayo.proyectopersonal.security.UserUtils;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice
-public class GlobalControllerAdvice {
+public class GlobalModel {
 
     @ModelAttribute("isLogged")
     public boolean isLogged() {

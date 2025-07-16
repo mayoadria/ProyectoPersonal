@@ -18,6 +18,9 @@
 <body>
 <div th:replace="/header.html :: siteHeader"></div>
 <h1>Crear Usuaris</h1>
+<div th:if="${mensajeError}" class="alert alert-danger">
+    <p th:text="${mensajeError}"></p>
+</div>
 <form th:action="${isEdit} ? '/admin/editarUsuari' : '/admin/newUsuari'" th:object="${usu}" method="POST">
     <div th:if="${isEdit}">
     <input type="hidden" name="nomUsuari" th:value="${usu.nomUsuari}" />
