@@ -373,10 +373,27 @@ public class DashboardAdmin {
 
     @GetMapping("/listarReserva")
     public String listar(Model model) {
+        Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
         List<Reserva> reservas = reservaService.listarReservas();
-        model.addAttribute("reserva", reservas);
+
+        if (usuari.getRol() == Rol.AGENTE) {
+            // Filtrar reservas en las que el coche pertenece al agente
+            List<Reserva> reservasAgente = reservas.stream()
+                    .filter(r -> r.getVehiculo().getCreador().getDni().equals(usuari.getDni()))
+                    .toList();
+            model.addAttribute("reserva", reservasAgente);
+        } else if (usuari.getRol() == Rol.CLIENTE) {
+            // Solo las reservas hechas por este usuario
+            List<Reserva> reservasClientes = reservaService.buscarReservasPorUsuario(usuari.getDni());
+            model.addAttribute("reserva", reservasClientes);
+        } else {
+            // ADMIN u otro rol con permisos completos
+            model.addAttribute("reserva", reservas);
+        }
+
         return "listaReservas";
     }
+
 
 
     @PostMapping("/cancelarReserva/{idReserva}/{matricula}")

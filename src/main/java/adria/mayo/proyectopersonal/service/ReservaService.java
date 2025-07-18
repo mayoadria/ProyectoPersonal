@@ -22,6 +22,10 @@ public class ReservaService {
         return reservaRepository.findAll();
     }
 
+    public List<Reserva> buscarReservasPorUsuario(String dni) {
+        return reservaRepository.findByDni(dni);
+    }
+
     public Optional<Reserva> trobarReserva(Long idReserva) {
         return reservaRepository.findById(idReserva);
     }
