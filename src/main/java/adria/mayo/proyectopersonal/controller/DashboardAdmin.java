@@ -284,11 +284,16 @@ public class DashboardAdmin {
     }
 
     @PostMapping("/newVehicle")
-    public String crearVehiculoAdmin(Vehiculo vehiculo, Model model, @RequestParam(value = "imagen", required = false) MultipartFile imagen) throws IOException {
+    public String crearVehiculoAdmin(@Valid @ModelAttribute("vehiculo")Vehiculo vehiculo,BindingResult result, Model model, @RequestParam(value = "imagen", required = false) MultipartFile imagen) throws IOException {
         Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
 
         Optional<Vehiculo> vehiculoExistente = vehiculoService.buscarVehiculoOptional(vehiculo.getMatricula());
-
+        if (result.hasErrors()){
+            prepararFormularioCrearVehiculo(model);
+            model.addAttribute("isLogged", true);
+            model.addAttribute("isEdit", false);
+            return "crearVehicle";
+        }
         if (vehiculoExistente.isEmpty()) {
             // Solo lo creamos si no existe
             if (usuari.getRol() == Rol.AGENTE) {
@@ -301,6 +306,8 @@ public class DashboardAdmin {
                 vehiculo.setFoto(base64Foto);
             }
             vehiculo.setEstatVehicle(EstatVehicle.INACTIU);
+
+
             vehiculoService.guardarVehiculo(vehiculo);
         } else {
             // El vehículo ya existe: puedes añadir un mensaje o lógica de error
@@ -327,7 +334,15 @@ public class DashboardAdmin {
     }
 
     @PostMapping("/editarVehicle")
-    public String guardarEdicioVehicle(@ModelAttribute("vehiculo") Vehiculo vehiculo, @RequestParam(value = "imagen", required = false) MultipartFile imagen) throws IOException {
+    public String guardarEdicioVehicle(@Valid @ModelAttribute("vehiculo") Vehiculo vehiculo, BindingResult result,
+                                       @RequestParam(value = "imagen", required = false) MultipartFile imagen,
+                                        Model model) throws IOException {
+        if (result.hasErrors()){
+            prepararFormularioCrearVehiculo(model);
+            model.addAttribute("isLogged", true);
+            model.addAttribute("isEdit", true);
+            return "crearVehicle";
+        }
         if (imagen != null && !imagen.isEmpty()) {
             String base64Foto = Base64.getEncoder().encodeToString(imagen.getBytes());
             vehiculo.setFoto(base64Foto);

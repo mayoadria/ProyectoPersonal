@@ -1,7 +1,9 @@
 package adria.mayo.proyectopersonal.entity;
 
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.*;
+import adria.mayo.proyectopersonal.validaciones.Vehicle.ValidMatricula;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.util.List;
@@ -14,12 +16,15 @@ import java.util.List;
 public class Vehiculo {
 
     @Id
+    @ValidMatricula
     private String matricula;
 
     @Column(nullable = false)
+    @NotEmpty(message = "La marca no pot estar buïda")
     private String marca;
 
     @Column(nullable = false)
+    @NotEmpty(message = "El model no pot estar buït")
     private String model;
 
     @Column(nullable = false, name = "preu_dia")
