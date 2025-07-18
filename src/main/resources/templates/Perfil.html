@@ -19,7 +19,7 @@
         <div class="sidebar">
 
             <div class="profile-image">
-                <img th:src="${cliente.foto}" alt=" ">
+                <img th:src="'data:image/jpeg;base64,' + ${cliente.foto}" alt=" ">
             </div>
             <div class="profile-name" th:text="${cliente.nomUsuari}"></div> <!-- Nombre de usuario -->
             <div class="profile-bio">
@@ -90,9 +90,9 @@
                 </div>
                 <div class="error-message" th:if="${#fields.hasErrors('poblacio')}" th:errors="*{poblacio}"></div>
 
-                <div class="mb-3">
-                    <label for="combustible" class="form-label">Pais</label>
-                    <select class="form-control" id="combustible" th:field="*{pais}" >
+                <div class="profile-field">
+                    <label for="pais" class="form-label">Pais</label>
+                    <select  id="pais" th:field="*{pais}" >
                         <option value="" disabled selected>Seleccioneu un Pais</option>
                         <option th:each="pais : ${T(adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais).values()}"
                                 th:value="${pais}" th:text="${pais}"></option>

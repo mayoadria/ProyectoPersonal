@@ -6,15 +6,19 @@ import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.UsuariService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Base64;
 
 @Controller
 @RequestMapping("/perfil")
@@ -48,15 +52,23 @@ public class PerfilController {
 
 
     @PostMapping("/editar")
-    public String editar(Model model, Usuari usuari,
+    public String editar(@Valid @ModelAttribute("cliente") Usuari usuari,
+                         BindingResult results,
                          HttpServletRequest request,
-                         HttpServletResponse response) {
+                         HttpServletResponse response,
+                         @RequestParam(value = "imagen", required = false) MultipartFile imagen,
+                          Model model) throws IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated() &&
                 !(authentication.getPrincipal() instanceof String)) {
 
+            if (results.hasErrors()) {
+                model.addAttribute("pais", Pais.values());
+                model.addAttribute("cliente", usuari);
+                return "Perfil";
+            }
             String nombreUsuarioLogueado = authentication.getName();
 
             Usuari clienteExistente = usuariService.findBynomUsuari(nombreUsuarioLogueado);
@@ -70,6 +82,11 @@ public class PerfilController {
                 clienteExistente.setNumContacte(usuari.getNumContacte());
                 clienteExistente.setPoblacio(usuari.getPoblacio());
                 clienteExistente.setPais(usuari.getPais());
+
+                if(imagen != null && !imagen.isEmpty()) {
+                    String base64Foto = Base64.getEncoder().encodeToString(imagen.getBytes());
+                    clienteExistente.setFoto(base64Foto);
+                }
 
                 // Email y nomUsuari
                 String nuevoEmail = usuari.getEmail();

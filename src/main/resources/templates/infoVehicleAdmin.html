@@ -64,7 +64,7 @@
                 <p><strong>Model:</strong> <span th:text="${vehiculo.model}"></span></p>
                 <p><strong>Dies mínim:</strong> <span th:text="${vehiculo.diesLloguerMinim}"></span></p>
                 <p><strong>Dies màxim:</strong> <span th:text="${vehiculo.diesLloguerMaxim}"></span></p>
-                <p><strong>Creador:</strong> <span th:text="${vehiculo.creador}"></span></p>
+                <p><strong>Creador:</strong> <span th:text="${'DNI: ' + vehiculo.creador.dni+ ' Nom Usuari: ' + vehiculo.creador.nomUsuari}"></span></p>
                 <p><strong>Color:</strong> <span th:text="${vehiculo.color}"></span></p>
                 <p><strong>Fiança:</strong> <span th:text="${vehiculo.fianca}"></span></p>
                 <p><strong>KM:</strong> <span th:text="${vehiculo.km}"></span></p>

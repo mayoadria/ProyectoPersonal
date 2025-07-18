@@ -28,8 +28,8 @@ public class CatalegController {
     public String cataleg(Model model){
         UserUtils.getUsuariDetalls(model);
         List<Vehiculo> vehiculos = vehicleService.listarVehiculosActivos(EstatVehicle.ACTIU);
-        List<Vehiculo> vehiculosSinCreador = vehiculos.stream().filter(v -> v.getCreador() !=null).toList();
-        model.addAttribute("vehiculos", vehiculosSinCreador);
+        List<Vehiculo> vehiculosConCreador = vehiculos.stream().filter(v -> v.getCreador() !=null).toList();
+        model.addAttribute("vehiculos", vehiculosConCreador);
         return "cataleg";
     }
 
