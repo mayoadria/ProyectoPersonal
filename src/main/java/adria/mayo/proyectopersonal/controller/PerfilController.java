@@ -1,15 +1,20 @@
 package adria.mayo.proyectopersonal.controller;
 
+import adria.mayo.proyectopersonal.entity.Token;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais;
 import adria.mayo.proyectopersonal.security.UserUtils;
+import adria.mayo.proyectopersonal.service.EnviarCorreo;
+import adria.mayo.proyectopersonal.service.TokenService;
 import adria.mayo.proyectopersonal.service.UsuariService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/perfil")
@@ -26,9 +33,15 @@ public class PerfilController {
 
 
     private final UsuariService usuariService;
+    private final EnviarCorreo enviarCorreo;
+    private final TokenService tokenService;
+    private final PasswordEncoder passwordEncoder;
 
-    public PerfilController(UsuariService usuariService) {
+    public PerfilController(UsuariService usuariService, EnviarCorreo enviarCorreo, TokenService tokenService, PasswordEncoder passwordEncoder) {
         this.usuariService = usuariService;
+        this.enviarCorreo = enviarCorreo;
+        this.tokenService = tokenService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/mostrarPerfil")
@@ -57,7 +70,7 @@ public class PerfilController {
                          HttpServletRequest request,
                          HttpServletResponse response,
                          @RequestParam(value = "imagen", required = false) MultipartFile imagen,
-                          Model model) throws IOException {
+                         Model model) throws IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -83,7 +96,7 @@ public class PerfilController {
                 clienteExistente.setPoblacio(usuari.getPoblacio());
                 clienteExistente.setPais(usuari.getPais());
 
-                if(imagen != null && !imagen.isEmpty()) {
+                if (imagen != null && !imagen.isEmpty()) {
                     String base64Foto = Base64.getEncoder().encodeToString(imagen.getBytes());
                     clienteExistente.setFoto(base64Foto);
                 }
@@ -117,6 +130,78 @@ public class PerfilController {
         }
 
         return "redirect:/perfil/mostrarPerfil";
+    }
+
+
+    @GetMapping("/changeContra")
+    public String enviarContra(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String nomUsuari = authentication.getName();
+            Usuari usuari = usuariService.findBynomUsuari(nomUsuari);
+            if (usuari != null) {
+                deleteToken(usuari);
+                String token = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+
+                Token resetToken = new Token(token, usuari);
+
+                tokenService.saveToken(resetToken);
+                enviarCorreo.enviarCorreo(usuari.getEmail(),token);
+                model.addAttribute("cliente", usuari);
+            }
+        }
+
+        return "canviarContra";
+    }
+
+    @PostMapping("/procesar-token")
+    public String newContra(
+            @RequestParam("token") String token,
+            @RequestParam("password") String password,
+            @RequestParam("confirmPassword") String confirmPassword,
+            Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()
+                && !(authentication.getPrincipal() instanceof String)) {
+
+            String nomUsuari = authentication.getName();
+            Usuari clienteExistente = usuariService.findBynomUsuari(nomUsuari);
+
+            if (clienteExistente != null) {
+                Optional<Token> conseguirToken = tokenService.getByToken(token);
+
+                if (conseguirToken.isPresent()) {
+
+                    if (!password.equals(confirmPassword)) {
+                        model.addAttribute("error", "Las contraseñas no coinciden.");
+                        return "canviarContra";
+                    }
+
+                    // Aquí se hace el cambio de contraseña
+                    clienteExistente.setContrasenya(password);
+                    usuariService.actualizarUsuari(clienteExistente);
+                    deleteToken(clienteExistente);
+
+                    model.addAttribute("mensaje", "Contraseña cambiada con éxito.");
+                    return "redirect:/perfil/mostrarPerfil";
+
+                } else {
+                    model.addAttribute("error", "Token inválido o expirado.");
+                    return "canviarContra";
+                }
+            }
+        }
+
+        return "redirect:/Perfil"; // o página de error
+    }
+
+
+    @Transactional
+    public void deleteToken(Usuari client) {
+        Optional<Token> token = tokenService.getByClient(client);
+        token.ifPresent(tokenService::deleteToken);
     }
 
 }

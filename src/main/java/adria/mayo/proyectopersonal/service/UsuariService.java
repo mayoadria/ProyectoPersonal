@@ -81,7 +81,14 @@ public class UsuariService {
     // Actualizar usuario manteniendo la contraseña existente
     public void actualizarUsuari(Usuari usuari) {
         Usuari usuariExistente = findByDni(usuari.getDni());
-        usuari.setContrasenya(usuariExistente.getContrasenya());
+        if (passwordEncoder.matches(usuari.getContrasenya(), usuariExistente.getContrasenya())) {
+            // Si es igual, no se modifica
+            usuari.setContrasenya(usuariExistente.getContrasenya());
+        } else {
+            // Si es diferente, se codifica
+            usuari.setContrasenya(passwordEncoder.encode(usuari.getContrasenya()));
+        }
+
         usuarioRepo.save(usuari);
     }
 

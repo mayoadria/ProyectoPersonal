@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario de Cambio de Contraseña</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/canviarContra.css">
+</head>
+<body>
+
+<form method="post" th:action="@{/perfil/procesar-token}">
+  <h2>Verificación de Token</h2>
+  <div th:if="${error}" style="color: red;">[[${error}]]</div>
+  <div th:if="${mensaje}" style="color: green;">[[${mensaje}]]</div>
+  <label for="token">Token:</label>
+  <input type="text" id="token" name="token" required>
+
+  <label for="password">Nueva Contraseña:</label>
+  <input type="password" id="password" name="password" required>
+
+  <label for="confirmPassword">Confirmar Contraseña:</label>
+  <input type="password" id="confirmPassword" name="confirmPassword" required>
+
+  <button type="submit">Enviar</button>
+</form>
+
+</body>
+</html>
+
