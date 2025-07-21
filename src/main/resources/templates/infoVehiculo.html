@@ -61,24 +61,29 @@
         <div class="section">
             <h3>DADES RESERVA</h3>
             <div class="fechas">
-                <form th:action="@{/reserva/crearReserva/{matricula}(matricula=${vehicle.matricula})}" method="post" id="formReserva">
-                    <input type="hidden" name="matricula" th:value="${vehicle.matricula}"/>
+                <form th:action="@{/admin/crearReserva/{matricula}(matricula=${vehicle.matricula})}" method="post" id="formReserva">
+                    <input type="hidden" name="matricula" th:value="${vehicle.matricula}" />
                     <input type="hidden" id="preuComplert" name="preuComplert" value="">
-                    <label for="fechaRecogida">Data recollida:</label>
-                    <input type="date" id="fechaRecogida" name="fechaRecogida" required/>
 
-                    <label for="fechaEntrega">Data entrega:</label>
-                    <input type="date" id="fechaEntrega" name="fechaEntrega" required/>
+                    <label for="fechaInici">Data recollida:</label>
+                    <input type="date" id="fechaInici" name="fechaInici" required />
+
+                    <label for="fechaFinal">Data entrega:</label>
+                    <input type="date" id="fechaFinal" name="fechaFinal" required />
+
+                    <p>Hora Recollida</p>
+                    <select id="hora_inici" name="horaInici" required>
+                        <option value="" disabled selected>Selecciona una hora</option>
+                        <!-- Opciones generadas por JS -->
+                    </select>
+
+                    <p>Hora entrega</p>
+                    <select id="hora_fin" name="horaFin" required>
+                        <option value="" disabled selected>Selecciona una hora</option>
+                        <!-- Opciones generadas por JS -->
+                    </select>
+
                 </form>
-                <p>Hora Recollida</p>
-                <select id="horaRecogida">
-                    <option value="" disabled selected>Selecciona una hora</option>
-                </select>
-                <p>Hora entrega</p>
-
-                <select id="horaEntrega">
-                    <option value="" disabled selected>Selecciona una hora</option>
-                </select>
 
             </div>
 

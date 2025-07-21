@@ -35,13 +35,11 @@ public class PerfilController {
     private final UsuariService usuariService;
     private final EnviarCorreo enviarCorreo;
     private final TokenService tokenService;
-    private final PasswordEncoder passwordEncoder;
 
-    public PerfilController(UsuariService usuariService, EnviarCorreo enviarCorreo, TokenService tokenService, PasswordEncoder passwordEncoder) {
+    public PerfilController(UsuariService usuariService, EnviarCorreo enviarCorreo, TokenService tokenService) {
         this.usuariService = usuariService;
         this.enviarCorreo = enviarCorreo;
         this.tokenService = tokenService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/mostrarPerfil")

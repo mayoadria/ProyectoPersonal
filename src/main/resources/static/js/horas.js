@@ -1,7 +1,7 @@
-const horaRecogida = document.getElementById("horaRecogida");
-const horaEntrega = document.getElementById("horaEntrega")
-const fechaEntrega = document.getElementById('fechaEntrega');
-const fechaRecogida = document.getElementById('fechaRecogida');
+const fechaRecogida = document.getElementById("fechaInici");
+const fechaEntrega = document.getElementById("fechaFinal");
+const horaRecogida = document.getElementById("hora_inici");
+const horaEntrega = document.getElementById("hora_fin");
 const diasReserva = document.getElementById('diasReserva');
 const precioTotal = document.getElementById('precioTotal');
 

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -21,11 +22,19 @@ public class Reserva {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false, name = "fechaInici")
-    private LocalDate fechaRecogida;
+    private LocalDate fechaInici;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false, name = "fechaFinal")
-    private LocalDate fechaEntrega;
+    private LocalDate fechaFinal;
+
+    @DateTimeFormat(pattern = "HH:mm")
+    @Column(nullable = false, name = "hora_inici")
+    private LocalTime horaInici;
+
+    @DateTimeFormat(pattern = "HH:mm")
+    @Column(nullable = false, name = "hora_fin")
+    private LocalTime horaFin;
 
     @Column(nullable = false, name = "preu_complert")
     private Double preuComplert;
