@@ -180,7 +180,7 @@ public class PerfilController {
             if (clienteExistente != null) {
                 Optional<Token> conseguirToken = tokenService.getByToken(token);
 
-                if (conseguirToken.isPresent()) {
+                if (conseguirToken.isPresent() && !tokenService.isExpired(conseguirToken.get())) {
 
                     if (!password.equals(confirmPassword)) {
                         model.addAttribute("error", "Las contraseñas no coinciden.");

@@ -7,6 +7,7 @@ import adria.mayo.proyectopersonal.repository.TokenRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -59,5 +60,9 @@ public class TokenService {
      */
     public Optional<Token> getByToken(String token) {
         return tokenRepo.findByTokenCode(token);
+    }
+
+    public boolean isExpired(Token token) {
+        return LocalDateTime.now().isAfter(token.getExpireDate());
     }
 }

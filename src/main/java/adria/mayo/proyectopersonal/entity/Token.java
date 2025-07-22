@@ -31,8 +31,8 @@ public class Token {
 //    /**
 //     * Data i hora de caducitat del token.
 //     */
-//    @Column(name = "exp_date", nullable = false)
-//    private LocalDateTime expireDate;
+    @Column(name = "exp_date", nullable = false)
+    private LocalDateTime expireDate;
 
     /**
      * Usuari associat a aquest token.
@@ -47,9 +47,7 @@ public class Token {
      *
      * @return {@code true} si el token ha caducat, {@code false} si encara és vàlid.
      */
-//    public boolean isExpired() {
-//        return LocalDateTime.now().isAfter(expireDate);
-//    }
+
 
     /**
      * Constructor per crear un nou token amb validesa de 10 minuts a partir del moment de creació.
@@ -60,6 +58,6 @@ public class Token {
     public Token(String tokenCode, Usuari usuari) {
         this.tokenCode = tokenCode;
         this.usuari = usuari;
-        //this.expireDate = LocalDateTime.now().plusMinutes(10);
+        this.expireDate = LocalDateTime.now().plusMinutes(1);
     }
 }
