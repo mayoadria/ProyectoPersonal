@@ -5,8 +5,10 @@ import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.*;
+import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.UsuariService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +23,7 @@ public class adminUsuaris {
 
     private final UsuariService usuariService;
 
+
     public adminUsuaris(UsuariService usuariService) {
         this.usuariService = usuariService;
     }
@@ -34,6 +37,8 @@ public class adminUsuaris {
 
     @GetMapping("/adminDashboard")
     public String adminDashboard(Model model) {
+        Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
+        model.addAttribute("isAdmin", usuari.getRol() == Rol.ADMINISTRADOR);
         return "adminDashboard";
     }
 
