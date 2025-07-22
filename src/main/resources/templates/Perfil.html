@@ -31,6 +31,11 @@
                 <label class="file-upload-btn" for="imagen">Subir Foto</label>
                 <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
             </div>
+
+
+            <div th:if="${error}" class="alert alert-danger">
+                <p th:text="${error}"></p>
+            </div>
         </div>
 
         <!-- Contenido principal -->

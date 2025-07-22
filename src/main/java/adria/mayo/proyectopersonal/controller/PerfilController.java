@@ -1,5 +1,6 @@
 package adria.mayo.proyectopersonal.controller;
 
+import adria.mayo.proyectopersonal.Config.RateLimit;
 import adria.mayo.proyectopersonal.entity.Token;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais;
@@ -7,11 +8,13 @@ import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.EnviarCorreo;
 import adria.mayo.proyectopersonal.service.TokenService;
 import adria.mayo.proyectopersonal.service.UsuariService;
+import io.github.bucket4j.Bucket;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -35,11 +39,13 @@ public class PerfilController {
     private final UsuariService usuariService;
     private final EnviarCorreo enviarCorreo;
     private final TokenService tokenService;
+    private final RateLimit rateLimit;
 
-    public PerfilController(UsuariService usuariService, EnviarCorreo enviarCorreo, TokenService tokenService) {
+    public PerfilController(UsuariService usuariService, EnviarCorreo enviarCorreo, TokenService tokenService, RateLimit rateLimit) {
         this.usuariService = usuariService;
         this.enviarCorreo = enviarCorreo;
         this.tokenService = tokenService;
+        this.rateLimit = rateLimit;
     }
 
     @GetMapping("/mostrarPerfil")
@@ -130,27 +136,31 @@ public class PerfilController {
         return "redirect:/perfil/mostrarPerfil";
     }
 
-
     @GetMapping("/changeContra")
-    public String enviarContra(Model model) {
+    public String enviarContra(Model model, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             String nomUsuari = authentication.getName();
             Usuari usuari = usuariService.findBynomUsuari(nomUsuari);
             if (usuari != null) {
+                Bucket bucket = rateLimit.resolveBucket(usuari.getNomUsuari());
+                if (!bucket.tryConsume(1)) {
+                    redirectAttributes.addFlashAttribute("error", "Debes esperar 1 minuto antes de volver a solicitar un correo.");
+                    return "redirect:/perfil/mostrarPerfil";
+                }
+
                 deleteToken(usuari);
                 String token = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
-
                 Token resetToken = new Token(token, usuari);
-
                 tokenService.saveToken(resetToken);
-                enviarCorreo.enviarCorreo(usuari.getEmail(),token);
+                enviarCorreo.enviarCorreo(usuari.getEmail(), token);
                 model.addAttribute("cliente", usuari);
             }
         }
 
         return "canviarContra";
     }
+
 
     @PostMapping("/procesar-token")
     public String newContra(
