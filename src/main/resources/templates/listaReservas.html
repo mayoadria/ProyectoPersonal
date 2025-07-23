@@ -17,7 +17,41 @@
 
 <main class="container mt-4">
     <section>
-        <h2>Llista de Reserves</h2>
+
+        <form th:action="@{/admin/listarReserva}" method="get">
+            <h2>Llista de Reserves</h2>
+            <button class="filter-toggle">Mostrar Filtres</button>
+
+            <div class="filter-content">
+                <div class="filtre">
+                    <label for="matricula" class="filt-txt">Matricula:</label>
+                    <input type="text" id="matricula" name="matricula" th:value="${param.matricula}" class="filt-input">
+                </div>
+                <div class="filtre">
+                    <label for="dni" class="filt-txt">DNI:</label>
+                    <input type="text" id="dni" name="dni" th:value="${param.dni}" class="filt-input">
+                </div>
+                <div class="filtre">
+                    <label for="estat" class="filt-txt">Estat:</label>
+                    <select id="estat" name="estat" class="filt-input">
+                        <option value="">Tots</option>
+                        <option th:each="estat : ${estat}" th:value="${estat}" th:text="${estat}"
+                                th:selected="${param.estat == estat}"></option>
+                    </select>
+                </div>
+                <div class="filtre">
+                    <label for="size" class="filt-txt">Resultats per pàgina:</label>
+                    <select id="size" name="size" class="filt-input">
+                        <option th:value="5" th:selected="${param.size == 5}">5</option>
+                        <option th:value="10" th:selected="${param.size == 2}">10</option>
+                        <option th:value="25" th:selected="${param.size == 25}">25</option>
+                        <option th:value="50" th:selected="${param.size == 50}">50</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-crear">Filtrar</button>
+            </div>
+        </form>
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -31,7 +65,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="reservas : ${reserva}">
+            <tr th:each="reservas : ${reservaList}">
                 <td th:text="${reservas.vehiculo.matricula}">Matricula Vehicle</td>
                 <td th:text="${reservas.usuari.dni}">Nom</td>
                 <td th:text="${reservas.estatReserva}">Estat</td>
@@ -54,6 +88,46 @@
 
             </tbody>
         </table>
+        <nav th:if="${reservaPage.totalPages > 1}" aria-label="Navegació de pàgines" class="mt-4">
+            <ul class="pagination justify-content-center">
+
+                <!-- Botón 'Anterior' -->
+                <li class="page-item" th:classappend="${reservaPage.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/listarReserva(page=${reservaPage.number - 1}, size=${param.size},
+                    matricula=${param.matricula},
+                    dni=${param.dni},
+                    estat=${param.estat})}">
+
+                        Anterior
+                    </a>
+                </li>
+
+                <!-- Números de página -->
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, reservaPage.totalPages - 1)}"
+                    th:classappend="${i == reservaPage.number} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/admin/listarReserva(reservaPage=${i}, size=${param.size},
+                    matricula=${param.matricula},
+                    dni=${param.dni},
+                    estat=${param.estat})}"
+                       th:text="${i + 1}">
+                    </a>
+                </li>
+
+                <!-- Botón 'Següent' -->
+                <li class="page-item" th:classappend="${reservaPage.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/listarReserva(page=${reservaPage.number + 1}, size=${param.size},
+                    matricula=${param.matricula},
+                    dni=${param.dni},
+                    estat=${param.estat})}">
+                        Següent
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </section>
 </main>
 </body>

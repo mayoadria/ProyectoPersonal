@@ -10,6 +10,10 @@ import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.EnviarCorreo;
 import adria.mayo.proyectopersonal.service.ReservaService;
 import adria.mayo.proyectopersonal.service.VehicleService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -56,27 +60,44 @@ public class adminReservas {
 
 
     @GetMapping("/listarReserva")
-    public String listar(Model model) {
+    public String listar(Model model,
+                         @RequestParam(name = "page", defaultValue = "0") int page,
+                         @RequestParam(name = "size", defaultValue = "10") int size,
+                         @RequestParam(name = "matricula", required = false) String matricula,
+                         @RequestParam(name = "dni", required = false) String dni,
+                         @RequestParam(name = "estat", required = false) EstatReserva estat) {
+
         Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
-        List<Reserva> reservas = reservaService.listarReservas();
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Reserva> reservas = reservaService.buscarReservasFiltro(
+                pageable,
+                matricula,
+                dni,
+                estat
+        );
+
+        Page<Reserva> resultadoFinal;
 
         if (usuari.getRol() == Rol.AGENTE) {
-            // Filtrar reservas en las que el coche pertenece al agente
-            List<Reserva> reservasAgente = reservas.stream()
+            List<Reserva> filtradas = reservas.stream()
                     .filter(r -> r.getVehiculo().getCreador().getDni().equals(usuari.getDni()))
                     .toList();
-            model.addAttribute("reserva", reservasAgente);
+            resultadoFinal = new PageImpl<>(filtradas, pageable, filtradas.size());
         } else if (usuari.getRol() == Rol.CLIENTE) {
-            // Solo las reservas hechas por este usuario
-            List<Reserva> reservasClientes = reservaService.buscarReservasPorUsuario(usuari.getDni());
-            model.addAttribute("reserva", reservasClientes);
+            List<Reserva> clienteReservas = reservaService.buscarReservasPorUsuario(usuari.getDni());
+            resultadoFinal = new PageImpl<>(clienteReservas, pageable, clienteReservas.size());
         } else {
-            // ADMIN u otro rol con permisos completos
-            model.addAttribute("reserva", reservas);
+            resultadoFinal = reservas;
         }
+
+        model.addAttribute("reservaPage", resultadoFinal);
+        model.addAttribute("reservaList", resultadoFinal.getContent());
+        model.addAttribute("estat", EstatReserva.values());
 
         return "listaReservas";
     }
+
 
     @PostMapping("/cancelarReserva/{idReserva}/{matricula}")
     public String cancelarReserva(@PathVariable Long idReserva, @PathVariable String matricula) {
