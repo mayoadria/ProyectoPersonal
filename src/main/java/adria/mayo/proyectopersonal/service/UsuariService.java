@@ -7,6 +7,8 @@ import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais;
 import adria.mayo.proyectopersonal.repository.UsuarioRepo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -112,10 +114,10 @@ public class UsuariService {
     }
 
     // Búsqueda avanzada
-    public List<Usuari> buscarUsuarisAvançat(String dni, String nom, String cognom, String email,
+    public Page<Usuari> buscarUsuarisAvançat(String dni, String nom, String cognom, String email,
                                              String nomUsuari, String telf, String codiPostal, String direccio,
-                                             String poblacio, EstatUsuari estat, Pais pais) {
+                                             String poblacio, EstatUsuari estat, Pais pais, Pageable pageable) {
         return usuarioRepo.buscarUsuarisAvançat(dni, nom, cognom, email, nomUsuari, telf,
-                codiPostal, direccio, poblacio, estat, pais);
+                codiPostal, direccio, poblacio, estat, pais, pageable);
     }
 }

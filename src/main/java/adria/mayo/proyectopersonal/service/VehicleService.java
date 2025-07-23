@@ -13,6 +13,8 @@ import adria.mayo.proyectopersonal.security.UserUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.SpringVersion;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,10 +72,9 @@ public class VehicleService {
         }
     }
 
-    public List<Vehiculo> buscarVehiculosFiltro(String matricula, String marca,
+    public Page<Vehiculo> buscarVehiculosFiltro(String matricula, String marca,
                                                 EstatVehicle estatVehicle, Combustible combustible,
-                                                CaixaCanvis canvis) {
-        return vehiclesRepository.listaFiltrado(matricula,marca,estatVehicle,
-                combustible,canvis);
+                                                CaixaCanvis canvis, Pageable pageable) {
+        return vehiclesRepository.listaFiltrado(matricula, marca, estatVehicle, combustible, canvis, pageable);
     }
 }

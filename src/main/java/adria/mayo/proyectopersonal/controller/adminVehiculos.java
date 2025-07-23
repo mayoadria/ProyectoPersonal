@@ -11,6 +11,9 @@ import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.UsuariService;
 import adria.mayo.proyectopersonal.service.VehicleService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -52,28 +55,34 @@ public class adminVehiculos {
             @ModelAttribute VehicleFltroDTO filtro,
             @RequestParam(name = "minAny", required = false) Integer minAny,
             @RequestParam(name = "maxAny", required = false) Integer maxAny,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
             Model model) {
-        Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
 
-        List<Vehiculo> vehicle = vehiculoService.buscarVehiculosFiltro(
+        Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Vehiculo> pageVehiculo = vehiculoService.buscarVehiculosFiltro(
                 filtro.getMatricula(),
                 filtro.getMarca(),
                 filtro.getEstatVehicle(),
                 filtro.getCombustible(),
-                filtro.getCanvis()
+                filtro.getCanvis(),
+                pageable
         );
 
+        // Filtro por año adicional (después de paginar)
+        List<Vehiculo> vehiclesFiltrats = pageVehiculo.getContent();
         if (minAny != null || maxAny != null) {
             int min = (minAny != null) ? minAny : Integer.MIN_VALUE;
             int max = (maxAny != null) ? maxAny : Integer.MAX_VALUE;
 
-            vehicle = vehicle.stream()
+            vehiclesFiltrats = vehiclesFiltrats.stream()
                     .filter(v -> v.getAnyVehicle() >= min && v.getAnyVehicle() <= max)
                     .toList();
         }
 
-
-        List<VehicleRespuestaDTO> vehicleDto = vehicle.stream().map(
+        List<VehicleRespuestaDTO> vehicleDto = vehiclesFiltrats.stream().map(
                 vehiculo -> new VehicleRespuestaDTO(
                         vehiculo.getMatricula(),
                         vehiculo.getMarca(),
@@ -93,24 +102,24 @@ public class adminVehiculos {
                         vehiculo.getKm(),
                         vehiculo.getFoto(),
                         usuariMapper.usuariToUsuariRespuestaDTO(vehiculo.getCreador())
-
                 )
         ).toList();
 
-        if(usuari.getRol() == Rol.AGENTE){
-            List<VehicleRespuestaDTO> vehicleDTOAgente = vehicleDto.stream().filter(
-                    vehicleRespuestaDTO -> vehicleRespuestaDTO.getCreador().getNomUsuari().equals(usuari.getNomUsuari())
-            ).toList();
-            model.addAttribute("vehicle", vehicleDTOAgente);
-        }else{
-            model.addAttribute("vehicle", vehicleDto);
+        if (usuari.getRol() == Rol.AGENTE) {
+            vehicleDto = vehicleDto.stream()
+                    .filter(dto -> dto.getCreador().getNomUsuari().equals(usuari.getNomUsuari()))
+                    .toList();
         }
 
+        model.addAttribute("vehicle", vehicleDto);
+        model.addAttribute("page", pageVehiculo); // Para usar paginación en la vista
         model.addAttribute("estatVehicle", EstatVehicle.values());
         model.addAttribute("combustible", Combustible.values());
         model.addAttribute("canvis", CaixaCanvis.values());
+
         return "ListaVehicles";
     }
+
 
     @PostMapping("/eliminarVeh/{matricula}")
     public String eliminarVehiculo(@PathVariable String matricula) {

@@ -8,6 +8,9 @@ import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.*;
 import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.UsuariService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,8 +46,12 @@ public class adminUsuaris {
     }
 
     @GetMapping("/listaUsu")
-    public String listaUsu(@ModelAttribute UsuariFiltroDTO filtro, Model model) {
-        List<Usuari> usu = usuariService.buscarUsuarisAvançat(
+    public String listaUsu(@ModelAttribute UsuariFiltroDTO filtro, Model model,
+                           @RequestParam(name = "page", defaultValue = "0") int page,
+                           @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Usuari> usu = usuariService.buscarUsuarisAvançat(
                 filtro.getDni(),
                 filtro.getNom(),
                 filtro.getCognom(),
@@ -55,11 +62,12 @@ public class adminUsuaris {
                 filtro.getDireccio(),
                 filtro.getPoblacio(),
                 filtro.getEstatUsuari(),
-                filtro.getPais()
+                filtro.getPais(),
+                pageable
         );
 
         // Convertir a DTO
-        List<UsuariRespuestaDTO> usuDTO = usu.stream()
+        Page<UsuariRespuestaDTO> usuDTO = usu
                 .map(u -> new UsuariRespuestaDTO(
                         u.getDni(),
                         u.getNom(),
@@ -73,12 +81,10 @@ public class adminUsuaris {
                         u.getDireccio(),
                         u.getPoblacio(),
                         u.getRol()
-                ))
-                .collect(Collectors.toList());
+                ));
 
-
-
-        model.addAttribute("usu", usuDTO);
+        model.addAttribute("page", usuDTO);
+        model.addAttribute("usu", usuDTO.getContent());
         model.addAttribute("estats", EstatUsuari.values());
         model.addAttribute("pais", Pais.values());
         return "ListaUsu";
@@ -100,28 +106,28 @@ public class adminUsuaris {
     @GetMapping("/creaUsuariAdmin")
     public String crearUsuari(Model model) {
         model.addAttribute("usu", new Usuari());
-        prepararFormularioCrearUsuario(model,false);
+        prepararFormularioCrearUsuario(model, false);
         return "CrearUsuari";
     }
 
     @PostMapping("/newUsuari")
     public String crearUsuarisAdmin(@Valid @ModelAttribute("usu") Usuari usuari, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            prepararFormularioCrearUsuario(model,false);
+            prepararFormularioCrearUsuario(model, false);
             return "CrearUsuari";
         }
         if (usuariService.findByEmailOptional(usuari.getEmail()).isPresent()) {
             result.rejectValue("email", "error.usu", "El email ya está registrado");
-            prepararFormularioCrearUsuario(model,false);
+            prepararFormularioCrearUsuario(model, false);
             return "CrearUsuari";  // Volvemos a la vista con error sin insertar
         }
         if (usuariService.findByDniOptional(usuari.getDni()).isPresent()) {
             result.rejectValue("dni", "error.usu", "El dni ya está registrado");
-            prepararFormularioCrearUsuario(model,false);
+            prepararFormularioCrearUsuario(model, false);
             return "CrearUsuari";  // Volvemos a la vista con error sin insertar
         }
 
-        usuariService.crearUsuari(usuari,usuari.getRol(),usuari.getEstat());
+        usuariService.crearUsuari(usuari, usuari.getRol(), usuari.getEstat());
         return "redirect:/admin/listaUsu";
     }
 
@@ -144,7 +150,7 @@ public class adminUsuaris {
                     usuari.getRol()
             );
             model.addAttribute("usu", dto);
-            prepararFormularioCrearUsuario(model,true);
+            prepararFormularioCrearUsuario(model, true);
             return "CrearUsuari";
         } else {
             return "redirect:/admin/listaUsu";

@@ -77,6 +77,15 @@
                             th:selected="${param.pais == pais}"></option>
                 </select>
             </div>
+            <div class="filtre">
+                <label for="size" class="filt-txt">Resultats per pàgina:</label>
+                <select id="size" name="size" class="filt-input">
+                    <option th:value="5" th:selected="${param.size == 5}">5</option>
+                    <option th:value="10" th:selected="${param.size == 2}">10</option>
+                    <option th:value="25" th:selected="${param.size == 25}">25</option>
+                    <option th:value="50" th:selected="${param.size == 50}">50</option>
+                </select>
+            </div>
 
             <button type="submit" class="btn-crear">Filtrar</button>
         </div>
@@ -134,6 +143,70 @@
             </tr>
             </tbody>
         </table>
+        <!-- Controles de paginación -->
+        <nav th:if="${page.totalPages > 1}" aria-label="Navegació de pàgines" class="mt-4">
+            <ul class="pagination justify-content-center">
+
+                <!-- Botón 'Anterior' -->
+                <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/listaUsu(page=${page.number - 1}, size=${param.size},
+                    dni=${param.dni},
+                    nom=${param.nom},
+                    cognom=${param.cognom},
+                    email=${param.email},
+                    nomUsuari=${param.nomUsuari},
+                    telf=${param.telf},
+                    codiPostal=${param.codiPostal},
+                    direccio=${param.direccio},
+                    poblacio=${param.poblacio},
+                    estat=${param.estat},
+                    pais=${param.pais})}">
+                        Anterior
+                    </a>
+                </li>
+
+                <!-- Números de página -->
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                    th:classappend="${i == page.number} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/admin/listaUsu(page=${i}, size=${param.size},
+                    dni=${param.dni},
+                    nom=${param.nom},
+                    cognom=${param.cognom},
+                    email=${param.email},
+                    nomUsuari=${param.nomUsuari},
+                    telf=${param.telf},
+                    codiPostal=${param.codiPostal},
+                    direccio=${param.direccio},
+                    poblacio=${param.poblacio},
+                    estat=${param.estat},
+                    pais=${param.pais})}",
+                       th:text="${i + 1}">
+                    </a>
+                </li>
+
+                <!-- Botón 'Següent' -->
+                <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/listaUsu(page=${page.number + 1}, size=${param.size},
+                    dni=${param.dni},
+                    nom=${param.nom},
+                    cognom=${param.cognom},
+                    email=${param.email},
+                    nomUsuari=${param.nomUsuari},
+                    telf=${param.telf},
+                    codiPostal=${param.codiPostal},
+                    direccio=${param.direccio},
+                    poblacio=${param.poblacio},
+                    estat=${param.estat},
+                    pais=${param.pais})}">
+                        Següent
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </section>
 </main>
 </body>

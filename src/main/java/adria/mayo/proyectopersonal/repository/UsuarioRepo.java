@@ -3,6 +3,8 @@ package adria.mayo.proyectopersonal.repository;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,7 +30,7 @@ public interface UsuarioRepo extends JpaRepository<Usuari, String> {
             "AND (:poblacio IS NULL OR LOWER(u.poblacio) LIKE LOWER(CONCAT('%', :poblacio, '%'))) " +
             "AND (:estat IS NULL OR u.estat = :estat) " +
             "AND (:pais IS NULL OR u.pais = :pais)")
-    List<Usuari> buscarUsuarisAvançat(
+    Page<Usuari> buscarUsuarisAvançat(
             @Param("dni") String dni,
             @Param("nom") String nom,
             @Param("cognom") String cognom,
@@ -39,6 +41,7 @@ public interface UsuarioRepo extends JpaRepository<Usuari, String> {
             @Param("direccio") String direccio,
             @Param("poblacio") String poblacio,
             @Param("estat") EstatUsuari estat,
-            @Param("pais") Pais pais
+            @Param("pais") Pais pais,
+            Pageable pageable
     );
 }
