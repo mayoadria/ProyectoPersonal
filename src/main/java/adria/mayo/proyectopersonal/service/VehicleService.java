@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VehicleService {
@@ -27,22 +28,28 @@ public class VehicleService {
     private VehiclesRepository vehiclesRepository;
 
     public void guardarVehiculo(Vehiculo vehiculo) {
-        vehiclesRepository.save(vehiculo);
         if(vehiculo.getEstatVehicle() == EstatVehicle.RESERVAT || vehiculo.getEstatVehicle() == EstatVehicle.ENTREGAT){
             throw new ActivarVehiculoException("El vehiculo con " + vehiculo.getMatricula() + " no se puede desactivar porque tiene una reserva");
+        }else{
+            vehiclesRepository.save(vehiculo);
         }
     }
 
     public List<Vehiculo> listarVehiculosActivos(EstatVehicle estatVehicle) {
-        return vehiclesRepository.findByEstatVehicle(estatVehicle);
+        return vehiclesRepository.findByEstatVehicle(estatVehicle)
+                .stream()
+                .filter(v -> v.getEstatVehicle() == EstatVehicle.ACTIU)
+                .collect(Collectors.toList());
     }
+
 
     public void eliminarVehiculo(String matricula) {
         Vehiculo vehiculo = buscarVehiculo(matricula);
         if(vehiculo.getEstatVehicle() == EstatVehicle.RESERVAT || vehiculo.getEstatVehicle() == EstatVehicle.ENTREGAT){
             throw new ActivarVehiculoException("El vehiculo con " + matricula + " no se puede eliminar porque tiene una reserva");
+        }else {
+            vehiclesRepository.delete(vehiculo);
         }
-        vehiclesRepository.delete(vehiculo);
     }
 
     public Vehiculo buscarVehiculo(String matricula) {
