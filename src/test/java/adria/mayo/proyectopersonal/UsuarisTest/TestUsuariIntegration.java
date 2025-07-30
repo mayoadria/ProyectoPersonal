@@ -1,5 +1,6 @@
 package adria.mayo.proyectopersonal.UsuarisTest;
 
+import adria.mayo.proyectopersonal.Excepciones.Usuari.AdminException;
 import adria.mayo.proyectopersonal.Excepciones.Usuari.EncontrarUsuarioException;
 import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
@@ -11,6 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
@@ -29,8 +33,6 @@ public class TestUsuariIntegration {
 
 
     private Usuari testUsuari;
-    @Autowired
-    private UsuariService usuariService;
 
     @BeforeEach
     public void setUp() {
@@ -47,7 +49,7 @@ public class TestUsuariIntegration {
         testUsuari.setCodiPostal("08001");
         testUsuari.setDireccio("Carrer Fictici 1");
         testUsuari.setPoblacio("Barcelona");
-        testUsuari.setRol(Rol.ADMINISTRADOR);
+        testUsuari.setRol(Rol.CLIENTE);
         testUsuari.setContrasenya("123456");
 
     }
@@ -69,20 +71,8 @@ public class TestUsuariIntegration {
         userService.crearUsuari(testUsuari, testUsuari.getRol(), testUsuari.getEstat());
 
         // 2. Creamos un segundo usuario con el mismo email
-        Usuari usuarioDuplicado = new Usuari();
-        usuarioDuplicado.setDni("87654321X");
-        usuarioDuplicado.setNom("Otro");
-        usuarioDuplicado.setCognoms("Usuario");
-        usuarioDuplicado.setEmail("adria@test.com"); // mismo email
-        usuarioDuplicado.setNomUsuari("otroUsuario");
-        usuarioDuplicado.setEstat(EstatUsuari.ACTIVO);
-        usuarioDuplicado.setPais(Pais.ESPANYA);
-        usuarioDuplicado.setNumContacte("699999999");
-        usuarioDuplicado.setCodiPostal("08002");
-        usuarioDuplicado.setDireccio("Otra calle 123");
-        usuarioDuplicado.setPoblacio("Barcelona");
-        usuarioDuplicado.setRol(Rol.CLIENTE);
-        usuarioDuplicado.setContrasenya("12345");
+        Usuari usuarioDuplicado = DataUsuaris.crearUsuari();
+        usuarioDuplicado.setEmail("adria@test.com");
 
         // 3. Esperamos una excepción o error al crear el duplicado
         assertThrows(RuntimeException.class, () -> {
@@ -115,7 +105,7 @@ public class TestUsuariIntegration {
 
         Usuari usuari = new Usuari();
         usuari.setDni("121212");
-        assertThrows(EncontrarUsuarioException.class, () -> usuariService.findByDni(usuari.getDni()));
+        assertThrows(EncontrarUsuarioException.class, () -> userService.findByDni(usuari.getDni()));
     }
 
     @Test
@@ -143,7 +133,7 @@ public class TestUsuariIntegration {
 
         Usuari usuari = new Usuari();
         usuari.setEmail("121212@asas.com");
-        assertThrows(EncontrarUsuarioException.class, () -> usuariService.findByEmail(usuari.getEmail()));
+        assertThrows(EncontrarUsuarioException.class, () -> userService.findByEmail(usuari.getEmail()));
     }
 
 
@@ -163,8 +153,139 @@ public class TestUsuariIntegration {
 
         Usuari usuari = new Usuari();
         usuari.setNomUsuari("121212");
-        assertThrows(EncontrarUsuarioException.class, () -> usuariService.findBynomUsuari(usuari.getNomUsuari()));
+        assertThrows(EncontrarUsuarioException.class, () -> userService.findBynomUsuari(usuari.getNomUsuari()));
     }
+
+
+    @Test
+    public void testEliminarUsuari() {
+        // Crear usuario
+        userService.crearUsuari(testUsuari, testUsuari.getRol(), testUsuari.getEstat());
+
+        // Verificar que el usuario fue creado
+        Usuari user = userService.findBynomUsuari(testUsuari.getNomUsuari());
+        assertNotNull(user, "El usuario debería existir después de crearlo");
+
+        // Eliminar usuario
+        userService.eliminarUsuari(user.getNomUsuari());
+
+    }
+
+
+    @Test
+    public void testEliminarUsuariNotFound() {
+        Usuari usuari = new Usuari();
+        usuari.setNomUsuari("121212");
+
+        assertThrows(EncontrarUsuarioException.class, () -> userService.eliminarUsuari(usuari.getNomUsuari()));
+    }
+
+    @Test
+    public void eliminarUsuariAdmin(){
+        Usuari usuari = testUsuari;
+        usuari.setRol(Rol.ADMINISTRADOR);
+        userService.crearUsuari(usuari, usuari.getRol(), usuari.getEstat());
+
+        assertThrows(AdminException.class,()-> userService.eliminarUsuari(usuari.getNomUsuari()));
+    }
+
+    @Test
+    public void findAll(){
+        Usuari usuari = DataUsuaris.crearUsuari();
+
+        userService.crearUsuari(usuari, usuari.getRol(), usuari.getEstat());
+        userService.crearUsuari(testUsuari,testUsuari.getRol(), testUsuari.getEstat());
+
+        userService.findAll();
+
+        assertEquals(2, userService.findAll().size());
+        assertEquals("pepe@gmail.com", userService.findAll().get(0).getEmail());
+        assertEquals("adria@test.com", userService.findAll().get(1).getEmail());
+    }
+
+
+    @Test
+    public void findAllEmpty(){
+        assertThrows(EncontrarUsuarioException.class, () -> userService.findAll());
+    }
+
+    @Test
+    public void actualizarUsuari(){
+        userService.crearUsuari(testUsuari, testUsuari.getRol(), testUsuari.getEstat());
+
+        testUsuari.setNomUsuari("pepe");
+        testUsuari.setCognoms("pedro");
+        userService.actualizarUsuari(testUsuari);
+
+        assertEquals("pepe", testUsuari.getNomUsuari());
+        assertEquals("pedro", testUsuari.getCognoms());
+    }
+
+
+    @Test
+    public void actualizarUsuariNotFound(){
+        Usuari usuari = new Usuari();
+        usuari.setDni("49828550Q");
+
+        assertThrows(EncontrarUsuarioException.class, () -> userService.actualizarUsuari(usuari));
+    }
+
+    @Test
+    public void activarUsuari(){
+        userService.crearUsuari(testUsuari, testUsuari.getRol(), testUsuari.getEstat());
+
+
+        userService.activarUsuari(testUsuari.getNomUsuari());
+        Usuari usuari = userService.findBynomUsuari(testUsuari.getNomUsuari());
+        assertEquals(EstatUsuari.INACTIVO, usuari.getEstat());
+    }
+
+    @Test
+    public void desactivarUsuari(){
+        testUsuari.setEstat(EstatUsuari.INACTIVO);
+        userService.crearUsuari(testUsuari, testUsuari.getRol(), testUsuari.getEstat());
+
+
+        userService.activarUsuari(testUsuari.getNomUsuari());
+        Usuari usuari = userService.findBynomUsuari(testUsuari.getNomUsuari());
+        assertEquals(EstatUsuari.ACTIVO, usuari.getEstat());
+    }
+
+    @Test
+    public void desactivarUsuariAdmin(){
+        testUsuari.setRol(Rol.ADMINISTRADOR);
+        userService.crearUsuari(testUsuari, testUsuari.getRol(), testUsuari.getEstat());
+
+        assertThrows(AdminException.class,()-> userService.activarUsuari(testUsuari.getNomUsuari()));
+    }
+
+    @Test
+    public void testPage(){
+        userService.crearUsuari(testUsuari, testUsuari.getRol(), testUsuari.getEstat());
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Usuari> resultado = userService.buscarUsuarisAvançat(
+                null,              // dni
+                "Adria",            // nom
+                null,              // cognom
+                null,              // email
+                null,              // nomUsuari
+                null,              // telf
+                null,              // codiPostal
+                null,              // direccio
+                null,              // poblacio
+                EstatUsuari.ACTIVO, // estat
+                null,              // pais
+                pageable
+        );
+        assertNotNull(resultado);
+        assertFalse(resultado.isEmpty(), "La búsqueda debería retornar al menos un usuario");
+        assertEquals("Adria", resultado.getContent().get(0).getNom());
+    }
+
+
+
 
 
 

@@ -28,9 +28,15 @@ public class VehicleService {
     private VehiclesRepository vehiclesRepository;
 
     public void guardarVehiculo(Vehiculo vehiculo) {
-        if(vehiculo.getEstatVehicle() == EstatVehicle.RESERVAT || vehiculo.getEstatVehicle() == EstatVehicle.ENTREGAT){
+
+        vehiclesRepository.save(vehiculo);
+
+    }
+
+    public void actualizarVehiculo(Vehiculo vehiculo) {
+        if (vehiculo.getEstatVehicle() == EstatVehicle.RESERVAT || vehiculo.getEstatVehicle() == EstatVehicle.ENTREGAT) {
             throw new ActivarVehiculoException("El vehiculo con " + vehiculo.getMatricula() + " no se puede desactivar porque tiene una reserva");
-        }else{
+        } else {
             vehiclesRepository.save(vehiculo);
         }
     }
@@ -45,15 +51,15 @@ public class VehicleService {
 
     public void eliminarVehiculo(String matricula) {
         Vehiculo vehiculo = buscarVehiculo(matricula);
-        if(vehiculo.getEstatVehicle() == EstatVehicle.RESERVAT || vehiculo.getEstatVehicle() == EstatVehicle.ENTREGAT){
+        if (vehiculo.getEstatVehicle() == EstatVehicle.RESERVAT || vehiculo.getEstatVehicle() == EstatVehicle.ENTREGAT) {
             throw new ActivarVehiculoException("El vehiculo con " + matricula + " no se puede eliminar porque tiene una reserva");
-        }else {
+        } else {
             vehiclesRepository.delete(vehiculo);
         }
     }
 
     public Vehiculo buscarVehiculo(String matricula) {
-        return vehiclesRepository.findById(matricula).orElseThrow(()->new EncontrarVehicleException("Vehiculo no encontrado: " + matricula));
+        return vehiclesRepository.findById(matricula).orElseThrow(() -> new EncontrarVehicleException("Vehiculo no encontrado: " + matricula));
     }
 
     public Optional<Vehiculo> buscarVehiculoOptional(String matricula) {
@@ -62,9 +68,9 @@ public class VehicleService {
 
     public void activarVehiculo(String matricula) {
         Vehiculo vehiculo = buscarVehiculo(matricula);
-        if(vehiculo.getEstatVehicle() == EstatVehicle.RESERVAT || vehiculo.getEstatVehicle() == EstatVehicle.ENTREGAT){
+        if (vehiculo.getEstatVehicle() == EstatVehicle.RESERVAT || vehiculo.getEstatVehicle() == EstatVehicle.ENTREGAT) {
             throw new ActivarVehiculoException("El vehiculo con " + matricula + " no se puede desactivar porque tiene una reserva");
-        }else {
+        } else {
             switch (vehiculo.getEstatVehicle()) {
                 case ACTIU:
                     vehiculo.setEstatVehicle(EstatVehicle.INACTIU);

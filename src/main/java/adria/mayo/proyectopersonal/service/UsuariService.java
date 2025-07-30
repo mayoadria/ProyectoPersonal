@@ -68,8 +68,13 @@ public class UsuariService {
 
     // Obtener todos los usuarios
     public List<Usuari> findAll() {
-        return usuarioRepo.findAll();
+        List<Usuari> usuarios = usuarioRepo.findAll();
+        if (usuarios.isEmpty()) {
+            throw new EncontrarUsuarioException("No hay usuarios en el sistema.");
+        }
+        return usuarios;
     }
+
 
     // Eliminar usuario con validación de rol
     public void eliminarUsuari(String nomUsuari) {

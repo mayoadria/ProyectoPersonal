@@ -207,7 +207,7 @@ public class adminVehiculos {
             String base64Foto = Base64.getEncoder().encodeToString(imagen.getBytes());
             vehiculo.setFoto(base64Foto);
         }
-        vehiculoService.guardarVehiculo(vehiculo);
+        vehiculoService.actualizarVehiculo(vehiculo);
         return "redirect:/admin/llistaVehiculo";
     }
 

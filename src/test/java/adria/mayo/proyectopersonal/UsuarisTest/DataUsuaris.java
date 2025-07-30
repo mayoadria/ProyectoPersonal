@@ -22,7 +22,7 @@ public class DataUsuaris {
     }
 
     public static Usuari crearUsuari() {
-        return new Usuari("12345678A", "prueba1", "prueba1C", "123456789", "pepe@",
+        return new Usuari("49828550Q", "prueba1", "prueba1C", "665582953", "pepe@gmail.com",
                 "1234", "pepe", Pais.ESPANYA, "04444", "prueba", "prueba",
                 Rol.CLIENTE, EstatUsuari.ACTIVO, null, null, null, null);
 
