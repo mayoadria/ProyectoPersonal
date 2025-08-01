@@ -59,7 +59,7 @@ public class TestUsuarisService {
         verify(usuarioRepo).save(any(Usuari.class));
         verify(usuarioRepo, times(1)).save(captor.capture());
         assertNotNull(usuari);
-        assertEquals("12345678A",usuari.getDni());
+        assertEquals("49828550Q",usuari.getDni());
         assertEquals(Pais.ESPANYA,usuari.getPais());
     }
 
@@ -95,7 +95,7 @@ public class TestUsuarisService {
         this.usuariService.findByEmail(usuari.getEmail());
 
         assertNotNull(usuari);
-        assertEquals("pepe@",usuari.getEmail());
+        assertEquals("pepe@gmail.com",usuari.getEmail());
         assertEquals("04444",usuari.getCodiPostal());
         verify(usuarioRepo, times(1)).findByEmail(usuari.getEmail());
     }

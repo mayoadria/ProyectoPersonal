@@ -63,7 +63,7 @@ public class TestVehiclesService {
         when(this.vehiclesRepository.findById(anyString())).thenReturn(Optional.of(vehiculo));
         this.vehicleService.buscarVehiculo(vehiculo.getMatricula());
         assertNotNull(vehiculo);
-        assertEquals("3211CBA", vehiculo.getMatricula());
+        assertEquals("3211CBD", vehiculo.getMatricula());
         assertEquals("Corolla", vehiculo.getModel());
         assertEquals(CaixaCanvis.MANUAL, vehiculo.getCaixaCanvis());
         verify(vehiclesRepository).findById(vehiculo.getMatricula());
@@ -87,7 +87,7 @@ public class TestVehiclesService {
         ArgumentCaptor<Vehiculo> argumentCaptor = ArgumentCaptor.forClass(Vehiculo.class);
         verify(vehiclesRepository).save(any(Vehiculo.class));
         verify(vehiclesRepository).save(argumentCaptor.capture());
-        assertEquals("3211CBA", argumentCaptor.getValue().getMatricula());
+        assertEquals("3211CBD", argumentCaptor.getValue().getMatricula());
         assertEquals("Corolla", argumentCaptor.getValue().getModel());
     }
 
@@ -156,7 +156,7 @@ public class TestVehiclesService {
         Vehiculo vehiculo = DataVehicles.crearVehiculo();
         vehiculo.setEstatVehicle(EstatVehicle.RESERVAT);
 
-        assertThrows(ActivarVehiculoException.class, () -> vehicleService.guardarVehiculo(vehiculo));
+        assertThrows(ActivarVehiculoException.class, () -> vehicleService.actualizarVehiculo(vehiculo));
 
         verify(vehiclesRepository, never()).save(any());
     }
@@ -167,7 +167,7 @@ public class TestVehiclesService {
         Vehiculo vehiculo = DataVehicles.crearVehiculo();
         vehiculo.setEstatVehicle(EstatVehicle.ENTREGAT);
 
-        assertThrows(ActivarVehiculoException.class, () -> vehicleService.guardarVehiculo(vehiculo));
+        assertThrows(ActivarVehiculoException.class, () -> vehicleService.actualizarVehiculo(vehiculo));
 
         verify(vehiclesRepository, never()).save(any());
     }

@@ -41,7 +41,8 @@ public class adminUsuaris {
     @GetMapping("/adminDashboard")
     public String adminDashboard(Model model) {
         Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
-        model.addAttribute("isAdmin", usuari.getRol() == Rol.ADMINISTRADOR);
+        boolean isAdmin = usuari != null && usuari.getRol() == Rol.ADMINISTRADOR;
+        model.addAttribute("isAdmin", isAdmin);
         return "adminDashboard";
     }
 

@@ -27,6 +27,12 @@ public class DataUsuaris {
                 Rol.CLIENTE, EstatUsuari.ACTIVO, null, null, null, null);
 
     }
+    public static Usuari crearUsuariAdmin() {
+        return new Usuari("49828550Q", "admin", "admin", "665582953", "admin@gmail.com",
+                "1234", "admin", Pais.ESPANYA, "04444", "prueba", "prueba",
+                Rol.ADMINISTRADOR, EstatUsuari.ACTIVO, null, null, null, null);
+
+    }
 
     public static Usuari crearUsuariInactivo() {
         return new Usuari("12345678A", "prueba1", "prueba1C", "123456789", "pepe@",
