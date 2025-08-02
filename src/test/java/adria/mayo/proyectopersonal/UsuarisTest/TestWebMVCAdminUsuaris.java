@@ -1,29 +1,18 @@
 package adria.mayo.proyectopersonal.UsuarisTest;
 
-import adria.mayo.proyectopersonal.controller.adminUsuaris;
 import adria.mayo.proyectopersonal.dto.UsuariRespuestaDTO;
 import adria.mayo.proyectopersonal.entity.Usuari;
-import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.EstatUsuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
-import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais;
 import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.UsuariService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -44,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TestWebMVCUsuaris {
+public class TestWebMVCAdminUsuaris {
 
     @Autowired
     private MockMvc mockMvc;

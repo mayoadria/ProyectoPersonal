@@ -65,4 +65,5 @@ public class TokenService {
     public boolean isExpired(Token token) {
         return LocalDateTime.now().isAfter(token.getExpireDate());
     }
+
 }
