@@ -81,6 +81,9 @@
                     <form th:action="@{/admin/activarReserva/{idReserva}(idReserva=${reservas.idReserva})}" method="post" style="display:inline">
                         <button type="submit" class="btn btn-success">Activar</button>
                     </form>
+                    <form th:action="@{/agent/crearIncidencia/{matricula}(matricula=${reservas.vehiculo.matricula})}" style="display:inline">
+                        <button type="submit" class="btn btn-success">Crear Incidencia</button>
+                    </form>
 
                 </td>
             </tr>

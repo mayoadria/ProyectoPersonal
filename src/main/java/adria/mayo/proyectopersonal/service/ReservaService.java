@@ -42,4 +42,8 @@ public class ReservaService {
         return reservaRepository.listaFiltrada(matricula, dni, estat, pageable);
 
     }
+
+    public Reserva trobarReservaIncidencia (String dni, String matricula, EstatReserva estat) {
+        return reservaRepository.findByDniandMatriculaandEstat(dni,matricula,estat);
+    }
 }

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crear Incidència · OpenRoad</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/infoVehiculo.css" />
+    <link rel="stylesheet" href="/css/header.css" />
+
+    <script src="/js/header.js" defer></script>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="/header.html :: siteHeader"></div>
+
+<div class="main-wrapper">
+    <main class="main-content">
+        <div class="container">
+            <!-- Izquierda: info vehículo -->
+            <div class="left-panel">
+                <img th:src="'data:image/jpeg;base64,' + ${vehiculo.foto}" alt="Foto del vehicle" class="vehiculo-img" />
+                <h3 class="nombre-coche" th:text="${vehiculo.marca + ' ' + vehiculo.model}"></h3>
+                <div class="details">
+                    <div><i class="fa-solid fa-car"></i> <span th:text="'Matrícula: ' + ${vehiculo.matricula}"></span></div>
+                    <div><i class="fa-solid fa-user"></i> <span th:text="'Places: ' + ${vehiculo.places}"></span></div>
+                    <div><i class="fa-solid fa-gas-pump"></i> <span th:text="'Combustible: ' + ${vehiculo.combustible}"></span></div>
+                </div>
+            </div>
+
+            <!-- Derecha: formulario incidencia -->
+            <div class="right-panel">
+                <h2>Crear Nova Incidència</h2>
+
+                <form th:action="@{/agent/crear/{matricula}(matricula=${vehiculo.matricula})}" th:object="${incidencia}" method="post" class="form-inci">
+                    <!-- Matrícula vehículo oculto para asociación -->
+<!--                    <input type="hidden" th:field="*{vehicle.matricula}" th:value="${vehiculo.matricula}" />-->
+
+                    <div class="form-group">
+                        <label for="titol">Títol:</label>
+                        <input type="text" id="titol" th:field="*{titol}" placeholder="Escriu el títol" required />
+                        <div th:if="${#fields.hasErrors('titol')}" th:errors="*{titol}" class="error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="motiu">Motiu:</label>
+                        <input type="text" id="motiu" th:field="*{motiu}" placeholder="Escriu el motiu de la incidencia" required />
+                        <div th:if="${#fields.hasErrors('motiu')}" th:errors="*{motiu}" class="error"></div>
+                    </div>
+
+                    <!-- Aquí podrías mostrar info reserva si está en el modelo -->
+                    <div th:if="${reserva != null}" class="reserva-info">
+                        <h3>Reserva relacionada</h3>
+                        <p><strong>Codi Reserva:</strong> <span th:text="${reserva.idReserva}"></span></p>
+                        <p><strong>Data inici reserva:</strong> <span th:text="${reserva.fechaInici}"></span></p>
+                        <p><strong>Data final reserva:</strong> <span th:text="${reserva.fechaFinal}"></span></p>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Crear Incidència</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>&copy; 2025 OpenRoad. Tots els drets reservats.</p>
+    </div>
+</footer>
+
+</body>
+</html>

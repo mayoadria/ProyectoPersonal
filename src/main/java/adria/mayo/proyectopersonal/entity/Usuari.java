@@ -87,6 +87,10 @@ public class Usuari implements UserDetails {
     @EqualsAndHashCode.Exclude
     private List<Local> locals;
 
+    @OneToMany(mappedBy = "usuari", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Incidencia> incidencies;
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

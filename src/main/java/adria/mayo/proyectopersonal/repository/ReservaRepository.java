@@ -26,4 +26,8 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
                                 @Param("dni") String dni,
                                 @Param("estat")EstatReserva estat,
                                 Pageable pageable);
+
+    @Query("select r from Reserva r where(:dni is null or :dni = r.usuari.dni and :matricula is null or :matricula = r.vehiculo.matricula and :estat is null or r.estatReserva = :estat) ")
+    Reserva findByDniandMatriculaandEstat (@RequestParam("dni") String dni,@RequestParam("matricula") String matricula,
+                                   @RequestParam("estat") EstatReserva estat);
 }

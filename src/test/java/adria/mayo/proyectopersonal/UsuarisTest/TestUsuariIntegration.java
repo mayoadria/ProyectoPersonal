@@ -62,7 +62,6 @@ public class TestUsuariIntegration {
         Optional<Usuari> result = userService.findByEmailOptional("adria@test.com");
         assertTrue(result.isPresent());
         assertEquals("adria", result.get().getNomUsuari());
-        System.out.println(result);
     }
 
     @Test
@@ -87,7 +86,7 @@ public class TestUsuariIntegration {
         Optional<Usuari> user = userService.findByDniOptional(testUsuari.getDni());
         assertTrue(user.isPresent());
         assertEquals("adria", user.get().getNomUsuari());
-        System.out.println(user);
+        //System.out.println(user);
     }
 
     @Test
@@ -97,7 +96,7 @@ public class TestUsuariIntegration {
         Usuari user = userService.findByDni(testUsuari.getDni());
         assertNotNull(user);
         assertEquals("adria", user.getNomUsuari());
-        System.out.println(user);
+
     }
     @Test
     public void findUsuariByDniNotFound() {
@@ -115,7 +114,7 @@ public class TestUsuariIntegration {
         Optional<Usuari> user = userService.findByEmailOptional(testUsuari.getEmail());
         assertTrue(user.isPresent());
         assertEquals("adria", user.get().getNomUsuari());
-        System.out.println(user);
+
     }
 
     @Test
@@ -125,7 +124,7 @@ public class TestUsuariIntegration {
         Usuari user = userService.findByEmail(testUsuari.getEmail());
         assertNotNull(user);
         assertEquals("adria", user.getNomUsuari());
-        System.out.println(user);
+
     }
     @Test
     public void findUsuariByEmailNotFound() {
@@ -144,7 +143,7 @@ public class TestUsuariIntegration {
         Usuari user = userService.findBynomUsuari(testUsuari.getNomUsuari());
         assertNotNull(user);
         assertEquals("adria", user.getNomUsuari());
-        System.out.println(user);
+
     }
 
     @Test

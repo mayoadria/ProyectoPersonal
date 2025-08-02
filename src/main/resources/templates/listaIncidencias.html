@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Incidencias</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/dashboardAdmin.css">
+    <script src="/js/dashboardAdmin.js" defer></script>
+    <script src="/js/header.js" defer></script>
+    <link rel="stylesheet" href="/css/header.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div th:replace="/header.html :: siteHeader"></div>
+
+<main class="container mt-4">
+    <section>
+
+<!--        <form th:action="@{/admin/listarReserva}" method="get">-->
+<!--            <h2>Llista de Reserves</h2>-->
+<!--            <button class="filter-toggle">Mostrar Filtres</button>-->
+
+<!--            <div class="filter-content">-->
+<!--                <div class="filtre">-->
+<!--                    <label for="matricula" class="filt-txt">Matricula:</label>-->
+<!--                    <input type="text" id="matricula" name="matricula" th:value="${param.matricula}" class="filt-input">-->
+<!--                </div>-->
+<!--                <div class="filtre">-->
+<!--                    <label for="dni" class="filt-txt">DNI:</label>-->
+<!--                    <input type="text" id="dni" name="dni" th:value="${param.dni}" class="filt-input">-->
+<!--                </div>-->
+<!--                <div class="filtre">-->
+<!--                    <label for="estat" class="filt-txt">Estat:</label>-->
+<!--                    <select id="estat" name="estat" class="filt-input">-->
+<!--                        <option value="">Tots</option>-->
+<!--                        <option th:each="estat : ${estat}" th:value="${estat}" th:text="${estat}"-->
+<!--                                th:selected="${param.estat == estat}"></option>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--                <div class="filtre">-->
+<!--                    <label for="size" class="filt-txt">Resultats per pàgina:</label>-->
+<!--                    <select id="size" name="size" class="filt-input">-->
+<!--                        <option th:value="5" th:selected="${param.size == 5}">5</option>-->
+<!--                        <option th:value="10" th:selected="${param.size == 2}">10</option>-->
+<!--                        <option th:value="25" th:selected="${param.size == 25}">25</option>-->
+<!--                        <option th:value="50" th:selected="${param.size == 50}">50</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+
+<!--                <button type="submit" class="btn-crear">Filtrar</button>-->
+<!--            </div>-->
+<!--        </form>-->
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Matricula Vehicle</th>
+                <th>Dni Usuari</th>
+                <th>Estat</th>
+                <th>Motiu</th>
+                <th>Data Inici</th>
+                <th>Data Final</th>
+                <th>Cost Total</th>
+                <th>Accions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="incidencias : ${incidencias}">
+                <td th:text="${incidencias.vehicle.matricula}">Matricula Vehicle</td>
+                <td th:text="${incidencias.usuari.dni}">Dni usuari</td>
+                <td th:text="${incidencias.estatIncidencia}">Estat</td>
+                <td th:text="${incidencias.motiu}">Motiu</td>
+                <td th:text="${incidencias.dataInici}">Data Inici</td>
+                <td th:text="${incidencias.dataFinal}">Data Final</td>
+                <td th:text="${incidencias.cost}">Preu Complert</td>
+
+<!--                <td>-->
+<!--                    <form th:action="@{/admin/cancelarReserva/{idReserva}/{matricula}(idReserva=${reservas.idReserva}, matricula=${reservas.vehiculo.matricula})}"-->
+<!--                     method="post" style="display:inline">-->
+<!--                        <button type="submit" class="btn btn-danger">Cancelar</button>-->
+<!--                    </form>-->
+<!--                    <form th:action="@{/admin/activarReserva/{idReserva}(idReserva=${reservas.idReserva})}" method="post" style="display:inline">-->
+<!--                        <button type="submit" class="btn btn-success">Activar</button>-->
+<!--                    </form>-->
+
+<!--                </td>-->
+            </tr>
+
+
+            </tbody>
+        </table>
+<!--        <nav th:if="${reservaPage.totalPages > 1}" aria-label="Navegació de pàgines" class="mt-4">-->
+<!--            <ul class="pagination justify-content-center">-->
+
+<!--                &lt;!&ndash; Botón 'Anterior' &ndash;&gt;-->
+<!--                <li class="page-item" th:classappend="${reservaPage.first} ? 'disabled'">-->
+<!--                    <a class="page-link"-->
+<!--                       th:href="@{/admin/listarReserva(page=${reservaPage.number - 1}, size=${param.size},-->
+<!--                    matricula=${param.matricula},-->
+<!--                    dni=${param.dni},-->
+<!--                    estat=${param.estat})}">-->
+
+<!--                        Anterior-->
+<!--                    </a>-->
+<!--                </li>-->
+
+<!--                &lt;!&ndash; Números de página &ndash;&gt;-->
+<!--                <li class="page-item"-->
+<!--                    th:each="i : ${#numbers.sequence(0, reservaPage.totalPages - 1)}"-->
+<!--                    th:classappend="${i == reservaPage.number} ? 'active'">-->
+<!--                    <a class="page-link"-->
+<!--                       th:href="@{/admin/listarReserva(reservaPage=${i}, size=${param.size},-->
+<!--                    matricula=${param.matricula},-->
+<!--                    dni=${param.dni},-->
+<!--                    estat=${param.estat})}"-->
+<!--                       th:text="${i + 1}">-->
+<!--                    </a>-->
+<!--                </li>-->
+
+<!--                &lt;!&ndash; Botón 'Següent' &ndash;&gt;-->
+<!--                <li class="page-item" th:classappend="${reservaPage.last} ? 'disabled'">-->
+<!--                    <a class="page-link"-->
+<!--                       th:href="@{/admin/listarReserva(page=${reservaPage.number + 1}, size=${param.size},-->
+<!--                    matricula=${param.matricula},-->
+<!--                    dni=${param.dni},-->
+<!--                    estat=${param.estat})}">-->
+<!--                        Següent-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </nav>-->
+    </section>
+</main>
+</body>
+</html>

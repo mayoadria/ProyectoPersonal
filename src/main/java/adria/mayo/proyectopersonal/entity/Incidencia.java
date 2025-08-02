@@ -23,8 +23,11 @@ public class Incidencia {
     @Column(nullable = false)
     private String titol;
 
-
     @Column(nullable = false)
+    private String motiu;
+
+
+    @Column(nullable = true)
     private Double cost;
 
     @Column(nullable = false, name = "data_inici")

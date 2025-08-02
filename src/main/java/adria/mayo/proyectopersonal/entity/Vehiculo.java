@@ -89,5 +89,8 @@ public class Vehiculo {
     @EqualsAndHashCode.Exclude
     private List<Reserva> reserves;
 
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Incidencia> incidencies;
+
 
 }
