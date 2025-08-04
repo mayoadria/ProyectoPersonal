@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenRoad · Vehicle</title>
+
+    <!-- Iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="/css/infoVehiculo.css">
+    <link rel="stylesheet" href="/css/header.css">
+
+    <!-- Scripts -->
+    <script src="/js/header.js" defer></script>
+
+</head>
+
+<body>
+<!-- Header -->
+<div th:replace="/header.html :: siteHeader"></div>
+
+<!-- Contenido Principal -->
+<div class="main-wrapper">
+    <main class="main-content">
+        <div class="container">
+
+            <!-- PANEL IZQUIERDO -->
+            <div class="left-panel">
+                <img th:src="'data:image/jpeg;base64,' + ${incidencia.vehicle.foto}" alt="Foto del vehicle"
+                     class="vehiculo-img"/>
+                <h1 class="nombre-coche" th:text="${incidencia.vehicle.marca + ' ' + incidencia.vehicle.model}">Marca
+                    Model</h1>
+
+                <div class="details">
+                    <div>
+                        <i class="fa-solid fa-user"></i>
+                        <span th:text="${incidencia.vehicle.places.getValor()}">5 places</span>
+                    </div>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="24" height="24">
+                            <path d="M40 100 Q40 50 100 40 H160 Q180 40 180 60 V150 Q180 170 160 170 H60 Q40 170 40 150 Z"
+                                  fill="black" stroke="black" stroke-width="2"/>
+                            <path d="M50 100 Q50 70 100 60 H150 Q160 60 160 80 V100 H50 Z" fill="white"/>
+                            <rect x="130" y="120" width="20" height="6" rx="3" ry="3" fill="white"/>
+                        </svg>
+                        <span th:text="${incidencia.vehicle.portes.getValor()}">5 portes</span>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-gear"></i>
+                        <span th:text="${incidencia.vehicle.caixaCanvis}">Manual</span>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-gas-pump"></i>
+                        <span th:text="${incidencia.vehicle.combustible}">Dièsel</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL DERECHO -->
+            <div class="right-panel">
+                <h2 th:text="${incidencia.titol}" style="font-size: 1.75rem; margin-bottom: 1rem;">Títol de la
+                    incidència</h2>
+
+                <div class="motiu-destacat">
+                    <strong>Motiu:</strong>
+                    <span th:text="${incidencia.motiu}">Substitució de pneumàtics</span>
+                </div>
+
+                <div class="section additional-info">
+                    <p><strong>Matrícula:</strong> <span th:text="${incidencia.vehicle.matricula}">1234ABC</span></p>
+                    <p><strong>Estat:</strong> <span th:text="${incidencia.estatIncidencia}">En procés</span></p>
+                    <p><strong>Canvi iniciat:</strong> <span th:text="${incidencia.dataInici}">01/08/2025</span></p>
+                    <p><strong>Usuari:</strong> <span th:text="${incidencia.usuari.dni}">Joan Puig</span></p>
+                </div>
+
+
+                <div>
+                    <form th:action="@{/agent/cambiarEstat/{idIncidencia}(idIncidencia=${incidencia.idIncidencia})}"
+                          method="post" class="form-estado">
+
+                        <!-- Mostrar solo si el estado no es TANCADA -->
+                        <div th:if="${estatIncidencia.name() != 'TANCADA'}">
+
+                            <div th:if="${estatIncidencia.name() == 'EN_CURS'}" class="form-group">
+                                <label for="costReparacio">Cost de la reparació (€):</label>
+                                <input type="number" step="0.01" min="0" name="costReparacio" id="costReparacio" required class="input-cost"/>
+                            </div>
+                            <button type="submit"
+                                    th:text="${estatIncidencia.name() == 'OBERTA' ? 'Processar Incidència' : 'Tancar Incidència'}"
+                                    class="btn-cambiar-estado">
+                                Cambiar Estado
+                            </button>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>&copy; 2025 OpenRoad. Tots els drets reservats.</p>
+    </div>
+</footer>
+</body>
+</html>

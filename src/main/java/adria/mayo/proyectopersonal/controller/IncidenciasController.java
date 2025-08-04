@@ -13,11 +13,9 @@ import adria.mayo.proyectopersonal.service.VehicleService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -101,6 +99,31 @@ public class IncidenciasController {
             return "crearIncidencia"; // o una página de error adecuada
         }
     }
+
+    @GetMapping("/veureDetallsIncidencia/{idIncidencia}")
+    public String veureDetallsIncidencia(@PathVariable Long idIncidencia, Model model) {
+        Incidencia incidencia = incidenciaService.buscarIncidencia(idIncidencia);
+
+        if (incidencia != null) {
+            model.addAttribute("incidencia", incidencia);
+            model.addAttribute("estatIncidencia", incidencia.getEstatIncidencia());
+        }
+        return "infoIncidenciaAdmin";
+    }
+
+    @PostMapping("/cambiarEstat/{idIncidencia}")
+    public String cambiarEstat(@PathVariable Long idIncidencia,
+                               @RequestParam(value = "costReparacio", required = false) Double costReparacio) {
+        Incidencia incidencia = incidenciaService.buscarIncidencia(idIncidencia);
+
+        if (incidencia != null) {
+            incidencia.setCost(costReparacio); // guarda el coste si tu entidad lo tiene
+            incidenciaService.actualizarIncidencia(incidencia.getIdIncidencia());
+        }
+
+        return "redirect:/agent/listaIncidencias";
+    }
+
 
 
 

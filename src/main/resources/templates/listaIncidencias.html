@@ -58,7 +58,7 @@
                 <th>Matricula Vehicle</th>
                 <th>Dni Usuari</th>
                 <th>Estat</th>
-                <th>Motiu</th>
+                <th>Titol</th>
                 <th>Data Inici</th>
                 <th>Data Final</th>
                 <th>Cost Total</th>
@@ -70,21 +70,17 @@
                 <td th:text="${incidencias.vehicle.matricula}">Matricula Vehicle</td>
                 <td th:text="${incidencias.usuari.dni}">Dni usuari</td>
                 <td th:text="${incidencias.estatIncidencia}">Estat</td>
-                <td th:text="${incidencias.motiu}">Motiu</td>
+                <td th:text="${incidencias.titol}">Motiu</td>
                 <td th:text="${incidencias.dataInici}">Data Inici</td>
                 <td th:text="${incidencias.dataFinal}">Data Final</td>
                 <td th:text="${incidencias.cost}">Preu Complert</td>
 
-<!--                <td>-->
-<!--                    <form th:action="@{/admin/cancelarReserva/{idReserva}/{matricula}(idReserva=${reservas.idReserva}, matricula=${reservas.vehiculo.matricula})}"-->
-<!--                     method="post" style="display:inline">-->
-<!--                        <button type="submit" class="btn btn-danger">Cancelar</button>-->
-<!--                    </form>-->
-<!--                    <form th:action="@{/admin/activarReserva/{idReserva}(idReserva=${reservas.idReserva})}" method="post" style="display:inline">-->
-<!--                        <button type="submit" class="btn btn-success">Activar</button>-->
-<!--                    </form>-->
+                <td>
+                    <form th:action="@{/agent/veureDetallsIncidencia/{idIncidencia}(idIncidencia= ${incidencias.idIncidencia})}" style="display:inline">
+                        <button type="submit" class="btn btn-danger">Ampliar Detalls</button>
+                    </form>
 
-<!--                </td>-->
+                </td>
             </tr>
 
 
