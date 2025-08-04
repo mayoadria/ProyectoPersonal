@@ -18,6 +18,10 @@ public class IncidenciaService {
         return incidenciaRepository.findAll();
     }
 
+    public List<Incidencia> listaIncidenciasPorVehiculo(String matricula){
+        return incidenciaRepository.vehiclelistIncidencias(matricula);
+    }
+
     public void crearIncidencia(Incidencia incidencia) {
         incidenciaRepository.save(incidencia);
     }

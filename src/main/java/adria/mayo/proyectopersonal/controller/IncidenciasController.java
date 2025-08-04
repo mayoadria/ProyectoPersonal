@@ -44,6 +44,12 @@ public class IncidenciasController {
         model.addAttribute("incidencias", listaIncidencias);
         return "listaIncidencias";
     }
+    @GetMapping("/listaIncidenciasPorVehiculo/{matricula}")
+    public String listaIncidenciasPorVehiculo(@PathVariable String matricula, Model model) {
+        List<Incidencia> listaIncidencias = incidenciaService.listaIncidenciasPorVehiculo(matricula);
+        model.addAttribute("incidencias", listaIncidencias);
+        return "listaIncidencias";
+    }
 
 
     @GetMapping("/crearIncidencia/{matricula}")
