@@ -10,6 +10,7 @@ import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.IncidenciaService;
 import adria.mayo.proyectopersonal.service.ReservaService;
 import adria.mayo.proyectopersonal.service.VehicleService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,11 +38,13 @@ public class IncidenciasController {
     }
 
     @GetMapping("/listaIncidencias")
+    @PreAuthorize("hasRole('AGENTE')")
     public String listaIncidencias(Model model) {
         List<Incidencia> listaIncidencias = incidenciaService.listaIncidencias();
         model.addAttribute("incidencias", listaIncidencias);
         return "listaIncidencias";
     }
+
     @GetMapping("/listaIncidenciasPorVehiculo/{matricula}")
     public String listaIncidenciasPorVehiculo(@PathVariable String matricula, Model model) {
         List<Incidencia> listaIncidencias = incidenciaService.listaIncidenciasPorVehiculo(matricula);
@@ -107,11 +110,13 @@ public class IncidenciasController {
         if (incidencia != null) {
             model.addAttribute("incidencia", incidencia);
             model.addAttribute("estatIncidencia", incidencia.getEstatIncidencia());
+            model.addAttribute("rol", incidencia.getUsuari().getRol());
         }
         return "infoIncidenciaAdmin";
     }
 
     @PostMapping("/cambiarEstat/{idIncidencia}")
+    @PreAuthorize("hasRole('AGENTE')")
     public String cambiarEstat(@PathVariable Long idIncidencia,
                                @RequestParam(value = "costReparacio", required = false) Double costReparacio) {
         Incidencia incidencia = incidenciaService.buscarIncidencia(idIncidencia);

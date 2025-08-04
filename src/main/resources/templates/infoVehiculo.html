@@ -61,7 +61,7 @@
         <div class="section">
             <h3>DADES RESERVA</h3>
             <div class="fechas">
-                <form th:action="@{/admin/crearReserva/{matricula}(matricula=${vehicle.matricula})}" method="post" id="formReserva">
+                <form th:action="@{/reservas/crearReserva/{matricula}(matricula=${vehicle.matricula})}" method="post" id="formReserva">
                     <input type="hidden" name="matricula" th:value="${vehicle.matricula}" />
                     <input type="hidden" id="preuComplert" name="preuComplert" value="">
 

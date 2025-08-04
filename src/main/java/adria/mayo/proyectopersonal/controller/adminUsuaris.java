@@ -11,6 +11,9 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +24,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
+@PreAuthorize("hasRole('ADMINISTRADOR')")
 @RequestMapping("/admin")
+
 public class adminUsuaris {
 
     private final UsuariService usuariService;
@@ -36,14 +41,6 @@ public class adminUsuaris {
         model.addAttribute("rol", Rol.values());
         model.addAttribute("estat", EstatUsuari.values());
         model.addAttribute("isEdit", isEdit);
-    }
-
-    @GetMapping("/adminDashboard")
-    public String adminDashboard(Model model) {
-        Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
-        boolean isAdmin = usuari != null && usuari.getRol() == Rol.ADMINISTRADOR;
-        model.addAttribute("isAdmin", isAdmin);
-        return "adminDashboard";
     }
 
     @GetMapping("/listaUsu")

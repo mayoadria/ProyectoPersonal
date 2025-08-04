@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/reservas")
 public class adminReservas {
 
     private final VehicleService vehicleService;
@@ -37,6 +38,7 @@ public class adminReservas {
     }
 
     @PostMapping("/crearReserva/{matricula}")
+    @PreAuthorize("hasAnyRole('CLIENTE','AGENTE','ADMINISTRADOR')")
     public String createReserva(
             @PathVariable String matricula,
             Model model, Reserva reserva) {
@@ -60,6 +62,7 @@ public class adminReservas {
 
 
     @GetMapping("/listarReserva")
+    @PreAuthorize("hasAnyRole('CLIENTE','AGENTE','ADMINISTRADOR')")
     public String listar(Model model,
                          @RequestParam(name = "page", defaultValue = "0") int page,
                          @RequestParam(name = "size", defaultValue = "10") int size,
@@ -94,12 +97,14 @@ public class adminReservas {
         model.addAttribute("reservaPage", resultadoFinal);
         model.addAttribute("reservaList", resultadoFinal.getContent());
         model.addAttribute("estat", EstatReserva.values());
+        model.addAttribute("rol", usuari.getRol());
 
         return "listaReservas";
     }
 
 
     @PostMapping("/cancelarReserva/{idReserva}/{matricula}")
+    @PreAuthorize("hasAnyRole('CLIENTE','AGENTE','ADMINISTRADOR')")
     public String cancelarReserva(@PathVariable Long idReserva, @PathVariable String matricula) {
         Optional<Reserva> optionalReserva = reservaService.trobarReserva(idReserva);
         Vehiculo vehiculo = vehicleService.buscarVehiculo(matricula);
@@ -113,11 +118,12 @@ public class adminReservas {
             reservaService.crearReserva(reserva);
             enviarCorreo.enviarCorreoReservaCancelada(reserva.getUsuari().getEmail(),reserva.getVehiculo().getMatricula(),reserva);
         }
-        return "redirect:/admin/listarReserva";
+        return "redirect:/reservas/listarReserva";
     }
 
 
     @PostMapping("/activarReserva/{idReserva}")
+    @PreAuthorize("hasAnyRole('AGENTE','ADMINISTRADOR')")
     public String activarReserva(@PathVariable Long idReserva) {
         Optional<Reserva> optionalReserva = reservaService.trobarReserva(idReserva);
 
@@ -127,7 +133,7 @@ public class adminReservas {
             reservaService.crearReserva(reserva);
             enviarCorreo.enviarCorreoReservaA(reserva.getUsuari().getEmail(),reserva.getVehiculo().getMatricula(),reserva);
         }
-        return "redirect:/admin/listarReserva";
+        return "redirect:/reservas/listarReserva";
     }
 
 

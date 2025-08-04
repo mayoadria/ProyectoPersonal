@@ -76,7 +76,7 @@
                 </div>
 
 
-                <div>
+                <div th:if="${rol.name() != 'CLIENTE'}">
                     <form th:action="@{/agent/cambiarEstat/{idIncidencia}(idIncidencia=${incidencia.idIncidencia})}"
                           method="post" class="form-estado">
 

@@ -18,7 +18,7 @@
 <main class="container mt-4">
     <section>
 
-        <form th:action="@{/admin/listarReserva}" method="get">
+        <form th:action="@{/reservas/listarReserva}" method="get">
             <h2>Llista de Reserves</h2>
             <button class="filter-toggle">Mostrar Filtres</button>
 
@@ -74,11 +74,11 @@
                 <td th:text="${reservas.preuComplert}">Preu Complert</td>
 
                 <td>
-                    <form th:action="@{/admin/cancelarReserva/{idReserva}/{matricula}(idReserva=${reservas.idReserva}, matricula=${reservas.vehiculo.matricula})}"
+                    <form th:action="@{/reservas/cancelarReserva/{idReserva}/{matricula}(idReserva=${reservas.idReserva}, matricula=${reservas.vehiculo.matricula})}"
                      method="post" style="display:inline">
                         <button type="submit" class="btn btn-danger">Cancelar</button>
                     </form>
-                    <form th:action="@{/admin/activarReserva/{idReserva}(idReserva=${reservas.idReserva})}" method="post" style="display:inline">
+                    <form th:if="${rol.name() != 'CLIENTE'}" th:action="@{/admin/activarReserva/{idReserva}(idReserva=${reservas.idReserva})}" method="post" style="display:inline">
                         <button type="submit" class="btn btn-success">Activar</button>
                     </form>
                     <form th:action="@{/agent/crearIncidencia/{matricula}(matricula=${reservas.vehiculo.matricula})}" style="display:inline">
@@ -97,7 +97,7 @@
                 <!-- Botón 'Anterior' -->
                 <li class="page-item" th:classappend="${reservaPage.first} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{/admin/listarReserva(page=${reservaPage.number - 1}, size=${param.size},
+                       th:href="@{/reservas/listarReserva(page=${reservaPage.number - 1}, size=${param.size},
                     matricula=${param.matricula},
                     dni=${param.dni},
                     estat=${param.estat})}">
@@ -111,7 +111,7 @@
                     th:each="i : ${#numbers.sequence(0, reservaPage.totalPages - 1)}"
                     th:classappend="${i == reservaPage.number} ? 'active'">
                     <a class="page-link"
-                       th:href="@{/admin/listarReserva(reservaPage=${i}, size=${param.size},
+                       th:href="@{/reservas/listarReserva(reservaPage=${i}, size=${param.size},
                     matricula=${param.matricula},
                     dni=${param.dni},
                     estat=${param.estat})}"
@@ -122,7 +122,7 @@
                 <!-- Botón 'Següent' -->
                 <li class="page-item" th:classappend="${reservaPage.last} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{/admin/listarReserva(page=${reservaPage.number + 1}, size=${param.size},
+                       th:href="@{/reservas/listarReserva(page=${reservaPage.number + 1}, size=${param.size},
                     matricula=${param.matricula},
                     dni=${param.dni},
                     estat=${param.estat})}">
