@@ -4,6 +4,7 @@ import adria.mayo.proyectopersonal.entity.Vehiculo;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.EstatVehicle;
 import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.VehicleService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ public class CatalegController {
 
 
     @GetMapping("/detallsVehicle/{matricula}")
+    @PreAuthorize("hasAnyRole('CLIENTE','AGENTE','ADMINISTRADOR')")
     public String detallsVehiculo(@PathVariable String matricula, Model model){
         UserUtils.getUsuariDetalls(model);
         Vehiculo vehiculo = vehicleService.buscarVehiculo(matricula);

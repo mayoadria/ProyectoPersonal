@@ -3,6 +3,7 @@ package adria.mayo.proyectopersonal.UsuarisTest;
 import adria.mayo.proyectopersonal.Config.RateLimit;
 import adria.mayo.proyectopersonal.entity.Token;
 import adria.mayo.proyectopersonal.entity.Usuari;
+import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
 import adria.mayo.proyectopersonal.entity.enums.enumsVehiculo.Pais;
 import adria.mayo.proyectopersonal.security.UserUtils;
 import adria.mayo.proyectopersonal.service.EnviarCorreo;
@@ -65,6 +66,7 @@ public class TestWebMVCPerfilUsuari {
         usuari.setNomUsuari("testUser");
         usuari.setEmail("testUser@example.com");
         usuari.setDni("12345678A");
+        usuari.setRol(Rol.ADMINISTRADOR);
 
         // Simula que el servicio devuelve el usuario
         when(usuariService.findBynomUsuari("testUser")).thenReturn(usuari);
@@ -89,6 +91,7 @@ public class TestWebMVCPerfilUsuari {
         usuariMock.setNomUsuari("testUser");
         usuariMock.setDni("12345678A");
         usuariMock.setEmail("testUser@example.com");
+        usuariMock.setRol(Rol.ADMINISTRADOR);
 
         // Usuario logueado
         UsernamePasswordAuthenticationToken auth =
@@ -119,6 +122,7 @@ public class TestWebMVCPerfilUsuari {
         Usuari usuariMock = new Usuari();
         usuariMock.setNomUsuari("testUser");
         usuariMock.setEmail("mayoadria@gmail.com");
+        usuariMock.setRol(Rol.ADMINISTRADOR);
 
         UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken(usuariMock, null, usuariMock.getAuthorities());
@@ -141,6 +145,7 @@ public class TestWebMVCPerfilUsuari {
         Usuari usuariMock = new Usuari();
         usuariMock.setNomUsuari("testUser");
         usuariMock.setDni("49828550Q");
+        usuariMock.setRol(Rol.ADMINISTRADOR);
 
         UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken(usuariMock, null, usuariMock.getAuthorities());

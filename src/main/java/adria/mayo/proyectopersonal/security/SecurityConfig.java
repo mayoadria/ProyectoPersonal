@@ -1,5 +1,6 @@
 package adria.mayo.proyectopersonal.security;
 
+import adria.mayo.proyectopersonal.Config.CustomSessionExpiredStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,9 +8,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableWebSecurity
@@ -17,18 +21,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain webChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(
-                auth -> auth
+    public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/registrar/**","/login", "/validar", "/",
                                 "/cataleg","/css/**","/js/**","/Imagenes/**").permitAll()
                         .anyRequest().authenticated()
-
-        ).formLogin(form -> form
-                        .loginPage("/login")                     // <- tu página personalizada
-                        .loginProcessingUrl("/login")            // <- Spring intercepta POST /login
-                        .usernameParameter("nomUsuari")          // <- el name del input
-                        .passwordParameter("password")           // <- el name del input
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .usernameParameter("nomUsuari")
+                        .passwordParameter("password")
                         .defaultSuccessUrl("/", true)
                         .failureUrl("/login?error=true")
                         .permitAll()
@@ -37,14 +41,29 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
                         .permitAll()
-                ).exceptionHandling(exception -> exception
+                )
+                .exceptionHandling(exception -> exception
                         .accessDeniedPage("/acceso-denegado")
+                )
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
+                        .expiredSessionStrategy(new CustomSessionExpiredStrategy())
+                        .sessionRegistry(sessionRegistry)
                 );
-
         return http.build();
     }
 
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
 
+     //Este bean es crítico para que Spring registre los eventos de sesión
+    @Bean
+    public static HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
@@ -55,5 +74,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

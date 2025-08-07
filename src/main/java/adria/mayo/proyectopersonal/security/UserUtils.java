@@ -4,9 +4,12 @@ import adria.mayo.proyectopersonal.entity.Usuari;
 import adria.mayo.proyectopersonal.entity.enums.enumsUsuario.Rol;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.ui.Model;
 
 public class UserUtils {
+
+
 
     public static Object getUsuariDetalls(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -14,7 +17,23 @@ public class UserUtils {
         if (auth != null && auth.isAuthenticated() &&
                 !(auth.getPrincipal() instanceof String)) {
 
-            Usuari usuari = (Usuari) auth.getPrincipal();
+            Object principal = auth.getPrincipal();
+            Usuari usuari = null;
+
+            if (principal instanceof Usuari) {
+                usuari = (Usuari) principal;
+            } else if (principal instanceof User) {
+                User user = (User) principal;
+                // Crear un Usuari "temporal" solo con el nombre de usuario
+                usuari = new Usuari();
+                usuari.setNomUsuari(user.getUsername());
+                // Opcionalmente asignar un rol por defecto o buscar en base de datos
+                usuari.setRol(Rol.CLIENTE); // por ejemplo
+            } else {
+                // Otros tipos, puedes lanzar excepción o retornar null
+                return null;
+            }
+
             String nomUsuari = usuari.getNomUsuari();
 
             if (usuari.getRol() == Rol.ADMINISTRADOR) {
@@ -47,4 +66,5 @@ public class UserUtils {
         }
         return null;
     }
+
 }

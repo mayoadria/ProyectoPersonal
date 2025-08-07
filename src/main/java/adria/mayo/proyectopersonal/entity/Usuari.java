@@ -88,6 +88,8 @@ public class Usuari implements UserDetails {
     private List<Local> locals;
 
     @OneToMany(mappedBy = "usuari", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude  // <--- agregar esta línea
+    @EqualsAndHashCode.Exclude
     private List<Incidencia> incidencies;
 
 

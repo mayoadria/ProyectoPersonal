@@ -10,7 +10,9 @@
 <body>
 <div class="login-container">
     <h1>Iniciar Sesión</h1>
-
+    <div th:if="${param.expired}">
+        <p class="error">Tu sesión ha expirado. Inicia sesión de nuevo.</p>
+    </div>
     <form class="row g-3" th:action="@{/login}" method="post">
         <div class="form-group">
             <label for="nomUsuari">Usuari</label>

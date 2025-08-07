@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -51,7 +53,8 @@ public class TestWebMVCAdminUsuaris {
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/admin/listaUsu")
                 .param("page", "0")
-                .param("size", "10"))
+                .param("size", "10")
+                        .with(user("admin").roles("ADMINISTRADOR")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("ListaUsu"))
                 .andExpect(model().attributeExists("usu","page","estats","pais"))
@@ -101,7 +104,8 @@ public class TestWebMVCAdminUsuaris {
                 return usuariMock;
             });
 
-            mockMvc.perform(MockMvcRequestBuilders.get("/admin/adminDashboard"))
+            mockMvc.perform(MockMvcRequestBuilders.get("/adminD/adminDashboard")
+                            .with(user("admin").roles("ADMINISTRADOR")))
                     .andExpect(status().isOk())
                     .andExpect(MockMvcResultMatchers.view().name("adminDashboard"))
                     .andExpect(MockMvcResultMatchers.model().attributeExists("isAdmin"))
@@ -117,14 +121,15 @@ public class TestWebMVCAdminUsuaris {
         doNothing().when(usuariService).eliminarUsuari(usuari.getNomUsuari());
 
         mockMvc.perform(post("/admin/eliminar/{nomUsuari}", usuari.getNomUsuari())
-                        .with(csrf()))
-                .andExpect(status().is3xxRedirection()) // redirección esperada
+                        .with(csrf())
+                        .with(user("admin").roles("ADMINISTRADOR")) // Usuario con rol ADMINISTRADOR
+                )
+                .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/listaUsu"));
 
-        // Verificar que se llamó al servicio con el parámetro correcto
         verify(usuariService, times(1)).eliminarUsuari(usuari.getNomUsuari());
-
     }
+
 
     @Test
     public void activarUsuari() throws Exception {
@@ -133,7 +138,8 @@ public class TestWebMVCAdminUsuaris {
         doNothing().when(usuariService).activarUsuari(usuari.getNomUsuari());
 
         mockMvc.perform(post("/admin/activar/{nomUsuari}", usuari.getNomUsuari())
-                        .with(csrf()))
+                        .with(csrf())
+                        .with(user("admin").roles("ADMINISTRADOR")))
                 .andExpect(status().is3xxRedirection()) // redirección esperada
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/listaUsu"));
 
@@ -143,7 +149,9 @@ public class TestWebMVCAdminUsuaris {
 
     @Test
     public void crearUsuariForm() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/admin/creaUsuariAdmin"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/creaUsuariAdmin")
+                        .with(user("admin").roles("ADMINISTRADOR")))
+
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("CrearUsuari"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("usu"))
@@ -166,6 +174,7 @@ public class TestWebMVCAdminUsuaris {
 
         mockMvc.perform(post("/admin/newUsuari")
                         .with(csrf())
+                        .with(user("admin").roles("ADMINISTRADOR"))
                         .flashAttr("usu", usuari))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/listaUsu"));
@@ -179,7 +188,8 @@ public class TestWebMVCAdminUsuaris {
                         .param("email", "") // campo vacío para provocar error de validación
                         .param("dni", "")
                         .with(csrf())
-                        .flashAttr("usu", new Usuari())) // puede usar uno vacío si hay validaciones en la clase
+                        .flashAttr("usu", new Usuari())
+                        .with(user("admin").roles("ADMINISTRADOR"))) // puede usar uno vacío si hay validaciones en la clase
                 .andExpect(status().isOk())
                 .andExpect(view().name("CrearUsuari"))
                 .andExpect(model().attributeHasFieldErrors("usu", "email", "dni"));
@@ -196,6 +206,7 @@ public class TestWebMVCAdminUsuaris {
 
         mockMvc.perform(post("/admin/newUsuari")
                         .with(csrf())
+                        .with(user("admin").roles("ADMINISTRADOR"))
                         .flashAttr("usu", usu))
                 .andExpect(status().isOk())
                 .andExpect(view().name("CrearUsuari"))
@@ -215,7 +226,8 @@ public class TestWebMVCAdminUsuaris {
 
         mockMvc.perform(post("/admin/newUsuari")
                         .with(csrf())
-                        .flashAttr("usu", usu))
+                        .flashAttr("usu", usu)
+                        .with(user("admin").roles("ADMINISTRADOR")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("CrearUsuari"))
                 .andExpect(model().attributeHasFieldErrors("usu", "dni"));
@@ -226,7 +238,8 @@ public class TestWebMVCAdminUsuaris {
         Usuari usuari = DataUsuaris.crearUsuari();
         when(usuariService.findBynomUsuari(usuari.getNomUsuari())).thenReturn(usuari);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/admin/editarUsuari/{nomUsuari}", usuari.getNomUsuari()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/editarUsuari/{nomUsuari}", usuari.getNomUsuari())
+                        .with(user("admin").roles("ADMINISTRADOR")))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("CrearUsuari"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("usu"))
@@ -248,6 +261,7 @@ public class TestWebMVCAdminUsuaris {
 
         mockMvc.perform(post("/admin/editarUsuari")
                         .with(csrf())
+                        .with(user("admin").roles("ADMINISTRADOR"))
                         .flashAttr("usu", usuari))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/listaUsu"));
@@ -262,6 +276,7 @@ public class TestWebMVCAdminUsuaris {
         mockMvc.perform(post("/admin/editarUsuari")
                         .param("email", "") // campo vacío para provocar error de validación
                         .with(csrf())
+                        .with(user("admin").roles("ADMINISTRADOR"))
                         .flashAttr("usu", new Usuari())) // puede usar uno vacío si hay validaciones en la clase
                 .andExpect(status().isOk())
                 .andExpect(view().name("CrearUsuari"))

@@ -38,7 +38,7 @@ public class IncidenciasController {
     }
 
     @GetMapping("/listaIncidencias")
-    @PreAuthorize("hasRole('AGENTE')")
+    @PreAuthorize("hasAnyRole('CLIENTE','AGENTE','ADMINISTRADOR')")
     public String listaIncidencias(Model model) {
         List<Incidencia> listaIncidencias = incidenciaService.listaIncidencias();
         model.addAttribute("incidencias", listaIncidencias);
@@ -46,6 +46,7 @@ public class IncidenciasController {
     }
 
     @GetMapping("/listaIncidenciasPorVehiculo/{matricula}")
+    @PreAuthorize("hasAnyRole('AGENTE','ADMINISTRADOR')")
     public String listaIncidenciasPorVehiculo(@PathVariable String matricula, Model model) {
         List<Incidencia> listaIncidencias = incidenciaService.listaIncidenciasPorVehiculo(matricula);
         model.addAttribute("incidencias", listaIncidencias);
@@ -54,6 +55,7 @@ public class IncidenciasController {
 
 
     @GetMapping("/crearIncidencia/{matricula}")
+    @PreAuthorize("hasAnyRole('CLIENTE','AGENTE','ADMINISTRADOR')")
     public String crearIncidencia(@PathVariable String matricula, Model model) {
         Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
         Optional<Vehiculo> vehiculoOptional = vehicleService.buscarVehiculoOptional(matricula);
@@ -83,6 +85,7 @@ public class IncidenciasController {
 
 
     @PostMapping("/crear/{matricula}")
+    @PreAuthorize("hasAnyRole('CLIENTE','AGENTE','ADMINISTRADOR')")
     public String crearIncidencia(@PathVariable String matricula, Incidencia incidencia, Model model) {
         Usuari usuari = (Usuari) UserUtils.getUsuariDetalls(model);
         incidencia.setUsuari(usuari);
@@ -104,6 +107,7 @@ public class IncidenciasController {
     }
 
     @GetMapping("/veureDetallsIncidencia/{idIncidencia}")
+    @PreAuthorize("hasAnyRole('CLIENTE','AGENTE','ADMINISTRADOR')")
     public String veureDetallsIncidencia(@PathVariable Long idIncidencia, Model model) {
         Incidencia incidencia = incidenciaService.buscarIncidencia(idIncidencia);
 
@@ -116,7 +120,7 @@ public class IncidenciasController {
     }
 
     @PostMapping("/cambiarEstat/{idIncidencia}")
-    @PreAuthorize("hasRole('AGENTE')")
+    @PreAuthorize("hasAnyRole('AGENTE','ADMINISTRADOR')")
     public String cambiarEstat(@PathVariable Long idIncidencia,
                                @RequestParam(value = "costReparacio", required = false) Double costReparacio) {
         Incidencia incidencia = incidenciaService.buscarIncidencia(idIncidencia);
